@@ -72,8 +72,14 @@ extern "C" {
 
 
 // Allocation and destruction.
+//
+// An |RSA| object represents a public or private RSA key. A given object may be
+// used concurrently on multiple threads by non-mutating functions, provided no
+// other thread is concurrently calling a mutating function. Unless otherwise
+// documented, functions which take a |const| pointer are non-mutating and
+// functions which take a non-|const| pointer are mutating.
 
-// RSA_new returns a new, empty RSA object or NULL on error.
+// RSA_new returns a new, empty |RSA| object or NULL on error.
 OPENSSL_EXPORT RSA *RSA_new(void);
 
 // RSA_new_method acts the same as |RSA_new| but takes an explicit |ENGINE|.
@@ -83,7 +89,8 @@ OPENSSL_EXPORT RSA *RSA_new_method(const ENGINE *engine);
 // reference count drops to zero.
 OPENSSL_EXPORT void RSA_free(RSA *rsa);
 
-// RSA_up_ref increments the reference count of |rsa| and returns one.
+// RSA_up_ref increments the reference count of |rsa| and returns one. It does
+// not mutate |rsa| for thread-safety purposes and may be used concurrently.
 OPENSSL_EXPORT int RSA_up_ref(RSA *rsa);
 
 
@@ -154,7 +161,7 @@ OPENSSL_EXPORT int RSA_set0_crt_params(RSA *rsa, BIGNUM *dmp1, BIGNUM *dmq1,
 // with event=3 when a suitable value for |p| is found.
 //
 // It returns one on success or zero on error.
-OPENSSL_EXPORT int RSA_generate_key_ex(RSA *rsa, int bits, BIGNUM *e,
+OPENSSL_EXPORT int RSA_generate_key_ex(RSA *rsa, int bits, const BIGNUM *e,
                                        BN_GENCB *cb);
 
 // RSA_generate_key_fips behaves like |RSA_generate_key_ex| but performs
@@ -164,12 +171,23 @@ OPENSSL_EXPORT int RSA_generate_key_fips(RSA *rsa, int bits, BN_GENCB *cb);
 
 
 // Encryption / Decryption
+//
+// These functions are considered non-mutating for thread-safety purposes and
+// may be used concurrently.
 
-// Padding types for encryption.
+// RSA_PKCS1_PADDING denotes PKCS#1 v1.5 padding. When used with encryption,
+// this is RSAES-PKCS1-v1_5. When used with signing, this is RSASSA-PKCS1-v1_5.
 #define RSA_PKCS1_PADDING 1
+
+// RSA_NO_PADDING denotes a raw RSA operation.
 #define RSA_NO_PADDING 3
+
+// RSA_PKCS1_OAEP_PADDING denotes the RSAES-OAEP encryption scheme.
 #define RSA_PKCS1_OAEP_PADDING 4
-// RSA_PKCS1_PSS_PADDING can only be used via the EVP interface.
+
+// RSA_PKCS1_PSS_PADDING denotes the RSASSA-PSS signature scheme. This value may
+// not be passed into |RSA_sign_raw|, only |EVP_PKEY_CTX_set_rsa_padding|. See
+// also |RSA_sign_pss_mgf1| and |RSA_verify_pss_mgf1|.
 #define RSA_PKCS1_PSS_PADDING 6
 
 // RSA_encrypt encrypts |in_len| bytes from |in| to the public key from |rsa|
@@ -231,6 +249,9 @@ OPENSSL_EXPORT int RSA_private_decrypt(size_t flen, const uint8_t *from,
 
 
 // Signing / Verification
+//
+// These functions are considered non-mutating for thread-safety purposes and
+// may be used concurrently.
 
 // RSA_sign signs |in_len| bytes of digest from |in| with |rsa| using
 // RSASSA-PKCS1-v1_5. It writes, at most, |RSA_size(rsa)| bytes to |out|. On
@@ -272,7 +293,8 @@ OPENSSL_EXPORT int RSA_sign_pss_mgf1(RSA *rsa, size_t *out_len, uint8_t *out,
 //
 // The |padding| argument must be one of the |RSA_*_PADDING| values. If in
 // doubt, |RSA_PKCS1_PADDING| is the most common but |RSA_PKCS1_PSS_PADDING|
-// (via the |EVP_PKEY| interface) is preferred for new protocols.
+// (via |RSA_sign_pss_mgf1| or the |EVP_PKEY| interface) is preferred for new
+// protocols.
 OPENSSL_EXPORT int RSA_sign_raw(RSA *rsa, size_t *out_len, uint8_t *out,
                                 size_t max_out, const uint8_t *in,
                                 size_t in_len, int padding);
@@ -317,7 +339,8 @@ OPENSSL_EXPORT int RSA_verify_pss_mgf1(RSA *rsa, const uint8_t *msg,
 //
 // The |padding| argument must be one of the |RSA_*_PADDING| values. If in
 // doubt, |RSA_PKCS1_PADDING| is the most common but |RSA_PKCS1_PSS_PADDING|
-// (via the |EVP_PKEY| interface) is preferred for new protocols.
+// (via |RSA_verify_pss_mgf1| or the |EVP_PKEY| interface) is preferred for new
+// protocols.
 OPENSSL_EXPORT int RSA_verify_raw(RSA *rsa, size_t *out_len, uint8_t *out,
                                   size_t max_out, const uint8_t *in,
                                   size_t in_len, int padding);
@@ -372,8 +395,9 @@ OPENSSL_EXPORT RSA *RSAPrivateKey_dup(const RSA *rsa);
 // returns zero then a more detailed error is available on the error queue.
 OPENSSL_EXPORT int RSA_check_key(const RSA *rsa);
 
-// RSA_check_fips performs public key validity tests on |key|. It returns one
-// if they pass and zero otherwise. Opaque keys always fail.
+// RSA_check_fips performs public key validity tests on |key|. It returns one if
+// they pass and zero otherwise. Opaque keys always fail. This function does not
+// mutate |rsa| for thread-safety purposes and may be used concurrently.
 OPENSSL_EXPORT int RSA_check_fips(RSA *key);
 
 // RSA_verify_PKCS1_PSS_mgf1 verifies that |EM| is a correct PSS padding of
@@ -390,7 +414,8 @@ OPENSSL_EXPORT int RSA_check_fips(RSA *key);
 //
 // This function implements only the low-level padding logic. Use
 // |RSA_verify_pss_mgf1| instead.
-OPENSSL_EXPORT int RSA_verify_PKCS1_PSS_mgf1(RSA *rsa, const uint8_t *mHash,
+OPENSSL_EXPORT int RSA_verify_PKCS1_PSS_mgf1(const RSA *rsa,
+                                             const uint8_t *mHash,
                                              const EVP_MD *Hash,
                                              const EVP_MD *mgf1Hash,
                                              const uint8_t *EM, int sLen);
@@ -407,7 +432,7 @@ OPENSSL_EXPORT int RSA_verify_PKCS1_PSS_mgf1(RSA *rsa, const uint8_t *mHash,
 //
 // This function implements only the low-level padding logic. Use
 // |RSA_sign_pss_mgf1| instead.
-OPENSSL_EXPORT int RSA_padding_add_PKCS1_PSS_mgf1(RSA *rsa, uint8_t *EM,
+OPENSSL_EXPORT int RSA_padding_add_PKCS1_PSS_mgf1(const RSA *rsa, uint8_t *EM,
                                                   const uint8_t *mHash,
                                                   const EVP_MD *Hash,
                                                   const EVP_MD *mgf1Hash,
@@ -567,7 +592,7 @@ OPENSSL_EXPORT int i2d_RSAPrivateKey(const RSA *in, uint8_t **outp);
 //
 // This function implements only the low-level padding logic. Use
 // |RSA_sign_pss_mgf1| instead.
-OPENSSL_EXPORT int RSA_padding_add_PKCS1_PSS(RSA *rsa, uint8_t *EM,
+OPENSSL_EXPORT int RSA_padding_add_PKCS1_PSS(const RSA *rsa, uint8_t *EM,
                                              const uint8_t *mHash,
                                              const EVP_MD *Hash, int sLen);
 
@@ -576,7 +601,7 @@ OPENSSL_EXPORT int RSA_padding_add_PKCS1_PSS(RSA *rsa, uint8_t *EM,
 //
 // This function implements only the low-level padding logic. Use
 // |RSA_verify_pss_mgf1| instead.
-OPENSSL_EXPORT int RSA_verify_PKCS1_PSS(RSA *rsa, const uint8_t *mHash,
+OPENSSL_EXPORT int RSA_verify_PKCS1_PSS(const RSA *rsa, const uint8_t *mHash,
                                         const EVP_MD *Hash, const uint8_t *EM,
                                         int sLen);
 
@@ -588,6 +613,10 @@ OPENSSL_EXPORT int RSA_padding_add_PKCS1_OAEP(uint8_t *to, size_t to_len,
                                               size_t from_len,
                                               const uint8_t *param,
                                               size_t param_len);
+
+// RSA_print prints a textual representation of |rsa| to |bio|. It returns one
+// on success or zero otherwise.
+OPENSSL_EXPORT int RSA_print(BIO *bio, const RSA *rsa, int indent);
 
 
 struct rsa_meth_st {
@@ -694,11 +723,12 @@ struct rsa_st {
 
 extern "C++" {
 
-namespace bssl {
+BSSL_NAMESPACE_BEGIN
 
 BORINGSSL_MAKE_DELETER(RSA, RSA_free)
+BORINGSSL_MAKE_UP_REF(RSA, RSA_up_ref)
 
-}  // namespace bssl
+BSSL_NAMESPACE_END
 
 }  // extern C++
 
@@ -752,5 +782,6 @@ BORINGSSL_MAKE_DELETER(RSA, RSA_free)
 #define RSA_R_WRONG_SIGNATURE_LENGTH 145
 #define RSA_R_PUBLIC_KEY_VALIDATION_FAILED 146
 #define RSA_R_D_OUT_OF_RANGE 147
+#define RSA_R_BLOCK_TYPE_IS_NOT_02 148
 
 #endif  // OPENSSL_HEADER_RSA_H

@@ -6,7 +6,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -65,6 +65,10 @@
 #include <stdio.h>
 #endif
 
+#if defined(__APPLE__)
+#include <TargetConditionals.h>
+#endif
+
 // Include a BoringSSL-only header so consumers including this header without
 // setting up include paths do not accidentally pick up the system
 // opensslconf.h.
@@ -120,6 +124,14 @@ extern "C" {
 
 #if defined(__APPLE__)
 #define OPENSSL_APPLE
+// Note |TARGET_OS_MAC| is set for all Apple OS variants. |TARGET_OS_OSX|
+// targets macOS specifically.
+#if defined(TARGET_OS_OSX) && TARGET_OS_OSX
+#define OPENSSL_MACOS
+#endif
+#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
+#define OPENSSL_IOS
+#endif
 #endif
 
 #if defined(_WIN32)
@@ -136,10 +148,27 @@ extern "C" {
 
 #if defined(TRUSTY)
 #define OPENSSL_TRUSTY
-#define OPENSSL_NO_THREADS
+#define OPENSSL_NO_THREADS_CORRUPT_MEMORY_AND_LEAK_SECRETS_IF_THREADED
 #endif
 
-#if !defined(OPENSSL_NO_THREADS)
+#if defined(__ANDROID_API__)
+#define OPENSSL_ANDROID
+#endif
+
+// BoringSSL requires platform's locking APIs to make internal global state
+// thread-safe, including the PRNG. On some single-threaded embedded platforms,
+// locking APIs may not exist, so this dependency may be disabled with the
+// following build flag.
+//
+// IMPORTANT: Doing so means the consumer promises the library will never be
+// used in any multi-threaded context. It causes BoringSSL to be globally
+// thread-unsafe. Setting it inappropriately will subtly and unpredictably
+// corrupt memory and leak secret keys.
+//
+// Do not set this flag on any platform where threads are possible. BoringSSL
+// maintainers will not provide support for any consumers that do so. Changes
+// which break such unsupported configurations will not be reverted.
+#if !defined(OPENSSL_NO_THREADS_CORRUPT_MEMORY_AND_LEAK_SECRETS_IF_THREADED)
 #define OPENSSL_THREADS
 #endif
 
@@ -155,7 +184,7 @@ extern "C" {
 // A consumer may use this symbol in the preprocessor to temporarily build
 // against multiple revisions of BoringSSL at the same time. It is not
 // recommended to do so for longer than is necessary.
-#define BORINGSSL_API_VERSION 7
+#define BORINGSSL_API_VERSION 9
 
 #if defined(BORINGSSL_SHARED_LIBRARY)
 
@@ -213,6 +242,35 @@ extern "C" {
 #define OPENSSL_UNUSED
 #endif
 
+// C and C++ handle inline functions differently. In C++, an inline function is
+// defined in just the header file, potentially emitted in multiple compilation
+// units (in cases the compiler did not inline), but each copy must be identical
+// to satsify ODR. In C, a non-static inline must be manually emitted in exactly
+// one compilation unit with a separate extern inline declaration.
+//
+// In both languages, exported inline functions referencing file-local symbols
+// are problematic. C forbids this altogether (though GCC and Clang seem not to
+// enforce it). It works in C++, but ODR requires the definitions be identical,
+// including all names in the definitions resolving to the "same entity". In
+// practice, this is unlikely to be a problem, but an inline function that
+// returns a pointer to a file-local symbol
+// could compile oddly.
+//
+// Historically, we used static inline in headers. However, to satisfy ODR, use
+// plain inline in C++, to allow inline consumer functions to call our header
+// functions. Plain inline would also work better with C99 inline, but that is
+// not used much in practice, extern inline is tedious, and there are conflicts
+// with the old gnu89 model:
+// https://stackoverflow.com/questions/216510/extern-inline
+#if defined(__cplusplus)
+#define OPENSSL_INLINE inline
+#else
+// Add OPENSSL_UNUSED so that, should an inline function be emitted via macro
+// (e.g. a |STACK_OF(T)| implementation) in a source file without tripping
+// clang's -Wunused-function.
+#define OPENSSL_INLINE static inline OPENSSL_UNUSED
+#endif
+
 #if defined(BORINGSSL_UNSAFE_FUZZER_MODE) && \
     !defined(BORINGSSL_UNSAFE_DETERMINISTIC_MODE)
 #define BORINGSSL_UNSAFE_DETERMINISTIC_MODE
@@ -222,9 +280,38 @@ extern "C" {
 #if __has_feature(address_sanitizer)
 #define OPENSSL_ASAN
 #endif
+#if __has_feature(thread_sanitizer)
+#define OPENSSL_TSAN
+#endif
 #if __has_feature(memory_sanitizer)
 #define OPENSSL_MSAN
+#define OPENSSL_ASM_INCOMPATIBLE
 #endif
+#endif
+
+#if defined(OPENSSL_ASM_INCOMPATIBLE)
+#undef OPENSSL_ASM_INCOMPATIBLE
+#if !defined(OPENSSL_NO_ASM)
+#define OPENSSL_NO_ASM
+#endif
+#endif  // OPENSSL_ASM_INCOMPATIBLE
+
+#if defined(__cplusplus)
+// enums can be predeclared, but only in C++ and only if given an explicit type.
+// C doesn't support setting an explicit type for enums thus a #define is used
+// to do this only for C++. However, the ABI type between C and C++ need to have
+// equal sizes, which is confirmed in a unittest.
+#define BORINGSSL_ENUM_INT : int
+enum ssl_early_data_reason_t BORINGSSL_ENUM_INT;
+enum ssl_encryption_level_t BORINGSSL_ENUM_INT;
+enum ssl_private_key_result_t BORINGSSL_ENUM_INT;
+enum ssl_renegotiate_mode_t BORINGSSL_ENUM_INT;
+enum ssl_select_cert_result_t BORINGSSL_ENUM_INT;
+enum ssl_select_cert_result_t BORINGSSL_ENUM_INT;
+enum ssl_ticket_aead_result_t BORINGSSL_ENUM_INT;
+enum ssl_verify_result_t BORINGSSL_ENUM_INT;
+#else
+#define BORINGSSL_ENUM_INT
 #endif
 
 // CRYPTO_THREADID is a dummy value.
@@ -330,6 +417,7 @@ typedef struct ssl_cipher_st SSL_CIPHER;
 typedef struct ssl_ctx_st SSL_CTX;
 typedef struct ssl_method_st SSL_METHOD;
 typedef struct ssl_private_key_method_st SSL_PRIVATE_KEY_METHOD;
+typedef struct ssl_quic_method_st SSL_QUIC_METHOD;
 typedef struct ssl_session_st SSL_SESSION;
 typedef struct ssl_st SSL;
 typedef struct ssl_ticket_aead_method_st SSL_TICKET_AEAD_METHOD;
@@ -355,6 +443,18 @@ typedef void *OPENSSL_BLOCK;
 #define BORINGSSL_NO_CXX
 #endif
 
+#if defined(BORINGSSL_PREFIX)
+#define BSSL_NAMESPACE_BEGIN \
+  namespace bssl {           \
+  inline namespace BORINGSSL_PREFIX {
+#define BSSL_NAMESPACE_END \
+  }                        \
+  }
+#else
+#define BSSL_NAMESPACE_BEGIN namespace bssl {
+#define BSSL_NAMESPACE_END }
+#endif
+
 // MSVC doesn't set __cplusplus to 201103 to indicate C++11 support (see
 // https://connect.microsoft.com/VisualStudio/feedback/details/763051/a-value-of-predefined-macro-cplusplus-is-still-199711l)
 // so MSVC is just assumed to support C++11.
@@ -363,6 +463,7 @@ typedef void *OPENSSL_BLOCK;
 #endif
 
 #if !defined(BORINGSSL_NO_CXX)
+
 extern "C++" {
 
 #include <memory>
@@ -378,12 +479,13 @@ extern "C++" {
 #if defined(BORINGSSL_NO_CXX)
 
 #define BORINGSSL_MAKE_DELETER(type, deleter)
+#define BORINGSSL_MAKE_UP_REF(type, up_ref_func)
 
 #else
 
 extern "C++" {
 
-namespace bssl {
+BSSL_NAMESPACE_BEGIN
 
 namespace internal {
 
@@ -448,7 +550,19 @@ class StackAllocated {
 template <typename T>
 using UniquePtr = std::unique_ptr<T, internal::Deleter<T>>;
 
-}  // namespace bssl
+#define BORINGSSL_MAKE_UP_REF(type, up_ref_func)             \
+  inline UniquePtr<type> UpRef(type *v) {                    \
+    if (v != nullptr) {                                      \
+      up_ref_func(v);                                        \
+    }                                                        \
+    return UniquePtr<type>(v);                               \
+  }                                                          \
+                                                             \
+  inline UniquePtr<type> UpRef(const UniquePtr<type> &ptr) { \
+    return UpRef(ptr.get());                                 \
+  }
+
+BSSL_NAMESPACE_END
 
 }  // extern C++
 

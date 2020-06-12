@@ -205,13 +205,19 @@ extern "C" {
 // ExtensionType value from draft-ietf-tokbind-negotiation-10
 #define TLSEXT_TYPE_token_binding 24
 
-// ExtensionType value from draft-ietf-quic-tls
-#define TLSEXT_TYPE_quic_transport_parameters 26
+// ExtensionType value from draft-ietf-quic-tls. Note that this collides with
+// TLS-LTS and, based on scans, something else too. Since it's QUIC-only, that
+// shouldn't be a problem in practice.
+#define TLSEXT_TYPE_quic_transport_parameters 0xffa5
+
+// ExtensionType value assigned to
+// https://tools.ietf.org/html/draft-ietf-tls-certificate-compression-03
+#define TLSEXT_TYPE_cert_compression 27
 
 // ExtensionType value from RFC4507
 #define TLSEXT_TYPE_session_ticket 35
 
-// ExtensionType values from draft-ietf-tls-tls13-18
+// ExtensionType values from RFC8446
 #define TLSEXT_TYPE_supported_groups 10
 #define TLSEXT_TYPE_pre_shared_key 41
 #define TLSEXT_TYPE_early_data 42
@@ -219,10 +225,15 @@ extern "C" {
 #define TLSEXT_TYPE_cookie 44
 #define TLSEXT_TYPE_psk_key_exchange_modes 45
 #define TLSEXT_TYPE_certificate_authorities 47
+#define TLSEXT_TYPE_signature_algorithms_cert 50
 #define TLSEXT_TYPE_key_share 51
 
 // ExtensionType value from RFC5746
 #define TLSEXT_TYPE_renegotiate 0xff01
+
+// ExtensionType value from draft-ietf-tls-subcerts. This is not an IANA defined
+// extension number.
+#define TLSEXT_TYPE_delegated_credential 0xff02
 
 // ExtensionType value from RFC6962
 #define TLSEXT_TYPE_certificate_timestamp 18
@@ -233,10 +244,8 @@ extern "C" {
 // This is not an IANA defined extension number
 #define TLSEXT_TYPE_channel_id 30032
 
-// This is not an IANA defined extension number
-#define TLSEXT_TYPE_dummy_pq_padding 54537
-
 // status request value from RFC 3546
+#define TLSEXT_STATUSTYPE_nothing (-1)
 #define TLSEXT_STATUSTYPE_ocsp 1
 
 // ECPointFormat values from RFC 4492
@@ -257,6 +266,10 @@ extern "C" {
 #define TLSEXT_hash_sha256 4
 #define TLSEXT_hash_sha384 5
 #define TLSEXT_hash_sha512 6
+
+// From https://tools.ietf.org/html/draft-ietf-tls-certificate-compression-03#section-3
+#define TLSEXT_cert_compression_zlib 1
+#define TLSEXT_cert_compression_brotli 2
 
 #define TLSEXT_MAXLEN_host_name 255
 
@@ -422,7 +435,7 @@ extern "C" {
 #define TLS1_CK_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256 0x0300CCA9
 #define TLS1_CK_ECDHE_PSK_WITH_CHACHA20_POLY1305_SHA256 0x0300CCAC
 
-// TLS 1.3 ciphersuites from draft-ietf-tls-tls13-16
+// TLS 1.3 ciphersuites from RFC 8446.
 #define TLS1_CK_AES_128_GCM_SHA256 0x03001301
 #define TLS1_CK_AES_256_GCM_SHA384 0x03001302
 #define TLS1_CK_CHACHA20_POLY1305_SHA256 0x03001303
@@ -594,10 +607,10 @@ extern "C" {
 #define TLS1_TXT_ECDHE_PSK_WITH_CHACHA20_POLY1305_SHA256 \
   "ECDHE-PSK-CHACHA20-POLY1305"
 
-// TLS 1.3 ciphersuites from draft-ietf-tls-tls13-16
-#define TLS1_TXT_AES_128_GCM_SHA256 "AEAD-AES128-GCM-SHA256"
-#define TLS1_TXT_AES_256_GCM_SHA384 "AEAD-AES256-GCM-SHA384"
-#define TLS1_TXT_CHACHA20_POLY1305_SHA256 "AEAD-CHACHA20-POLY1305-SHA256"
+// TLS 1.3 ciphersuites from RFC 8446.
+#define TLS1_TXT_AES_128_GCM_SHA256 "TLS_AES_128_GCM_SHA256"
+#define TLS1_TXT_AES_256_GCM_SHA384 "TLS_AES_256_GCM_SHA384"
+#define TLS1_TXT_CHACHA20_POLY1305_SHA256 "TLS_CHACHA20_POLY1305_SHA256"
 
 
 #define TLS_CT_RSA_SIGN 1
