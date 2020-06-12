@@ -15,7 +15,7 @@ pod spec which Firebase
 FIREBASE_GITHUB_REPOSITORY=firebase/firebase-ios-sdk
 LATEST_FIREBASE_PODSPEC=$(pod spec which Firebase)
 # TODO temp hard coded to run earlier releases
-LATEST_FIREBASE_PODSPEC=$(echo $LATEST_FIREBASE_PODSPEC | sed "s/6.26.0/6.24.0/")
+LATEST_FIREBASE_PODSPEC=$(echo $LATEST_FIREBASE_PODSPEC | sed "s/6.26.0/6.25.0/")
 LATEST_FIREBASE_VERSION=$(python -c 'import json,sys; print(json.loads(sys.stdin.read())["version"])' <"$LATEST_FIREBASE_PODSPEC")
 # -------------------
 #      Functions
