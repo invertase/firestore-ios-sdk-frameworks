@@ -12,6 +12,24 @@ Currently the Firestore iOS SDK depends on some 500k lines of mostly C++, which 
   - [#4284](https://github.com/firebase/firebase-ios-sdk/issues/4284) `Adding FirebaseFirestore pod dependency adds minutes to build time`
 - [FirebaseExtended/flutterfire](https://github.com/FirebaseExtended/flutterfire)
   - [#349](https://github.com/FirebaseExtended/flutterfire/issues/349) `[cloud_firestore] Xcode build extremely slow`
+  
+#### Before & After
+
+Before and after timing below, timed when running Xcode build (with cache fully cleared) in a project with Firestore.
+
+**Mac mini (2018) 6 cores**:
+
+```
+Before:    ~ 240s
+After:     ~  45s
+```
+
+**GitHub Action CI 2 cores**:
+
+```
+Before:    ~ 551s
+After:     ~ 174s
+```
 
 ### Usage
 
@@ -40,7 +58,6 @@ The below are the currently supported Firebase iOS SDK versions of this reposito
  - [6.24.0](https://github.com/invertase/firestore-ios-sdk-frameworks/releases/tag/6.24.0)
  - [6.23.0](https://github.com/invertase/firestore-ios-sdk-frameworks/releases/tag/6.23.0)
  - [6.22.0](https://github.com/invertase/firestore-ios-sdk-frameworks/releases/tag/6.22.0)
- - [6.21.0](https://github.com/invertase/firestore-ios-sdk-frameworks/releases/tag/6.21.0)
  - [6.21.0](https://github.com/invertase/firestore-ios-sdk-frameworks/releases/tag/6.21.0)
 
 ## License
