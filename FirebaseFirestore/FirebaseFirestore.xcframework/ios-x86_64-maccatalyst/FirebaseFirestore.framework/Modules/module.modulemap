@@ -1,0 +1,12 @@
+framework module FirebaseFirestore {
+umbrella header "FirebaseFirestore.h"
+export *
+module * { export * }
+  link framework "CoreTelephony"
+  link framework "Foundation"
+  link framework "MobileCoreServices"
+  link framework "SystemConfiguration"
+  link framework "UIKit"
+  link "c++"
+  link "z"
+}
