@@ -1,0 +1,32 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+#  schedule:
+#    - cron:  '0 */6 * * *' # Every 6 hours
+
+jobs:
+  latest_release:
+    name: 'Latest Release'
+    timeout-minutes: 10
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: 'master'
+          fetch-depth: 0
+      - name: GIT Setup
+        run: |
+          git config --global user.name '@Salakar'
+          git config --global user.email 'Salakar@users.noreply.github.com'
+          git remote set-url origin git@github.com:$GITHUB_REPOSITORY
+      - uses: webfactory/ssh-agent@v0.2.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Process Latest Version
+        run: |
+          ./.github/workflows/scripts/process-latest-version.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
