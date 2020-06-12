@@ -1,11 +1,8 @@
 name: Build
 
 on:
-  push:
-    branches:
-      - master
-#  schedule:
-#    - cron:  '0 */6 * * *' # Every 6 hours
+  schedule:
+   - cron:  '0 */3 * * *' # Every 3 hours
 
 jobs:
   latest_release:
