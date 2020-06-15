@@ -8,6 +8,7 @@ Pod::Spec.new do |s|
   s.homepage         = 'http://invertase.io'
   s.license          = 'Apache-2.0'
   s.source           = { :path => '.' }
+  s.cocoapods_version = '>= 1.9.1'
   s.authors          = 'Invertase Limited'
   s.vendored_frameworks = 'FirebaseFirestore/*.xcframework'
   s.preserve_paths      = 'FirebaseFirestore/*.xcframework'
