@@ -132,9 +132,9 @@ echo "Found FirebaseFirestore subspec with version '$firebase_firestore_version'
 echo "A frameworks tag for Firebase pod version $LATEST_FIREBASE_VERSION does not yet exist, creating it..."
 
 # Get the release information from the Firebase iOS SDK repository, so we can extract the asset zip to download.
-firebase_ios_repo_release=$(get_github_release_by_tag "$FIREBASE_GITHUB_REPOSITORY" "$LATEST_FIREBASE_VERSION")
+firebase_ios_repo_release=$(get_github_release_by_tag "$FIREBASE_GITHUB_REPOSITORY" CocoaPods-"$LATEST_FIREBASE_VERSION")
 if [[ -z "$firebase_ios_repo_release" ]]; then
-  echo "Error: could not find a release with the tag $LATEST_FIREBASE_VERSION on the $FIREBASE_GITHUB_REPOSITORY repository."
+  echo "Error: could not find a release with the tag CocoaPods-$LATEST_FIREBASE_VERSION on the $FIREBASE_GITHUB_REPOSITORY repository."
   exit 1
 fi
 
