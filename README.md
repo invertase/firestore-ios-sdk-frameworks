@@ -55,6 +55,7 @@ The first time you `pod install` a specific version, CocoaPods will remotely ret
 The below are the currently supported Firebase iOS SDK versions of this repository, this list is updated automatically.
 
 <!--NEW_VERSION_PLACEHOLDER-->
+ - [6.28.0](https://github.com/invertase/firestore-ios-sdk-frameworks/releases/tag/6.28.0)
  - [6.27.1](https://github.com/invertase/firestore-ios-sdk-frameworks/releases/tag/6.27.1)
  - [6.27.0](https://github.com/invertase/firestore-ios-sdk-frameworks/releases/tag/6.27.0)
  - [6.26.0](https://github.com/invertase/firestore-ios-sdk-frameworks/releases/tag/6.26.0)

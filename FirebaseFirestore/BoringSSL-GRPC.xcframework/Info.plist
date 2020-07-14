@@ -6,16 +6,17 @@
 	<array>
 		<dict>
 			<key>LibraryIdentifier</key>
-			<string>ios-armv7_arm64</string>
+			<string>ios-x86_64-maccatalyst</string>
 			<key>LibraryPath</key>
 			<string>BoringSSL-GRPC.framework</string>
 			<key>SupportedArchitectures</key>
 			<array>
-				<string>armv7</string>
-				<string>arm64</string>
+				<string>x86_64</string>
 			</array>
 			<key>SupportedPlatform</key>
 			<string>ios</string>
+			<key>SupportedPlatformVariant</key>
+			<string>maccatalyst</string>
 		</dict>
 		<dict>
 			<key>LibraryIdentifier</key>
@@ -34,17 +35,16 @@
 		</dict>
 		<dict>
 			<key>LibraryIdentifier</key>
-			<string>ios-x86_64-maccatalyst</string>
+			<string>ios-armv7_arm64</string>
 			<key>LibraryPath</key>
 			<string>BoringSSL-GRPC.framework</string>
 			<key>SupportedArchitectures</key>
 			<array>
-				<string>x86_64</string>
+				<string>armv7</string>
+				<string>arm64</string>
 			</array>
 			<key>SupportedPlatform</key>
 			<string>ios</string>
-			<key>SupportedPlatformVariant</key>
-			<string>maccatalyst</string>
 		</dict>
 	</array>
 	<key>CFBundlePackageType</key>
