@@ -54,6 +54,8 @@ The first time you `pod install` a specific version, CocoaPods will remotely ret
 
 The below are the currently supported Firebase iOS SDK versions of this repository, this list is updated automatically.
 
+> **⚠️ Note:** if you are looking for a new version that is not listed in the supported versions list, examine the upstream release notes for firebase-ios-sdk carefully. This can happen if the firebase-ios-sdk team issues an interim release to solve some urgent problem, but do not run their full release process. If that happens, don't worry - just wait for the next supported version before moving forward, or temporarily de-integrate this pre-compiled framework if you must use the interim version. 6.31.1 is an example of this, with more details [here](https://github.com/firebase/firebase-ios-sdk/pull/6368#issuecomment-685030446) for why it might happen.
+
 <!--NEW_VERSION_PLACEHOLDER-->
  - [6.31.0](https://github.com/invertase/firestore-ios-sdk-frameworks/releases/tag/6.31.0)
  - [6.30.0](https://github.com/invertase/firestore-ios-sdk-frameworks/releases/tag/6.30.0)
