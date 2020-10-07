@@ -1,8 +1,9 @@
 name: Build
 
 on:
+  workflow_dispatch:
   schedule:
-   - cron:  '0 */6 * * *' # Every 3 hours
+   - cron:  '0 */6 * * *' # Every 6 hours
 
 jobs:
   latest_release:
@@ -22,8 +23,8 @@ jobs:
       - uses: webfactory/ssh-agent@v0.2.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Set Github Token Securely
+        run: echo "GITHUB_TOKEN=${{ secrets.GH_TOKEN }}" >> $GITHUB_ENV
       - name: Process Latest Version
         run: |
           ./.github/workflows/scripts/process-latest-version.sh
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
