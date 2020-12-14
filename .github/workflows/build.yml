@@ -29,10 +29,13 @@ jobs:
         run: |
           ./.github/workflows/scripts/process-latest-version.sh
       - name: Report Failure Status
-        if: always()
-        uses: ravsamhq/notify-slack-action@master
-        with:
-          status: ${{ job.status }}
-          notify_when: 'success'
+        if: success()
+        uses: rtCamp/action-slack-notify@v2
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.INVERTASEBOT_SLACK_GITHUB_CHANNEL_WEBHOOK_URL }}
+          SLACK_WEBHOOK: ${{ secrets.INVERTASEBOT_SLACK_GITHUB_CHANNEL_WEBHOOK_URL }}
+          SLACK_COLOR: '#FF0000'
+          SLACK_USERNAME: 'InvertaseBot'
+          SLACK_TITLE: ':bell: Build Failure'
+          SLACK_ICON: 'https://static.invertase.io/assets/invertase-logo-small.png'
+          SLACK_MESSAGE: 'An invertase/firestore-ios-sdk-frameworks build has failed!'
+          SLACK_FOOTER: 'https://github.com/invertase/firestore-ios-sdk-frameworks/actions'
