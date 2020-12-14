@@ -32,7 +32,7 @@ jobs:
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
-          fields: repo,action,eventName,workflow,job,took
+          fields: repo,action,eventName,workflow
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.INVERTASEBOT_SLACK_GITHUB_CHANNEL_WEBHOOK_URL }}
-        if: success()
+        if: failure()
