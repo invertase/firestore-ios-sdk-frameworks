@@ -28,3 +28,11 @@ jobs:
       - name: Process Latest Version
         run: |
           ./.github/workflows/scripts/process-latest-version.sh
+      - name: Report Failure Status
+        if: always()
+        uses: ravsamhq/notify-slack-action@master
+        with:
+          status: ${{ job.status }}
+          notify_when: 'success'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.INVERTASEBOT_SLACK_GITHUB_CHANNEL_WEBHOOK_URL }}
