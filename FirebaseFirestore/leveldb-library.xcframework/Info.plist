@@ -6,6 +6,20 @@
 	<array>
 		<dict>
 			<key>LibraryIdentifier</key>
+			<string>ios-x86_64-maccatalyst</string>
+			<key>LibraryPath</key>
+			<string>leveldb-library.framework</string>
+			<key>SupportedArchitectures</key>
+			<array>
+				<string>x86_64</string>
+			</array>
+			<key>SupportedPlatform</key>
+			<string>ios</string>
+			<key>SupportedPlatformVariant</key>
+			<string>maccatalyst</string>
+		</dict>
+		<dict>
+			<key>LibraryIdentifier</key>
 			<string>macos-x86_64</string>
 			<key>LibraryPath</key>
 			<string>leveldb-library.framework</string>
@@ -27,20 +41,6 @@
 			</array>
 			<key>SupportedPlatform</key>
 			<string>tvos</string>
-		</dict>
-		<dict>
-			<key>LibraryIdentifier</key>
-			<string>ios-x86_64-maccatalyst</string>
-			<key>LibraryPath</key>
-			<string>leveldb-library.framework</string>
-			<key>SupportedArchitectures</key>
-			<array>
-				<string>x86_64</string>
-			</array>
-			<key>SupportedPlatform</key>
-			<string>ios</string>
-			<key>SupportedPlatformVariant</key>
-			<string>maccatalyst</string>
 		</dict>
 		<dict>
 			<key>LibraryIdentifier</key>
