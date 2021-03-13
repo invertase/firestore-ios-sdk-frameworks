@@ -31,8 +31,15 @@ jobs:
       - name: Report Failure Status
         uses: 8398a7/action-slack@v3
         with:
-          status: ${{ job.status }}
-          fields: repo,action,eventName,workflow
+          status: custom
+          fields: workflow,job,repo
+          custom_payload: |
+            {
+              attachments: [{
+                color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
+                text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} of ${process.env.AS_REPO} on firebase-ios-sdk ${process.env.LATEST_FIREBASE_VERSION} ${{ job.status }}`,
+              }]
+            }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.INVERTASEBOT_SLACK_GITHUB_CHANNEL_WEBHOOK_URL }}
         if: failure()
