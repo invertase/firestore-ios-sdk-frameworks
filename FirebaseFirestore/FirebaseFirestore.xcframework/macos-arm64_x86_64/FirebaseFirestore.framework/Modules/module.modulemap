@@ -5,6 +5,7 @@ module * { export * }
   link framework "AppKit"
   link framework "CoreTelephony"
   link framework "Foundation"
+  link framework "Security"
   link framework "SystemConfiguration"
   link "c++"
   link "z"
