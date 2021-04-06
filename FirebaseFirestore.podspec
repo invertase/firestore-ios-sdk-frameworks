@@ -30,17 +30,26 @@ Pod::Spec.new do |s|
 
   skip_leveldb = false
 
+  if defined?($FirebaseFirestoreExcludeLeveldb)
+    Pod::UI.puts "#{s.name}: FirebaseFirestoreExcludeLeveldb set to #{$FirebaseFirestoreExcludeLeveldb} in Podfile"
+    skip_leveldb = $FirebaseFirestoreExcludeLeveldb
+  end
+
   # FlutterFire
-  if current_definition_string.include?('firebase_database')
+  if !skip_leveldb && current_definition_string.include?('firebase_database')
+    Pod::UI.puts "#{s.name}: Detected firebase_database module. Avoiding leveldb double-inclusion."
     skip_leveldb = true
   # React native Firebase  
-  elsif current_definition_string.include?('RNFBDatabase')
+  elsif !skip_leveldb && current_definition_string.include?('RNFBDatabase')
+    Pod::UI.puts "#{s.name}: Detected RNFBDatabase module. Avoiding leveldb double-inclusion."
     skip_leveldb = true
   # Pod spec used directly  
-  elsif current_definition_string.include?('FirebaseDatabase')
+  elsif !skip_leveldb && current_definition_string.include?('FirebaseDatabase')
+    Pod::UI.puts "#{s.name}: Detected FirebaseDatabase module. Avoiding leveldb double-inclusion."
     skip_leveldb = true
   # Umbrella pod spec  
-  elsif current_definition_string.include?('Firebase/Database')
+  elsif !skip_leveldb && current_definition_string.include?('Firebase/Database')
+    Pod::UI.puts "#{s.name}: Detected Firebase/Database module. Avoiding leveldb double-inclusion."
     skip_leveldb = true
   end
 
