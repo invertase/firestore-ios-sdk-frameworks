@@ -1,28 +1,31 @@
 firebase_firestore_version = '7.11.0'
 
 Pod::Spec.new do |s|
-  s.name             = 'FirebaseFirestore'
-  s.version          = firebase_firestore_version
-  s.summary          = 'A replica Firebase Firestore podspec.'
-  s.description      = 'A replica Firebase Firestore podspec that provides pre-compiled binaries/frameworks instead'
-  s.homepage         = 'http://invertase.io'
-  s.license          = 'Apache-2.0'
-  s.source           = { :path => '.' }
-  s.cocoapods_version = '>= 1.10.0'
-  s.authors          = 'Invertase Limited'
-  s.vendored_frameworks = 'FirebaseFirestore/*.xcframework'
-  s.preserve_paths      = 'FirebaseFirestore/*.xcframework'
-  s.resource            = 'FirebaseFirestore/Resources/*.bundle'
-  s.pod_target_xcconfig = { 'OTHER_LDFLAGS' => '-lObjC' }
-  s.static_framework = true
+  s.name                   = 'FirebaseFirestore'
+  s.version                = firebase_firestore_version
+  s.summary                = 'A replica Firebase Firestore podspec.'
+  s.description            = 'A replica Firebase Firestore podspec that provides pre-compiled binaries/frameworks instead'
+  s.homepage               = 'http://invertase.io'
+  s.license                = 'Apache-2.0'
+  s.source                 = { :path => '.' }
+  s.cocoapods_version      = '>= 1.10.0'
+  s.authors                = 'Invertase Limited'
+  s.vendored_frameworks    = 'FirebaseFirestore/*.xcframework'
+  s.preserve_paths         = 'FirebaseFirestore/*.xcframework'
+  s.resource               = 'FirebaseFirestore/Resources/*.bundle'
+  s.pod_target_xcconfig    = { 'OTHER_LDFLAGS' => '-lObjC' }
+  s.static_framework       = true
 
-  # These frameworks and the c++ library are here from, and copied specifically to match, the upstream podspec:
+  # These frameworks, minimums, and the c++ library are here from, and copied specifically to match, the upstream podspec:
   # https://github.com/firebase/firebase-ios-sdk/blob/34c4bdbce23f5c6e739bda83b71ba592d6400cd5/FirebaseFirestore.podspec#L103
   # They may need updating periodically.
-  s.ios.frameworks = 'SystemConfiguration', 'UIKit'
-  s.osx.frameworks = 'SystemConfiguration'
-  s.tvos.frameworks = 'SystemConfiguration', 'UIKit'
-  s.library = 'c++'
+  s.ios.frameworks         = 'SystemConfiguration', 'UIKit'
+  s.osx.frameworks         = 'SystemConfiguration'
+  s.tvos.frameworks        = 'SystemConfiguration', 'UIKit'
+  s.library                = 'c++'
+  s.ios.deployment_target  = '10.0'
+  s.osx.deployment_target  = '10.12'
+  s.tvos.deployment_target = '10.0'
 
   # Skip leveldb framework if Firebase Database is included in any form 
   current_target_definition = Pod::Config.instance.podfile.send(:current_target_definition)
