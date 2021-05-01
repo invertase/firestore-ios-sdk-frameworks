@@ -41,14 +41,23 @@ Integrating is as simple as adding 1 line to your main target in your projects `
 
 
 ```ruby
-pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '6.26.0'
+pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '7.11.0'
 ```
 
-> **⚠️ Note:** where the tag says `6.26.0` this should be changed to the pod version of `Firebase/Firestore` that you or your dependencies are using - in the format `X.X.X`, for FlutterFire the version that is being used can be seen [here](https://github.com/FirebaseExtended/flutterfire/blob/master/packages/firebase_core/firebase_core/ios/firebase_sdk_version.rb), for React Native Firebase [here](https://github.com/invertase/react-native-firebase/blob/master/packages/app/package.json#L70). If no version is specified on your current `Firebase/Firestore` pod then you can omit `, :tag => '6.26.0'` from the line above and use the latest version on master.
+> **⚠️ Note:** where the tag says `7.11.0` this should be changed to the pod version of `Firebase/Firestore` that you or your dependencies are using - in the format `X.X.X`, for FlutterFire the version that is being used can be seen [here](https://github.com/FirebaseExtended/flutterfire/blob/master/packages/firebase_core/firebase_core/ios/firebase_sdk_version.rb), for React Native Firebase [here](https://github.com/invertase/react-native-firebase/blob/master/packages/app/package.json#L70). If no version is specified on your current `Firebase/Firestore` pod then you can omit `, :tag => '7.11.0'` from the line above and use the latest version on master.
 
 The first time you `pod install` a specific version, CocoaPods will remotely retrieve this git repository at the specifed tag and cache it locally for use as a source for the `FirebaseFirestore` pod.
 
 > **⚠️ Note:** if you were previously caching iOS builds on CI you may now find that when using precompiled binaries that caching is no longer required and it may actually slow down your build times by several minutes. 
+
+### Resolving 'leveldb' missing or duplicate symbol errors
+
+The "leveldb" framework is needed by FirebaseFirestore but may be included in other libraries, so it needs to be included or excluded correctly.
+The podspec here attempts to do that for you automatically by default, by detecting known situations where it should be excluded, but sometimes auto-detection fails.
+
+If your build fails due with duplicate 'leveldb' symbols, `pod FirebaseFirestore/WithoutLeveldb` as the pod name instead of `pod FirebaseFirestore`, reinstall pods and try rebuilding.
+
+If your build fails due with missing 'leveldb' symbols, `pod FirebaseFirestore/WithLeveldb` as the pod name instead of `pod FirebaseFirestore`, reinstall pods and try rebuilding.
 
 ### Supported Firebase iOS SDK versions
 
