@@ -7,6 +7,9 @@ on:
 
 jobs:
   latest_release:
+    # Don't run on private repo unless it is a PR.
+    if: (github.repository == 'invertase/firestore-ios-sdk-frameworks' && github.event_name == 'schedule') || github.event_name == 'pull_request'
+
     name: 'Latest Release'
     timeout-minutes: 10
     runs-on: macos-latest
