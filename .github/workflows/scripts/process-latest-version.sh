@@ -8,7 +8,14 @@ pod repo add-cdn trunk "https://cdn.cocoapods.org/"
 pod repo update
 pod spec which Firebase
 
-# Uncomment for testing purposes:
+if [ "${GITHUB_REPOSITORY}" != "" ] && [ "${GITHUB_REPOSITORY}" != "invertase/firestore-ios-sdk-frameworks" ]; then
+  # we're running in github CI environment, but not on main repo. Must be testing.
+  # The script will fail at the end but should do most processing, for testing/validation.
+  echo "Running in test mode on repo fork. Setting dummy token."
+  GITHUB_TOKEN="dummy token"
+fi
+
+# Uncomment for local testing purposes:
 #GITHUB_TOKEN=your-token-here
 #GITHUB_REPOSITORY=invertase/firestore-ios-sdk-frameworks
 
