@@ -245,7 +245,7 @@ git add .
 git commit -m "release: $LATEST_FIREBASE_VERSION"
 git tag -a "$LATEST_FIREBASE_VERSION" -m "$LATEST_FIREBASE_VERSION"
 git push origin master --follow-tags
-create_github_release "$LATEST_FIREBASE_VERSION" "\"[View Firebase iOS SDK Release](https://github.com/firebase/firebase-ios-sdk/releases/tag/$LATEST_FIREBASE_VERSION)\"" "$LATEST_FIREBASE_VERSION"
+create_github_release "$LATEST_FIREBASE_VERSION" "\"[View Firebase Apple SDK Release](https://github.com/firebase/firebase-ios-sdk/releases/tag/$LATEST_FIREBASE_VERSION)\"" "$LATEST_FIREBASE_VERSION"
 
 echo ""
 echo "Release $LATEST_FIREBASE_VERSION complete."
