@@ -14,17 +14,18 @@ LATEST_FIREBASE_PODSPEC=$(pod spec which Firebase)
 LATEST_FIREBASE_VERSION=$(python -c 'import json,sys; print(json.loads(sys.stdin.read())["version"])' <"$LATEST_FIREBASE_PODSPEC")
 echo "LATEST_FIREBASE_VERSION=$LATEST_FIREBASE_VERSION" >> "$GITHUB_ENV"
 
-if [ "${GITHUB_REPOSITORY}" != "" ] && [ "${GITHUB_REPOSITORY}" != "${FRAMEWORKS_GITHUB_REPOSITORY}" ]; then
-  # we're running in github CI environment, but not on main repo. Must be testing.
-  # The script will fail at the end but should do most processing, for testing/validation.
-  echo "Running in test mode on repo fork. Setting dummy token."
-  GITHUB_TOKEN="dummytoken"
-fi
-
 # Uncomment for local testing purposes:
 #GITHUB_TOKEN=your-token-here
 #GITHUB_REPOSITORY=invertase/firestore-ios-sdk-frameworks
 
+if [ "${GITHUB_REPOSITORY}" != "" ] && [ "${GITHUB_REPOSITORY}" != "${FRAMEWORKS_GITHUB_REPOSITORY}" ]; then
+  # we're running in github CI environment, but not on main repo. Must be testing.
+  # The script will fail at the end but should do most processing, for testing/validation.
+  echo "Running in test mode on repo fork. Setting dummy token."
+  GITHUB_TOKEN_CURL_HEADER=""
+else
+  GITHUB_TOKEN_CURL_HEADER="--header \"Authorization: Bearer $GITHUB_TOKEN\""
+fi
 
 # -------------------
 #      Functions
@@ -54,7 +55,7 @@ create_github_release() {
   body=$(printf "$body" "$release_tag" "$release_name" "$release_body")
   response=$(curl --request POST \
     --url https://api.github.com/repos/${GITHUB_REPOSITORY}/releases \
-    --header "Authorization: Bearer $GITHUB_TOKEN" \
+    "${GITHUB_TOKEN_CURL_HEADER}" \
     --header 'Content-Type: application/json' \
     --data "$body" \
     -s)
@@ -82,7 +83,7 @@ get_github_release_by_tag() {
 
   response=$(curl --request GET \
     --url "https://api.github.com/repos/${github_repository}/releases/tags/${release_tag}" \
-    --header "Authorization: Bearer $GITHUB_TOKEN" \
+    "${GITHUB_TOKEN_CURL_HEADER}" \
     --header 'Content-Type: application/json' \
     -s)
 
@@ -107,9 +108,9 @@ get_github_release_by_tag() {
 #    Main Script
 # -------------------
 
-# Ensure that the GITHUB_TOKEN env variable is defined
-if [[ -z "$GITHUB_TOKEN" ]]; then
-  echo "Missing required GITHUB_TOKEN env variable. Set this on the workflow action or on your local environment."
+# Ensure that the curl token header will work correctly
+if [[ -z "$GITHUB_TOKEN_CURL_HEADER" ]] && [ "${GITHUB_REPOSITORY}" == "${FRAMEWORKS_GITHUB_REPOSITORY}" ]; then
+  echo "Missing required GITHUB_TOKEN_CURL_HEADER variable. Was GITHUB_TOKEN set correctly on the workflow action or on your local environment?"
   exit 1
 fi
 
