@@ -8,21 +8,23 @@ pod repo add-cdn trunk "https://cdn.cocoapods.org/"
 pod repo update
 pod spec which Firebase
 
-if [ "${GITHUB_REPOSITORY}" != "" ] && [ "${GITHUB_REPOSITORY}" != "invertase/firestore-ios-sdk-frameworks" ]; then
+FIREBASE_GITHUB_REPOSITORY=firebase/firebase-ios-sdk
+FRAMEWORKS_GITHUB_REPOSITORY=invertase/firestore-ios-sdk-frameworks
+LATEST_FIREBASE_PODSPEC=$(pod spec which Firebase)
+LATEST_FIREBASE_VERSION=$(python -c 'import json,sys; print(json.loads(sys.stdin.read())["version"])' <"$LATEST_FIREBASE_PODSPEC")
+echo "LATEST_FIREBASE_VERSION=$LATEST_FIREBASE_VERSION" >> "$GITHUB_ENV"
+
+if [ "${GITHUB_REPOSITORY}" != "" ] && [ "${GITHUB_REPOSITORY}" != "${FRAMEWORKS_GITHUB_REPOSITORY}" ]; then
   # we're running in github CI environment, but not on main repo. Must be testing.
   # The script will fail at the end but should do most processing, for testing/validation.
   echo "Running in test mode on repo fork. Setting dummy token."
-  GITHUB_TOKEN="dummy token"
+  GITHUB_TOKEN="dummytoken"
 fi
 
 # Uncomment for local testing purposes:
 #GITHUB_TOKEN=your-token-here
 #GITHUB_REPOSITORY=invertase/firestore-ios-sdk-frameworks
 
-FIREBASE_GITHUB_REPOSITORY=firebase/firebase-ios-sdk
-LATEST_FIREBASE_PODSPEC=$(pod spec which Firebase)
-LATEST_FIREBASE_VERSION=$(python -c 'import json,sys; print(json.loads(sys.stdin.read())["version"])' <"$LATEST_FIREBASE_PODSPEC")
-echo "LATEST_FIREBASE_VERSION=$LATEST_FIREBASE_VERSION" >> "$GITHUB_ENV"
 
 # -------------------
 #      Functions
@@ -89,6 +91,10 @@ get_github_release_by_tag() {
     echo "$response"
   else
     response_message=$(echo "$response" | python -c "import sys, json; data = json.load(sys.stdin); print(data.get('message'))")
+    if [ "$response_message" == "Bad credentials" ] && [ "${GITHUB_REPOSITORY}" != "${FRAMEWORKS_GITHUB_REPOSITORY}" ]; then
+      # running in test mode on local fork, bad credentials are expected
+      return
+    fi
     if [ "$response_message" != "Not Found" ]; then
       echo "Failed to query release '$release_name' -> GitHub API request failed with response: $response_message"
       echo "$response"
