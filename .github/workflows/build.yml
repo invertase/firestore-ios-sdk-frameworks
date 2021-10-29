@@ -24,14 +24,17 @@ jobs:
           git config --global user.email 'Salakar@users.noreply.github.com'
           git remote set-url origin git@github.com:$GITHUB_REPOSITORY
       - uses: webfactory/ssh-agent@v0.5.3
+        if: ${{ github.repository == 'invertase/firestore-ios-sdk-frameworks' }}
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Set Github Token Securely
+        if: ${{ github.repository == 'invertase/firestore-ios-sdk-frameworks' }}
         run: echo "GITHUB_TOKEN=${{ secrets.GH_TOKEN }}" >> $GITHUB_ENV
       - name: Process Latest Version
         run: |
           ./.github/workflows/scripts/process-latest-version.sh
       - name: Report Failure Status
+        if: ${{ github.repository == 'invertase/firestore-ios-sdk-frameworks' }}
         uses: 8398a7/action-slack@v3
         with:
           status: custom
