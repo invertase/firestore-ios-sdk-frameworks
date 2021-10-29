@@ -44,7 +44,7 @@ create_github_release() {
 
   local body='{
 	  "tag_name": "%s",
-	  "target_commitish": "master",
+	  "target_commitish": "main",
 	  "name": "%s",
 	  "body": %s,
 	  "draft": false,
@@ -258,7 +258,7 @@ echo "$updated_readme_contents" >README.md
 git add .
 git commit -m "release: $LATEST_FIREBASE_VERSION"
 git tag -a "$LATEST_FIREBASE_VERSION" -m "$LATEST_FIREBASE_VERSION"
-git push origin master --follow-tags
+git push origin main --follow-tags
 create_github_release "$LATEST_FIREBASE_VERSION" "\"[View Firebase Apple SDK Release](https://github.com/firebase/firebase-ios-sdk/releases/tag/$LATEST_FIREBASE_VERSION)\"" "$LATEST_FIREBASE_VERSION"
 
 echo ""

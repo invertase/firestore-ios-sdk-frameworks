@@ -3,20 +3,20 @@ name: Build
 on:
   workflow_dispatch:
   schedule:
-   - cron:  '0 */6 * * *' # Every 6 hours
+    - cron: "0 */6 * * *" # Every 6 hours
 
 jobs:
   latest_release:
     # Don't run on private repo unless it is a PR or manual run
     if: (github.repository == 'invertase/firestore-ios-sdk-frameworks' && github.event_name == 'schedule') || github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request'
 
-    name: 'Latest Release'
+    name: "Latest Release"
     timeout-minutes: 10
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: 'master'
+          ref: "main"
           fetch-depth: 0
       - name: GIT Setup
         run: |
