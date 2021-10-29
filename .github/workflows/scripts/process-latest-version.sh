@@ -55,7 +55,7 @@ create_github_release() {
   body=$(printf "$body" "$release_tag" "$release_name" "$release_body")
   response=$(curl --request POST \
     --url https://api.github.com/repos/${GITHUB_REPOSITORY}/releases \
-    "${GITHUB_TOKEN_CURL_HEADER}" \
+    ${GITHUB_TOKEN_CURL_HEADER} \
     --header 'Content-Type: application/json' \
     --data "$body" \
     -s)
@@ -83,7 +83,7 @@ get_github_release_by_tag() {
 
   response=$(curl --request GET \
     --url "https://api.github.com/repos/${github_repository}/releases/tags/${release_tag}" \
-    "${GITHUB_TOKEN_CURL_HEADER}" \
+    ${GITHUB_TOKEN_CURL_HEADER} \
     --header 'Content-Type: application/json' \
     -s)
 
