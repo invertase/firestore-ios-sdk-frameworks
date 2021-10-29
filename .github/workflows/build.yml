@@ -34,7 +34,6 @@ jobs:
         run: |
           ./.github/workflows/scripts/process-latest-version.sh
       - name: Report Failure Status
-        if: ${{ github.repository == 'invertase/firestore-ios-sdk-frameworks' }}
         uses: 8398a7/action-slack@v3
         with:
           status: custom
