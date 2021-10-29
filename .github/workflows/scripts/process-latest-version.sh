@@ -136,15 +136,22 @@ echo "A frameworks tag for Firebase pod version $LATEST_FIREBASE_VERSION does no
 firebase_ios_repo_release=$(get_github_release_by_tag "$FIREBASE_GITHUB_REPOSITORY" "$LATEST_FIREBASE_VERSION")
 if [[ -z "$firebase_ios_repo_release" ]]; then
   echo "Warning: could not find a release with the tag $LATEST_FIREBASE_VERSION on the $FIREBASE_GITHUB_REPOSITORY repository."
+
   # On the off-chance they tagged it slightly differently (e.g. '7.3.0' vs 'CocoaPods-7.3.0' try the other one
   firebase_ios_repo_release=$(get_github_release_by_tag "$FIREBASE_GITHUB_REPOSITORY" "CocoaPods-$LATEST_FIREBASE_VERSION")
   if [[ -z "$firebase_ios_repo_release" ]]; then
-    echo "Error: backup check for tag CocoaPods-$LATEST_FIREBASE_VERSION on the $FIREBASE_GITHUB_REPOSITORY repository also failed."
-    exit 1
+    echo "Warning: backup check for tag CocoaPods-$LATEST_FIREBASE_VERSION on the $FIREBASE_GITHUB_REPOSITORY repository also failed."
+
+    # On the off-chance they tagged it slightly differently (e.g. 'v8.9.0' vs 'CocoaPods-8.9.0' try that
+    firebase_ios_repo_release=$(get_github_release_by_tag "$FIREBASE_GITHUB_REPOSITORY" "v$LATEST_FIREBASE_VERSION")
+    if [[ -z "$firebase_ios_repo_release" ]]; then
+      echo "Error: backup check for tag v$LATEST_FIREBASE_VERSION on the $FIREBASE_GITHUB_REPOSITORY repository also failed."
+      exit 1
+    fi
   fi
 fi
 
-# Check the release actually has any assets (sometimes the don't)
+# Check the release actually has any assets (sometimes they don't)
 if [[ "$firebase_ios_repo_release" != *".zip"* ]]; then
   echo ""
   echo ""
