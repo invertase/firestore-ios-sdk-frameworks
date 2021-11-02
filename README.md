@@ -36,7 +36,7 @@ After:     ~ 174s
 Integrating is as simple as adding 1 line to your main target in your projects `Podfile`. Any dependencies in your project that already consume the Firebase iOS SDK from pods will then automatically source Firestore from these precompiled binaries rather than from source.
 
  - For Flutter & React Native this file is usually located at `ios/Podfile`
- - For Futter the target is usually called `Runner` and can be added inside the `target 'Runner' do` block in your podfile.
+ - For Flutter the target is usually called `Runner` and can be added inside the `target 'Runner' do` block in your podfile.
  - For React Native this would be inside the target that has all your local `React-*` pods included.
 
 
