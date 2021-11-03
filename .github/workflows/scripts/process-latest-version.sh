@@ -58,7 +58,7 @@ create_github_release() {
     --url https://api.github.com/repos/${GITHUB_REPOSITORY}/releases \
     ${GITHUB_TOKEN_CURL_HEADER} \
     --header 'Content-Type: application/json' \
-    --data "$body" \
+    --data \'$body\' \
     -s)
 
   created=$(echo "$response" | python -c "import sys, json; data = json.load(sys.stdin); print(data.get('id', sys.stdin))")
