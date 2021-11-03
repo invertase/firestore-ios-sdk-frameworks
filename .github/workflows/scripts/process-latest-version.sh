@@ -61,6 +61,10 @@ create_github_release() {
     -s)
 
   created=$(echo "$response" | python -c "import sys, json; data = json.load(sys.stdin); print(data.get('id', sys.stdin))")
+
+  echo "Our response was: $response"
+  echo "'created' was: $created"
+
   if [ "$created" != "$response" ]; then
     echo "Release created successfully!"
   else
