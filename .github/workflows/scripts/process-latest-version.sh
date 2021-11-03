@@ -44,15 +44,16 @@ create_github_release() {
 
   local body='{
 	  "tag_name": "%s",
-	  "target_commitish": "main",
 	  "name": "%s",
-	  "body": %s,
-	  "draft": false,
-	  "prerelease": false
+	  "body": "%s"
 	}'
 
   # shellcheck disable=SC2059
   body=$(printf "$body" "$release_tag" "$release_name" "$release_body")
+  
+  echo "body prior to curl: $body"
+  echo "curl is curl --request POST --url https://api.github.com/repos/${GITHUB_REPOSITORY}/releases --header 'Content-Type: application/json' --data \"$body\" -s"
+
   response=$(curl --request POST \
     --url https://api.github.com/repos/${GITHUB_REPOSITORY}/releases \
     ${GITHUB_TOKEN_CURL_HEADER} \
@@ -263,7 +264,7 @@ git add .
 git commit -m "release: $LATEST_FIREBASE_VERSION"
 git tag -a "$LATEST_FIREBASE_VERSION" -m "$LATEST_FIREBASE_VERSION"
 git push origin main --follow-tags
-create_github_release "$LATEST_FIREBASE_VERSION" "\"[View Firebase Apple SDK Release](https://github.com/firebase/firebase-ios-sdk/releases/tag/$LATEST_FIREBASE_VERSION)\"" "$LATEST_FIREBASE_VERSION"
+create_github_release "$LATEST_FIREBASE_VERSION" "[View Firebase Apple SDK Release](https://github.com/firebase/firebase-ios-sdk/releases/tag/$LATEST_FIREBASE_VERSION)" "$LATEST_FIREBASE_VERSION"
 
 echo ""
 echo "Release $LATEST_FIREBASE_VERSION complete."
