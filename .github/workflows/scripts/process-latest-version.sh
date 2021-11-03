@@ -8,24 +8,14 @@ pod repo add-cdn trunk "https://cdn.cocoapods.org/"
 pod repo update
 pod spec which Firebase
 
-FIREBASE_GITHUB_REPOSITORY=firebase/firebase-ios-sdk
-FRAMEWORKS_GITHUB_REPOSITORY=invertase/firestore-ios-sdk-frameworks
-LATEST_FIREBASE_PODSPEC=$(pod spec which Firebase)
-LATEST_FIREBASE_VERSION=$(python -c 'import json,sys; print(json.loads(sys.stdin.read())["version"])' <"$LATEST_FIREBASE_PODSPEC")
-echo "LATEST_FIREBASE_VERSION=$LATEST_FIREBASE_VERSION" >> "$GITHUB_ENV"
-
-# Uncomment for local testing purposes:
+# Uncomment for testing purposes:
 #GITHUB_TOKEN=your-token-here
 #GITHUB_REPOSITORY=invertase/firestore-ios-sdk-frameworks
 
-if [ "${GITHUB_REPOSITORY}" != "" ] && [ "${GITHUB_REPOSITORY}" != "${FRAMEWORKS_GITHUB_REPOSITORY}" ]; then
-  # we're running in github CI environment, but not on main repo. Must be testing.
-  # The script will fail at the end but should do most processing, for testing/validation.
-  echo "Running in test mode on repo fork. Setting dummy token."
-  GITHUB_TOKEN_CURL_HEADER=""
-else
-  GITHUB_TOKEN_CURL_HEADER="--header \"Authorization: Bearer $GITHUB_TOKEN\""
-fi
+FIREBASE_GITHUB_REPOSITORY=firebase/firebase-ios-sdk
+LATEST_FIREBASE_PODSPEC=$(pod spec which Firebase)
+LATEST_FIREBASE_VERSION=$(python -c 'import json,sys; print(json.loads(sys.stdin.read())["version"])' <"$LATEST_FIREBASE_PODSPEC")
+echo "LATEST_FIREBASE_VERSION=$LATEST_FIREBASE_VERSION" >> "$GITHUB_ENV"
 
 # -------------------
 #      Functions
@@ -44,28 +34,23 @@ create_github_release() {
 
   local body='{
 	  "tag_name": "%s",
+	  "target_commitish": "master",
 	  "name": "%s",
-	  "body": "%s"
+	  "body": %s,
+	  "draft": false,
+	  "prerelease": false
 	}'
 
   # shellcheck disable=SC2059
   body=$(printf "$body" "$release_tag" "$release_name" "$release_body")
-  
-  echo "body prior to curl: $body"
-  echo "curl is curl --request POST --url https://api.github.com/repos/${GITHUB_REPOSITORY}/releases --header 'Content-Type: application/json' --data \"$body\" -s"
-
   response=$(curl --request POST \
     --url https://api.github.com/repos/${GITHUB_REPOSITORY}/releases \
-    ${GITHUB_TOKEN_CURL_HEADER} \
+    --header "Authorization: Bearer $GITHUB_TOKEN" \
     --header 'Content-Type: application/json' \
-    --data \'$body\' \
+    --data "$body" \
     -s)
 
   created=$(echo "$response" | python -c "import sys, json; data = json.load(sys.stdin); print(data.get('id', sys.stdin))")
-
-  echo "Our response was: $response"
-  echo "'created' was: $created"
-
   if [ "$created" != "$response" ]; then
     echo "Release created successfully!"
   else
@@ -88,7 +73,7 @@ get_github_release_by_tag() {
 
   response=$(curl --request GET \
     --url "https://api.github.com/repos/${github_repository}/releases/tags/${release_tag}" \
-    ${GITHUB_TOKEN_CURL_HEADER} \
+    --header "Authorization: Bearer $GITHUB_TOKEN" \
     --header 'Content-Type: application/json' \
     -s)
 
@@ -97,10 +82,6 @@ get_github_release_by_tag() {
     echo "$response"
   else
     response_message=$(echo "$response" | python -c "import sys, json; data = json.load(sys.stdin); print(data.get('message'))")
-    if [ "$response_message" == "Bad credentials" ] && [ "${GITHUB_REPOSITORY}" != "${FRAMEWORKS_GITHUB_REPOSITORY}" ]; then
-      # running in test mode on local fork, bad credentials are expected
-      return
-    fi
     if [ "$response_message" != "Not Found" ]; then
       echo "Failed to query release '$release_name' -> GitHub API request failed with response: $response_message"
       echo "$response"
@@ -113,9 +94,9 @@ get_github_release_by_tag() {
 #    Main Script
 # -------------------
 
-# Ensure that the curl token header will work correctly
-if [[ -z "$GITHUB_TOKEN_CURL_HEADER" ]] && [ "${GITHUB_REPOSITORY}" == "${FRAMEWORKS_GITHUB_REPOSITORY}" ]; then
-  echo "Missing required GITHUB_TOKEN_CURL_HEADER variable. Was GITHUB_TOKEN set correctly on the workflow action or on your local environment?"
+# Ensure that the GITHUB_TOKEN env variable is defined
+if [[ -z "$GITHUB_TOKEN" ]]; then
+  echo "Missing required GITHUB_TOKEN env variable. Set this on the workflow action or on your local environment."
   exit 1
 fi
 
@@ -155,7 +136,6 @@ echo "A frameworks tag for Firebase pod version $LATEST_FIREBASE_VERSION does no
 firebase_ios_repo_release=$(get_github_release_by_tag "$FIREBASE_GITHUB_REPOSITORY" "$LATEST_FIREBASE_VERSION")
 if [[ -z "$firebase_ios_repo_release" ]]; then
   echo "Warning: could not find a release with the tag $LATEST_FIREBASE_VERSION on the $FIREBASE_GITHUB_REPOSITORY repository."
-
   # On the off-chance they tagged it slightly differently (e.g. '7.3.0' vs 'CocoaPods-7.3.0' try the other one
   firebase_ios_repo_release=$(get_github_release_by_tag "$FIREBASE_GITHUB_REPOSITORY" "CocoaPods-$LATEST_FIREBASE_VERSION")
   if [[ -z "$firebase_ios_repo_release" ]]; then
@@ -170,7 +150,7 @@ if [[ -z "$firebase_ios_repo_release" ]]; then
   fi
 fi
 
-# Check the release actually has any assets (sometimes they don't)
+# Check the release actually has any assets (sometimes the don't)
 if [[ "$firebase_ios_repo_release" != *".zip"* ]]; then
   echo ""
   echo ""
@@ -263,8 +243,8 @@ echo "$updated_readme_contents" >README.md
 git add .
 git commit -m "release: $LATEST_FIREBASE_VERSION"
 git tag -a "$LATEST_FIREBASE_VERSION" -m "$LATEST_FIREBASE_VERSION"
-git push origin main --follow-tags
-create_github_release "$LATEST_FIREBASE_VERSION" "[View Firebase Apple SDK Release](https://github.com/firebase/firebase-ios-sdk/releases/tag/$LATEST_FIREBASE_VERSION)" "$LATEST_FIREBASE_VERSION"
+git push origin master --follow-tags
+create_github_release "$LATEST_FIREBASE_VERSION" "\"[View Firebase iOS SDK Release](https://github.com/firebase/firebase-ios-sdk/releases/tag/$LATEST_FIREBASE_VERSION)\"" "$LATEST_FIREBASE_VERSION"
 
 echo ""
 echo "Release $LATEST_FIREBASE_VERSION complete."
