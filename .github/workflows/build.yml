@@ -12,7 +12,7 @@ jobs:
 
     name: "Latest Release"
     timeout-minutes: 10
-    runs-on: macos-latest
+    runs-on: macos-12
     steps:
       - uses: actions/checkout@v2
       - name: GIT Setup

@@ -14,7 +14,7 @@ pod spec which Firebase
 
 FIREBASE_GITHUB_REPOSITORY=firebase/firebase-ios-sdk
 LATEST_FIREBASE_PODSPEC=$(pod spec which Firebase)
-LATEST_FIREBASE_VERSION=$(python -c 'import json,sys; print(json.loads(sys.stdin.read())["version"])' <"$LATEST_FIREBASE_PODSPEC")
+LATEST_FIREBASE_VERSION=$(python3 -c 'import json,sys; print(json.loads(sys.stdin.read())["version"])' <"$LATEST_FIREBASE_PODSPEC")
 echo "LATEST_FIREBASE_VERSION=$LATEST_FIREBASE_VERSION" >> "$GITHUB_ENV"
 
 # -------------------
@@ -50,7 +50,7 @@ create_github_release() {
     --data "$body" \
     -s)
 
-  created=$(echo "$response" | python -c "import sys, json; data = json.load(sys.stdin); print(data.get('id', sys.stdin))")
+  created=$(echo "$response" | python3 -c "import sys, json; data = json.load(sys.stdin); print(data.get('id', sys.stdin))")
   if [ "$created" != "$response" ]; then
     echo "Release created successfully!"
   else
@@ -77,11 +77,11 @@ get_github_release_by_tag() {
     --header 'Content-Type: application/json' \
     -s)
 
-  release_id=$(echo "$response" | python -c "import sys, json; data = json.load(sys.stdin); print(data.get('id', 'Not Found'))")
+  release_id=$(echo "$response" | python3 -c "import sys, json; data = json.load(sys.stdin); print(data.get('id', 'Not Found'))")
   if [ "$release_id" != "Not Found" ]; then
     echo "$response"
   else
-    response_message=$(echo "$response" | python -c "import sys, json; data = json.load(sys.stdin); print(data.get('message'))")
+    response_message=$(echo "$response" | python3 -c "import sys, json; data = json.load(sys.stdin); print(data.get('message'))")
     if [ "$response_message" != "Not Found" ]; then
       echo "Failed to query release '$release_name' -> GitHub API request failed with response: $response_message"
       echo "$response"
@@ -115,7 +115,7 @@ if [[ -n "$framework_repo_release" ]]; then
   exit 0
 fi
 
-firebase_firestore_version=$(python -c 'import json,sys; print(next((x for x in json.loads(sys.stdin.read())["subspecs"] if x["name"] == "Firestore"), None)["dependencies"]["FirebaseFirestore"][0])' <"$LATEST_FIREBASE_PODSPEC")
+firebase_firestore_version=$(python3 -c 'import json,sys; print(next((x for x in json.loads(sys.stdin.read())["subspecs"] if x["name"] == "Firestore"), None)["dependencies"]["FirebaseFirestore"][0])' <"$LATEST_FIREBASE_PODSPEC")
 # Sanity check we actually got the subspec version value as it should look something like `~> 1.15.0`
 if [[ "$firebase_firestore_version" != '~>'* ]]; then
   echo ""
