@@ -160,26 +160,8 @@ if [[ "$firebase_ios_repo_release" != *".zip"* ]]; then
   exit 1
 fi
 
-firebase_release_archive=$(echo "$firebase_ios_repo_release" | python -c 'import json,sys; print(json.loads(sys.stdin.read())["assets"][0]["browser_download_url"])')
-echo "Found archive asset, extracting direct download url from url $firebase_release_archive ..."
-
-redirect_url_html=$(curl -sS --fail "$firebase_release_archive")
-redirect_url=$(echo "$redirect_url_html" | cut -d'"' -f 2)
-if [[ "$redirect_url" != 'https://'* ]]; then
-  echo ""
-  echo "Redirect response HTML:"
-  echo "$redirect_url_html"
-  echo ""
-  echo "Attempted extraction URL:"
-  echo "$redirect_url"
-  echo ""
-  echo "Error: could not extract download url from GitHub asset redirect response."
-  exit 1
-fi
-
-# A quick and dirty URL unescape
-# shellcheck disable=SC2001
-redirect_url=$(echo "$redirect_url" | sed 's/\&amp\;/\&/g')
+firebase_release_archive=$(echo "$firebase_ios_repo_release" | python3 -c 'import json,sys; print(json.loads(sys.stdin.read())["assets"][0]["browser_download_url"])')
+echo "Found archive asset, downloading from url $firebase_release_archive ..."
 
 # Create .tmp directory to download and extract binaries from
 mkdir -p .tmp
@@ -189,13 +171,7 @@ mkdir -p .tmp
 rm -rf .tmp/Firebase
 
 # Download the zip
-echo ""
-echo "Extracted asset redirect URL:"
-echo "$redirect_url"
-echo ""
-echo "Downloading asset..."
-echo ""
-curl --fail "$redirect_url" > .tmp/Firebase.zip
+curl --fail --location "$firebase_release_archive" > .tmp/Firebase.zip
 
 echo "Download successful, extracting archive..."
 unzip -q .tmp/Firebase.zip 'Firebase/FirebaseFirestore/*' -d .tmp/
