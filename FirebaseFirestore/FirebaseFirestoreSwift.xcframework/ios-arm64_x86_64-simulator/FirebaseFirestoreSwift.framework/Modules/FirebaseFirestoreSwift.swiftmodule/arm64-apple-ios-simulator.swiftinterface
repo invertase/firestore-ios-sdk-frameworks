@@ -1,0 +1,249 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.6 (swiftlang-5.6.0.323.62 clang-1316.0.20.8)
+// swift-module-flags: -target arm64-apple-ios11.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name FirebaseFirestoreSwift
+import FirebaseFirestore
+@_exported import FirebaseFirestoreSwift
+import Foundation
+import Swift
+import SwiftUI
+import _Concurrency
+public enum FirestoreDecodingError : Swift.Error {
+  case decodingIsNotSupported(Swift.String)
+  case fieldNameConflict(Swift.String)
+}
+public enum FirestoreEncodingError : Swift.Error {
+  case encodingIsNotSupported(Swift.String)
+}
+@available(iOS 13, tvOS 13, macOS 10.15, macCatalyst 13, watchOS 7, *)
+extension FirebaseFirestore.CollectionReference {
+  
+  #if compiler(>=5.3) && $AsyncAwait
+  public func addDocument(data: [Swift.String : Any]) async throws -> FirebaseFirestore.DocumentReference
+  #endif
+
+}
+extension FirebaseFirestore.CollectionReference {
+  public func addDocument<T>(from value: T, encoder: FirebaseFirestore.Firestore.Encoder = Firestore.Encoder(), completion: ((Swift.Error?) -> Swift.Void)? = nil) throws -> FirebaseFirestore.DocumentReference where T : Swift.Encodable
+}
+public protocol DocumentIDWrappable {
+  static func wrap(_ documentReference: FirebaseFirestore.DocumentReference) throws -> Self
+}
+extension Swift.String : FirebaseFirestoreSwift.DocumentIDWrappable {
+  public static func wrap(_ documentReference: FirebaseFirestore.DocumentReference) throws -> Swift.String
+}
+extension FirebaseFirestore.DocumentReference : FirebaseFirestoreSwift.DocumentIDWrappable {
+  public static func wrap(_ documentReference: FirebaseFirestore.DocumentReference) throws -> Self
+}
+@propertyWrapper public struct DocumentID<Value> : Swift.Codable where Value : FirebaseFirestoreSwift.DocumentIDWrappable, Value : Swift.Decodable, Value : Swift.Encodable {
+  public init(wrappedValue value: Value?)
+  public var wrappedValue: Value? {
+    get
+    set
+  }
+  public init(from documentReference: FirebaseFirestore.DocumentReference?) throws
+  public init(from decoder: Swift.Decoder) throws
+  public func encode(to encoder: Swift.Encoder) throws
+}
+extension FirebaseFirestoreSwift.DocumentID : Swift.Equatable where Value : Swift.Equatable {
+  public static func == (a: FirebaseFirestoreSwift.DocumentID<Value>, b: FirebaseFirestoreSwift.DocumentID<Value>) -> Swift.Bool
+}
+extension FirebaseFirestoreSwift.DocumentID : Swift.Hashable where Value : Swift.Hashable {
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+extension FirebaseFirestore.DocumentReference {
+  public func getDocument<T>(as type: T.Type, with serverTimestampBehavior: FirebaseFirestore.ServerTimestampBehavior = .none, decoder: FirebaseFirestore.Firestore.Decoder = .init(), completion: @escaping (Swift.Result<T, Swift.Error>) -> Swift.Void) where T : Swift.Decodable
+  
+  #if compiler(>=5.3) && $AsyncAwait
+  @available(iOS 13, tvOS 13, macOS 10.15, macCatalyst 13, watchOS 7, *)
+  public func getDocument<T>(as type: T.Type, with serverTimestampBehavior: FirebaseFirestore.ServerTimestampBehavior = .none, decoder: FirebaseFirestore.Firestore.Decoder = .init()) async throws -> T where T : Swift.Decodable
+  #endif
+
+}
+extension FirebaseFirestore.DocumentReference {
+  public func setData<T>(from value: T, encoder: FirebaseFirestore.Firestore.Encoder = Firestore.Encoder(), completion: ((Swift.Error?) -> Swift.Void)? = nil) throws where T : Swift.Encodable
+  public func setData<T>(from value: T, merge: Swift.Bool, encoder: FirebaseFirestore.Firestore.Encoder = Firestore.Encoder(), completion: ((Swift.Error?) -> Swift.Void)? = nil) throws where T : Swift.Encodable
+  public func setData<T>(from value: T, mergeFields: [Any], encoder: FirebaseFirestore.Firestore.Encoder = Firestore.Encoder(), completion: ((Swift.Error?) -> Swift.Void)? = nil) throws where T : Swift.Encodable
+}
+extension FirebaseFirestore.DocumentSnapshot {
+  public func data<T>(as type: T.Type, with serverTimestampBehavior: FirebaseFirestore.ServerTimestampBehavior = .none, decoder: FirebaseFirestore.Firestore.Decoder = .init()) throws -> T where T : Swift.Decodable
+}
+@propertyWrapper public struct ExplicitNull<Value> {
+  public init(wrappedValue value: Value?)
+  public var wrappedValue: Value? {
+    get
+    set
+  }
+}
+extension FirebaseFirestoreSwift.ExplicitNull : Swift.Equatable where Value : Swift.Equatable {
+  public static func == (a: FirebaseFirestoreSwift.ExplicitNull<Value>, b: FirebaseFirestoreSwift.ExplicitNull<Value>) -> Swift.Bool
+}
+extension FirebaseFirestoreSwift.ExplicitNull : Swift.Hashable where Value : Swift.Hashable {
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+extension FirebaseFirestoreSwift.ExplicitNull : Swift.Encodable where Value : Swift.Encodable {
+  public func encode(to encoder: Swift.Encoder) throws
+}
+extension FirebaseFirestoreSwift.ExplicitNull : Swift.Decodable where Value : Swift.Decodable {
+  public init(from decoder: Swift.Decoder) throws
+}
+extension FirebaseFirestore.FieldValue : Swift.Encodable {
+  public func encode(to encoder: Swift.Encoder) throws
+}
+@available(iOS 13, tvOS 13, macOS 10.15, macCatalyst 13, watchOS 7, *)
+extension FirebaseFirestore.Firestore {
+  
+  #if compiler(>=5.3) && $AsyncAwait
+  public func loadBundle(_ bundleData: Foundation.Data) async throws -> FirebaseFirestore.LoadBundleTaskProgress
+  #endif
+
+  
+  #if compiler(>=5.3) && $AsyncAwait
+  public func loadBundle(_ bundleStream: Foundation.InputStream) async throws -> FirebaseFirestore.LoadBundleTaskProgress
+  #endif
+
+  
+  #if compiler(>=5.3) && $AsyncAwait
+  public func runTransaction(_ updateBlock: @escaping (FirebaseFirestore.Transaction, Foundation.NSErrorPointer) -> Any?) async throws -> Any?
+  #endif
+
+}
+extension FirebaseFirestore.Firestore {
+  public struct Decoder {
+    public init()
+    public func decode<T>(_: T.Type, from container: Any, in document: FirebaseFirestore.DocumentReference? = nil) throws -> T where T : Swift.Decodable
+  }
+}
+extension FirebaseFirestore.Firestore {
+  public struct Encoder {
+    public init()
+    public func encode<T>(_ value: T) throws -> [Swift.String : Any] where T : Swift.Encodable
+  }
+}
+public enum DecodingFailureStrategy {
+  case ignore
+  case raise
+  public static func == (a: FirebaseFirestoreSwift.DecodingFailureStrategy, b: FirebaseFirestoreSwift.DecodingFailureStrategy) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+@available(iOS 14.0, macOS 11.0, macCatalyst 14.0, tvOS 14.0, watchOS 7.0, *)
+@propertyWrapper @_Concurrency.MainActor(unsafe) public struct FirestoreQuery<T> : SwiftUI.DynamicProperty {
+  public struct Configuration {
+    public var path: Swift.String
+    public var predicates: [FirebaseFirestoreSwift.QueryPredicate]
+    public var decodingFailureStrategy: FirebaseFirestoreSwift.DecodingFailureStrategy
+    public var error: Swift.Error?
+  }
+  @_Concurrency.MainActor(unsafe) public var wrappedValue: T {
+    get
+  }
+  @_Concurrency.MainActor(unsafe) public var projectedValue: FirebaseFirestoreSwift.FirestoreQuery<T>.Configuration {
+    get
+    nonmutating set
+  }
+  @_Concurrency.MainActor(unsafe) public init<U>(collectionPath: Swift.String, predicates: [FirebaseFirestoreSwift.QueryPredicate] = [], decodingFailureStrategy: FirebaseFirestoreSwift.DecodingFailureStrategy = .raise) where T == [U], U : Swift.Decodable
+  @_Concurrency.MainActor(unsafe) public init<U>(collectionPath: Swift.String, predicates: [FirebaseFirestoreSwift.QueryPredicate] = [], decodingFailureStrategy: FirebaseFirestoreSwift.DecodingFailureStrategy = .raise) where T == Swift.Result<[U], Swift.Error>, U : Swift.Decodable
+}
+public enum QueryPredicate {
+  case isEqualTo(_: Swift.String, _: Any)
+  case isIn(_: Swift.String, _: [Any])
+  case isNotIn(_: Swift.String, _: [Any])
+  case arrayContains(_: Swift.String, _: Any)
+  case arrayContainsAny(_: Swift.String, _: [Any])
+  case isLessThan(_: Swift.String, _: Any)
+  case isGreaterThan(_: Swift.String, _: Any)
+  case isLessThanOrEqualTo(_: Swift.String, _: Any)
+  case isGreaterThanOrEqualTo(_: Swift.String, _: Any)
+  case orderBy(_: Swift.String, _: Swift.Bool)
+  case limitTo(_: Swift.Int)
+  case limitToLast(_: Swift.Int)
+  public static func whereField(_ field: Swift.String, isEqualTo value: Any) -> FirebaseFirestoreSwift.QueryPredicate
+  public static func whereField(_ field: Swift.String, isIn values: [Any]) -> FirebaseFirestoreSwift.QueryPredicate
+  public static func whereField(_ field: Swift.String, isNotIn values: [Any]) -> FirebaseFirestoreSwift.QueryPredicate
+  public static func whereField(_ field: Swift.String, arrayContains value: Any) -> FirebaseFirestoreSwift.QueryPredicate
+  public static func whereField(_ field: Swift.String, arrayContainsAny values: [Any]) -> FirebaseFirestoreSwift.QueryPredicate
+  public static func whereField(_ field: Swift.String, isLessThan value: Any) -> FirebaseFirestoreSwift.QueryPredicate
+  public static func whereField(_ field: Swift.String, isGreaterThan value: Any) -> FirebaseFirestoreSwift.QueryPredicate
+  public static func whereField(_ field: Swift.String, isLessThanOrEqualTo value: Any) -> FirebaseFirestoreSwift.QueryPredicate
+  public static func whereField(_ field: Swift.String, isGreaterThanOrEqualTo value: Any) -> FirebaseFirestoreSwift.QueryPredicate
+  public static func order(by field: Swift.String, descending value: Swift.Bool = false) -> FirebaseFirestoreSwift.QueryPredicate
+  public static func limit(to value: Swift.Int) -> FirebaseFirestoreSwift.QueryPredicate
+  public static func limit(toLast value: Swift.Int) -> FirebaseFirestoreSwift.QueryPredicate
+  public static func `where`(_ name: Swift.String, isEqualTo value: Any) -> FirebaseFirestoreSwift.QueryPredicate
+  public static func `where`(_ name: Swift.String, isIn values: [Any]) -> FirebaseFirestoreSwift.QueryPredicate
+  public static func `where`(_ name: Swift.String, isNotIn values: [Any]) -> FirebaseFirestoreSwift.QueryPredicate
+  public static func `where`(field name: Swift.String, arrayContains value: Any) -> FirebaseFirestoreSwift.QueryPredicate
+  public static func `where`(_ name: Swift.String, arrayContainsAny values: [Any]) -> FirebaseFirestoreSwift.QueryPredicate
+  public static func `where`(_ name: Swift.String, isLessThan value: Any) -> FirebaseFirestoreSwift.QueryPredicate
+  public static func `where`(_ name: Swift.String, isGreaterThan value: Any) -> FirebaseFirestoreSwift.QueryPredicate
+  public static func `where`(_ name: Swift.String, isLessThanOrEqualTo value: Any) -> FirebaseFirestoreSwift.QueryPredicate
+  public static func `where`(_ name: Swift.String, isGreaterThanOrEqualTo value: Any) -> FirebaseFirestoreSwift.QueryPredicate
+}
+public protocol ServerTimestampWrappable {
+  static func wrap(_ timestamp: FirebaseFirestore.Timestamp) throws -> Self
+  static func unwrap(_ value: Self) throws -> FirebaseFirestore.Timestamp
+}
+extension Foundation.Date : FirebaseFirestoreSwift.ServerTimestampWrappable {
+  public static func wrap(_ timestamp: FirebaseFirestore.Timestamp) throws -> Foundation.Date
+  public static func unwrap(_ value: Foundation.Date) throws -> FirebaseFirestore.Timestamp
+}
+extension FirebaseFirestore.Timestamp : FirebaseFirestoreSwift.ServerTimestampWrappable {
+  public static func wrap(_ timestamp: FirebaseFirestore.Timestamp) throws -> Self
+  public static func unwrap(_ value: FirebaseFirestore.Timestamp) throws -> FirebaseFirestore.Timestamp
+}
+@propertyWrapper public struct ServerTimestamp<Value> : Swift.Codable where Value : FirebaseFirestoreSwift.ServerTimestampWrappable, Value : Swift.Decodable, Value : Swift.Encodable {
+  public init(wrappedValue value: Value?)
+  public var wrappedValue: Value? {
+    get
+    set
+  }
+  public init(from decoder: Swift.Decoder) throws
+  public func encode(to encoder: Swift.Encoder) throws
+}
+extension FirebaseFirestoreSwift.ServerTimestamp : Swift.Equatable where Value : Swift.Equatable {
+  public static func == (a: FirebaseFirestoreSwift.ServerTimestamp<Value>, b: FirebaseFirestoreSwift.ServerTimestamp<Value>) -> Swift.Bool
+}
+extension FirebaseFirestoreSwift.ServerTimestamp : Swift.Hashable where Value : Swift.Hashable {
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+extension FirebaseFirestore.Transaction {
+  @discardableResult
+  public func setData<T>(from value: T, forDocument doc: FirebaseFirestore.DocumentReference, encoder: FirebaseFirestore.Firestore.Encoder = Firestore
+                               .Encoder()) throws -> FirebaseFirestore.Transaction where T : Swift.Encodable
+  @discardableResult
+  public func setData<T>(from value: T, forDocument doc: FirebaseFirestore.DocumentReference, merge: Swift.Bool, encoder: FirebaseFirestore.Firestore.Encoder = Firestore
+                               .Encoder()) throws -> FirebaseFirestore.Transaction where T : Swift.Encodable
+  @discardableResult
+  public func setData<T>(from value: T, forDocument doc: FirebaseFirestore.DocumentReference, mergeFields: [Any], encoder: FirebaseFirestore.Firestore.Encoder = Firestore
+                               .Encoder()) throws -> FirebaseFirestore.Transaction where T : Swift.Encodable
+}
+extension FirebaseFirestore.WriteBatch {
+  @discardableResult
+  public func setData<T>(from value: T, forDocument doc: FirebaseFirestore.DocumentReference, encoder: FirebaseFirestore.Firestore.Encoder = Firestore
+                               .Encoder()) throws -> FirebaseFirestore.WriteBatch where T : Swift.Encodable
+  @discardableResult
+  public func setData<T>(from value: T, forDocument doc: FirebaseFirestore.DocumentReference, merge: Swift.Bool, encoder: FirebaseFirestore.Firestore.Encoder = Firestore
+                               .Encoder()) throws -> FirebaseFirestore.WriteBatch where T : Swift.Encodable
+  @discardableResult
+  public func setData<T>(from value: T, forDocument doc: FirebaseFirestore.DocumentReference, mergeFields: [Any], encoder: FirebaseFirestore.Firestore.Encoder = Firestore
+                               .Encoder()) throws -> FirebaseFirestore.WriteBatch where T : Swift.Encodable
+}
+extension FirebaseFirestore.DocumentReference : Swift.Encodable {}
+extension FirebaseFirestore.DocumentReference : Swift.Decodable {}
+extension FirebaseFirestoreSwift.DecodingFailureStrategy : Swift.Equatable {}
+extension FirebaseFirestoreSwift.DecodingFailureStrategy : Swift.Hashable {}
+extension FirebaseFirestore.GeoPoint : Swift.Encodable {}
+extension FirebaseFirestore.GeoPoint : Swift.Decodable {}
+extension FirebaseFirestore.Timestamp : Swift.Encodable {}
+extension FirebaseFirestore.Timestamp : Swift.Decodable {}

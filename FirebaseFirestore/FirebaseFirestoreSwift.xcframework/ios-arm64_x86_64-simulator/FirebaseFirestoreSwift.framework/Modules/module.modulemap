@@ -1,0 +1,11 @@
+framework module FirebaseFirestoreSwift {
+  umbrella header "FirebaseFirestoreSwift-umbrella.h"
+
+  export *
+  module * { export * }
+}
+
+module FirebaseFirestoreSwift.Swift {
+    header "FirebaseFirestoreSwift-Swift.h"
+    requires objc
+}

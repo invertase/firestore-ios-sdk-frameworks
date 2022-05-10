@@ -1,5 +1,5 @@
 framework module FirebaseFirestore {
-umbrella header "FirebaseFirestore.h"
+umbrella header "FirebaseFirestore-umbrella.h"
 export *
 module * { export * }
   link framework "AppKit"
