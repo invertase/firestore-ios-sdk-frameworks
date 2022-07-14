@@ -6,6 +6,33 @@
 	<array>
 		<dict>
 			<key>LibraryIdentifier</key>
+			<string>ios-arm64_x86_64-simulator</string>
+			<key>LibraryPath</key>
+			<string>FirebaseFirestoreSwift.framework</string>
+			<key>SupportedArchitectures</key>
+			<array>
+				<string>arm64</string>
+				<string>x86_64</string>
+			</array>
+			<key>SupportedPlatform</key>
+			<string>ios</string>
+			<key>SupportedPlatformVariant</key>
+			<string>simulator</string>
+		</dict>
+		<dict>
+			<key>LibraryIdentifier</key>
+			<string>tvos-arm64</string>
+			<key>LibraryPath</key>
+			<string>FirebaseFirestoreSwift.framework</string>
+			<key>SupportedArchitectures</key>
+			<array>
+				<string>arm64</string>
+			</array>
+			<key>SupportedPlatform</key>
+			<string>tvos</string>
+		</dict>
+		<dict>
+			<key>LibraryIdentifier</key>
 			<string>ios-arm64</string>
 			<key>LibraryPath</key>
 			<string>FirebaseFirestoreSwift.framework</string>
@@ -31,21 +58,6 @@
 		</dict>
 		<dict>
 			<key>LibraryIdentifier</key>
-			<string>tvos-arm64_x86_64-simulator</string>
-			<key>LibraryPath</key>
-			<string>FirebaseFirestoreSwift.framework</string>
-			<key>SupportedArchitectures</key>
-			<array>
-				<string>arm64</string>
-				<string>x86_64</string>
-			</array>
-			<key>SupportedPlatform</key>
-			<string>tvos</string>
-			<key>SupportedPlatformVariant</key>
-			<string>simulator</string>
-		</dict>
-		<dict>
-			<key>LibraryIdentifier</key>
 			<string>ios-arm64_x86_64-maccatalyst</string>
 			<key>LibraryPath</key>
 			<string>FirebaseFirestoreSwift.framework</string>
@@ -61,19 +73,7 @@
 		</dict>
 		<dict>
 			<key>LibraryIdentifier</key>
-			<string>tvos-arm64</string>
-			<key>LibraryPath</key>
-			<string>FirebaseFirestoreSwift.framework</string>
-			<key>SupportedArchitectures</key>
-			<array>
-				<string>arm64</string>
-			</array>
-			<key>SupportedPlatform</key>
-			<string>tvos</string>
-		</dict>
-		<dict>
-			<key>LibraryIdentifier</key>
-			<string>ios-arm64_x86_64-simulator</string>
+			<string>tvos-arm64_x86_64-simulator</string>
 			<key>LibraryPath</key>
 			<string>FirebaseFirestoreSwift.framework</string>
 			<key>SupportedArchitectures</key>
@@ -82,7 +82,7 @@
 				<string>x86_64</string>
 			</array>
 			<key>SupportedPlatform</key>
-			<string>ios</string>
+			<string>tvos</string>
 			<key>SupportedPlatformVariant</key>
 			<string>simulator</string>
 		</dict>
