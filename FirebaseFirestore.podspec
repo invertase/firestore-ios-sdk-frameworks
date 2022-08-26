@@ -23,9 +23,9 @@ Pod::Spec.new do |s|
   s.osx.frameworks         = 'SystemConfiguration'
   s.tvos.frameworks        = 'SystemConfiguration', 'UIKit'
   s.library                = 'c++'
-  s.ios.deployment_target  = '10.0'
-  s.osx.deployment_target  = '10.12'
-  s.tvos.deployment_target = '10.0'
+  s.ios.deployment_target  = '11.0'
+  s.osx.deployment_target  = '10.13'
+  s.tvos.deployment_target = '11.0'
 
   s.default_subspecs       = "AutodetectLeveldb"
 
