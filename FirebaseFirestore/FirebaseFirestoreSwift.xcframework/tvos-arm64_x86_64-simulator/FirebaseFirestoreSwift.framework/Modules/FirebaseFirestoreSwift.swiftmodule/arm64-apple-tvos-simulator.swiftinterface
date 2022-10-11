@@ -1,8 +1,9 @@
 // swift-interface-format-version: 1.0
 // swift-compiler-version: Apple Swift version 5.6 (swiftlang-5.6.0.323.62 clang-1316.0.20.8)
-// swift-module-flags: -target arm64-apple-tvos11.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name FirebaseFirestoreSwift
+// swift-module-flags: -target arm64-apple-tvos12.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name FirebaseFirestoreSwift
 import FirebaseFirestore
 @_exported import FirebaseFirestoreSwift
+import FirebaseSharedSwift
 import Foundation
 import Swift
 import SwiftUI
@@ -34,13 +35,14 @@ extension Swift.String : FirebaseFirestoreSwift.DocumentIDWrappable {
 extension FirebaseFirestore.DocumentReference : FirebaseFirestoreSwift.DocumentIDWrappable {
   public static func wrap(_ documentReference: FirebaseFirestore.DocumentReference) throws -> Self
 }
-@propertyWrapper public struct DocumentID<Value> : Swift.Codable where Value : FirebaseFirestoreSwift.DocumentIDWrappable, Value : Swift.Decodable, Value : Swift.Encodable {
+@propertyWrapper public struct DocumentID<Value> : FirebaseSharedSwift.StructureCodingUncodedUnkeyed where Value : FirebaseFirestoreSwift.DocumentIDWrappable, Value : Swift.Decodable, Value : Swift.Encodable {
   public init(wrappedValue value: Value?)
   public var wrappedValue: Value? {
     get
     set
   }
-  public init(from documentReference: FirebaseFirestore.DocumentReference?) throws
+}
+extension FirebaseFirestoreSwift.DocumentID : Swift.Codable {
   public init(from decoder: Swift.Decoder) throws
   public func encode(to encoder: Swift.Encoder) throws
 }
@@ -69,6 +71,29 @@ extension FirebaseFirestore.DocumentReference {
 }
 extension FirebaseFirestore.DocumentSnapshot {
   public func data<T>(as type: T.Type, with serverTimestampBehavior: FirebaseFirestore.ServerTimestampBehavior = .none, decoder: FirebaseFirestore.Firestore.Decoder = .init()) throws -> T where T : Swift.Decodable
+}
+extension FirebaseFirestore.Firestore {
+  public class Encoder {
+    public var dateEncodingStrategy: FirebaseSharedSwift.FirebaseDataEncoder.DateEncodingStrategy
+    public var dataEncodingStrategy: FirebaseSharedSwift.FirebaseDataEncoder.DataEncodingStrategy
+    public var nonConformingFloatEncodingStrategy: FirebaseSharedSwift.FirebaseDataEncoder.NonConformingFloatEncodingStrategy
+    public var keyEncodingStrategy: FirebaseSharedSwift.FirebaseDataEncoder.KeyEncodingStrategy
+    public var userInfo: [Swift.CodingUserInfoKey : Any]
+    public func encode<T>(_ value: T) throws -> [Swift.String : Any] where T : Swift.Encodable
+    public init()
+    @objc deinit
+  }
+  public class Decoder {
+    public var dateDecodingStrategy: FirebaseSharedSwift.FirebaseDataDecoder.DateDecodingStrategy
+    public var dataDecodingStrategy: FirebaseSharedSwift.FirebaseDataDecoder.DataDecodingStrategy
+    public var nonConformingFloatDecodingStrategy: FirebaseSharedSwift.FirebaseDataDecoder.NonConformingFloatDecodingStrategy
+    public var keyDecodingStrategy: FirebaseSharedSwift.FirebaseDataDecoder.KeyDecodingStrategy
+    public var userInfo: [Swift.CodingUserInfoKey : Any]
+    public func decode<T>(_ t: T.Type, from data: Any) throws -> T where T : Swift.Decodable
+    public func decode<T>(_ t: T.Type, from data: Any, in reference: FirebaseFirestore.DocumentReference?) throws -> T where T : Swift.Decodable
+    public init()
+    @objc deinit
+  }
 }
 @propertyWrapper public struct ExplicitNull<Value> {
   public init(wrappedValue value: Value?)
@@ -112,18 +137,6 @@ extension FirebaseFirestore.Firestore {
   public func runTransaction(_ updateBlock: @escaping (FirebaseFirestore.Transaction, Foundation.NSErrorPointer) -> Any?) async throws -> Any?
   #endif
 
-}
-extension FirebaseFirestore.Firestore {
-  public struct Decoder {
-    public init()
-    public func decode<T>(_: T.Type, from container: Any, in document: FirebaseFirestore.DocumentReference? = nil) throws -> T where T : Swift.Decodable
-  }
-}
-extension FirebaseFirestore.Firestore {
-  public struct Encoder {
-    public init()
-    public func encode<T>(_ value: T) throws -> [Swift.String : Any] where T : Swift.Encodable
-  }
 }
 public enum DecodingFailureStrategy {
   case ignore
@@ -214,6 +227,16 @@ extension FirebaseFirestoreSwift.ServerTimestamp : Swift.Equatable where Value :
 extension FirebaseFirestoreSwift.ServerTimestamp : Swift.Hashable where Value : Swift.Hashable {
   public func hash(into hasher: inout Swift.Hasher)
   public var hashValue: Swift.Int {
+    get
+  }
+}
+extension FirebaseSharedSwift.FirebaseDataDecoder.DateDecodingStrategy {
+  public static var timestamp: FirebaseSharedSwift.FirebaseDataDecoder.DateDecodingStrategy {
+    get
+  }
+}
+extension FirebaseSharedSwift.FirebaseDataEncoder.DateEncodingStrategy {
+  public static var timestamp: FirebaseSharedSwift.FirebaseDataEncoder.DateEncodingStrategy {
     get
   }
 }
