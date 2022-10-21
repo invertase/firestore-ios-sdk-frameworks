@@ -25,6 +25,7 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target = '11.0'
 
   s.default_subspecs       = "AutodetectLeveldb"
+  s.dependency 'FirebaseSharedSwift', '~> 10.0'
 
   # Base Pod gets everything except leveldb, which if included here may collide with inclusions elsewhere
   s.subspec 'Base' do |base|
