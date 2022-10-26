@@ -26,13 +26,29 @@ Pod::Spec.new do |s|
 
   s.default_subspecs       = "AutodetectLeveldb"
 
+  # Skip leveldb framework if Firebase Database is included in any form
+  # Skip FirebaseFirestoreSwift if project is FlutterFire or React Native Firebase project. See:
+  # https://github.com/invertase/firestore-ios-sdk-frameworks/issues/62
+  current_target_definition = Pod::Config.instance.podfile.send(:current_target_definition)
+  current_definition_string = current_target_definition.to_hash.to_s
+
+  hasCloudFirestore = current_definition_string.include?('cloud_firestore')
+  hasRNFBFirestore = current_definition_string.include?('RNFBFirestore')
+
   # Base Pod gets everything except leveldb, which if included here may collide with inclusions elsewhere
   s.subspec 'Base' do |base|
-    frameworksBase = Dir.glob("FirebaseFirestore/*.xcframework").select { |name|
-      if ! name.include? 'leveldb'
-        name
+    frameworksBase = Dir.glob("FirebaseFirestore/*.xcframework").select do |name|
+      if name.include?('leveldb')
+        false
+      elsif hasCloudFirestore && name.include?('FirebaseFirestoreSwift')
+        false
+      elsif hasRNFBFirestore && name.include?('FirebaseFirestoreSwift')
+        false
+      else
+        true
       end
-    }
+    end
+
     base.vendored_frameworks  = frameworksBase
     base.preserve_paths       = frameworksBase
     base.resource             = 'FirebaseFirestore/Resources/*.bundle'
@@ -42,9 +58,6 @@ Pod::Spec.new do |s|
   s.subspec 'AutodetectLeveldb' do |autodb|
     autodb.dependency 'FirebaseFirestore/Base'
 
-    # Skip leveldb framework if Firebase Database is included in any form
-    current_target_definition = Pod::Config.instance.podfile.send(:current_target_definition)
-    current_definition_string = current_target_definition.to_hash.to_s
 
     skip_leveldb = false
 
