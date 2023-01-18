@@ -23,6 +23,7 @@ public class FirebaseDataEncoder {
   public enum DataEncodingStrategy {
     case deferredToData
     case base64
+    case blob
     case custom((Foundation.Data, Swift.Encoder) throws -> Swift.Void)
   }
   public enum NonConformingFloatEncodingStrategy {
@@ -57,6 +58,7 @@ public class FirebaseDataDecoder {
   public enum DataDecodingStrategy {
     case deferredToData
     case base64
+    case blob
     case custom((_ decoder: Swift.Decoder) throws -> Foundation.Data)
   }
   public enum NonConformingFloatDecodingStrategy {

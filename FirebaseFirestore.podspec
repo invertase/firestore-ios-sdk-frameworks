@@ -1,4 +1,4 @@
-firebase_firestore_version = '10.3.0'
+firebase_firestore_version = '10.4.0'
 
 Pod::Spec.new do |s|
   s.name                   = 'FirebaseFirestore'
