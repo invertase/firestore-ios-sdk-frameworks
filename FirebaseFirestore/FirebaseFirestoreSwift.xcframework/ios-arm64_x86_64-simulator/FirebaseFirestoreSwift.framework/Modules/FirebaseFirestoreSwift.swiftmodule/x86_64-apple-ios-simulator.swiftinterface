@@ -24,6 +24,7 @@ extension FirebaseFirestore.CollectionReference {
 
 }
 extension FirebaseFirestore.CollectionReference {
+  @discardableResult
   public func addDocument<T>(from value: T, encoder: FirebaseFirestore.Firestore.Encoder = Firestore.Encoder(), completion: ((Swift.Error?) -> Swift.Void)? = nil) throws -> FirebaseFirestore.DocumentReference where T : Swift.Encodable
 }
 public protocol DocumentIDWrappable {
