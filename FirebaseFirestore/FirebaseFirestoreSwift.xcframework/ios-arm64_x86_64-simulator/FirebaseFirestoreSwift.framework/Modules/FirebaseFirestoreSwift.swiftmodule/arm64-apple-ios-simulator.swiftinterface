@@ -19,6 +19,7 @@ public enum FirestoreEncodingError : Swift.Error {
 extension FirebaseFirestore.CollectionReference {
   
   #if compiler(>=5.3) && $AsyncAwait
+  @discardableResult
   public func addDocument(data: [Swift.String : Any]) async throws -> FirebaseFirestore.DocumentReference
   #endif
 
