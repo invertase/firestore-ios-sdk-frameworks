@@ -24,8 +24,8 @@
 #include <stddef.h>
 
 #include <grpc/byte_buffer.h>
-#include <grpc/impl/codegen/connectivity_state.h>
-#include <grpc/impl/codegen/grpc_types.h>
+#include <grpc/impl/codegen/connectivity_state.h>  // IWYU pragma: export
+#include <grpc/impl/codegen/grpc_types.h>          // IWYU pragma: export
 #include <grpc/impl/codegen/propagation_bits.h>
 #include <grpc/slice.h>
 #include <grpc/status.h>
@@ -295,15 +295,41 @@ GRPCAPI void grpc_channel_get_info(grpc_channel* channel,
     to non-experimental or remove it. */
 GRPCAPI void grpc_channel_reset_connect_backoff(grpc_channel* channel);
 
-/** Create a client channel to 'target'. Additional channel level configuration
-    MAY be provided by grpc_channel_args, though the expectation is that most
-    clients will want to simply pass NULL. The user data in 'args' need only
-    live through the invocation of this function. However, if any args of the
-    'pointer' type are passed, then the referenced vtable must be maintained
-    by the caller until grpc_channel_destroy terminates. See grpc_channel_args
-    definition for more on this. */
-GRPCAPI grpc_channel* grpc_insecure_channel_create(
-    const char* target, const grpc_channel_args* args, void* reserved);
+/** --- grpc_channel_credentials object. ---
+
+   A channel credentials object represents a way to authenticate a client on a
+   channel. Different types of channel credentials are declared in
+   grpc_security.h. */
+
+typedef struct grpc_channel_credentials grpc_channel_credentials;
+
+/** Releases a channel credentials object.
+   The creator of the credentials object is responsible for its release. */
+
+GRPCAPI void grpc_channel_credentials_release(grpc_channel_credentials* creds);
+
+/** --- grpc_server_credentials object. ---
+
+   A server credentials object represents a way to authenticate a server.
+   Different types of server credentials are declared in grpc_security.h. */
+
+typedef struct grpc_server_credentials grpc_server_credentials;
+
+/** Releases a server_credentials object.
+   The creator of the server_credentials object is responsible for its release.
+   */
+GRPCAPI void grpc_server_credentials_release(grpc_server_credentials* creds);
+
+/** Creates a secure channel using the passed-in credentials. Additional
+    channel level configuration MAY be provided by grpc_channel_args, though
+    the expectation is that most clients will want to simply pass NULL. The
+    user data in 'args' need only live through the invocation of this function.
+    However, if any args of the 'pointer' type are passed, then the referenced
+    vtable must be maintained by the caller until grpc_channel_destroy
+    terminates. See grpc_channel_args definition for more on this. */
+GRPCAPI grpc_channel* grpc_channel_create(const char* target,
+                                          grpc_channel_credentials* creds,
+                                          const grpc_channel_args* args);
 
 /** Create a lame client: this client fails every operation attempted on it. */
 GRPCAPI grpc_channel* grpc_lame_client_channel_create(
@@ -444,11 +470,11 @@ GRPCAPI void grpc_server_config_fetcher_destroy(
 GRPCAPI void grpc_server_set_config_fetcher(
     grpc_server* server, grpc_server_config_fetcher* config_fetcher);
 
-/** Add a HTTP2 over plaintext over tcp listener.
-    Returns bound port number on success, 0 on failure.
-    REQUIRES: server not started */
-GRPCAPI int grpc_server_add_insecure_http2_port(grpc_server* server,
-                                                const char* addr);
+/** Add a HTTP2 over an encrypted link over tcp listener.
+   Returns bound port number on success, 0 on failure.
+   REQUIRES: server not started */
+GRPCAPI int grpc_server_add_http2_port(grpc_server* server, const char* addr,
+                                       grpc_server_credentials* creds);
 
 /** Start a server - tells all listeners to start listening */
 GRPCAPI void grpc_server_start(grpc_server* server);
@@ -516,7 +542,7 @@ GRPCAPI void grpc_resource_quota_set_max_threads(
 
 /** EXPERIMENTAL.  Dumps xDS configs as a serialized ClientConfig proto.
     The full name of the proto is envoy.service.status.v3.ClientConfig. */
-GRPCAPI grpc_slice grpc_dump_xds_configs();
+GRPCAPI grpc_slice grpc_dump_xds_configs(void);
 
 /** Fetch a vtable for a grpc_channel_arg that points to a grpc_resource_quota
  */
