@@ -46,6 +46,14 @@ pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk
 
 > **⚠️ Note:** where the tag says `7.11.0` this should be changed to the pod version of `Firebase/Firestore` that you or your dependencies are using - in the format `X.X.X`, for FlutterFire the version that is being used can be seen [here](https://github.com/FirebaseExtended/flutterfire/blob/master/packages/firebase_core/firebase_core/ios/firebase_sdk_version.rb), for React Native Firebase [here](https://github.com/invertase/react-native-firebase/blob/master/packages/app/package.json#L70). If no version is specified on your current `Firebase/Firestore` pod then you can omit `, :tag => '7.11.0'` from the line above and use the latest version on master.
 
+#### Alternatively
+Add the following two lines instead, and this will add the `FirebaseFirestore` pod with latest supported tag for the provided framework.
+
+```ruby
+eval(Net::HTTP.get_response(URI('https://raw.githubusercontent.com/invertase/firestore-ios-sdk-frameworks/main/firebase_sdk_version.rb')).body)
+firebase_firebase_pod('flutter') # flutter or rn/react-native 
+```
+
 The first time you `pod install` a specific version, CocoaPods will remotely retrieve this git repository at the specifed tag and cache it locally for use as a source for the `FirebaseFirestore` pod.
 
 > **⚠️ Note:** if you were previously caching iOS builds on CI you may now find that when using precompiled binaries that caching is no longer required and it may actually slow down your build times by several minutes. 
