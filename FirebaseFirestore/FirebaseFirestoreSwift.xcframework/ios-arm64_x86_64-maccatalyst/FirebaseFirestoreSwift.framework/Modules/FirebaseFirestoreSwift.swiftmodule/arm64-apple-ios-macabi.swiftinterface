@@ -156,6 +156,7 @@ public enum DecodingFailureStrategy {
     public var predicates: [FirebaseFirestoreSwift.QueryPredicate]
     public var decodingFailureStrategy: FirebaseFirestoreSwift.DecodingFailureStrategy
     public var error: Swift.Error?
+    public var animation: SwiftUI.Animation?
   }
   @_Concurrency.MainActor(unsafe) public var wrappedValue: T {
     get
@@ -164,8 +165,8 @@ public enum DecodingFailureStrategy {
     get
     nonmutating set
   }
-  @_Concurrency.MainActor(unsafe) public init<U>(collectionPath: Swift.String, predicates: [FirebaseFirestoreSwift.QueryPredicate] = [], decodingFailureStrategy: FirebaseFirestoreSwift.DecodingFailureStrategy = .raise) where T == [U], U : Swift.Decodable
-  @_Concurrency.MainActor(unsafe) public init<U>(collectionPath: Swift.String, predicates: [FirebaseFirestoreSwift.QueryPredicate] = [], decodingFailureStrategy: FirebaseFirestoreSwift.DecodingFailureStrategy = .raise) where T == Swift.Result<[U], Swift.Error>, U : Swift.Decodable
+  @_Concurrency.MainActor(unsafe) public init<U>(collectionPath: Swift.String, predicates: [FirebaseFirestoreSwift.QueryPredicate] = [], decodingFailureStrategy: FirebaseFirestoreSwift.DecodingFailureStrategy = .raise, animation: SwiftUI.Animation? = nil) where T == [U], U : Swift.Decodable
+  @_Concurrency.MainActor(unsafe) public init<U>(collectionPath: Swift.String, predicates: [FirebaseFirestoreSwift.QueryPredicate] = [], decodingFailureStrategy: FirebaseFirestoreSwift.DecodingFailureStrategy = .raise, animation: SwiftUI.Animation? = nil) where T == Swift.Result<[U], Swift.Error>, U : Swift.Decodable
 }
 public enum QueryPredicate {
   case isEqualTo(_: Swift.String, _: Any)
