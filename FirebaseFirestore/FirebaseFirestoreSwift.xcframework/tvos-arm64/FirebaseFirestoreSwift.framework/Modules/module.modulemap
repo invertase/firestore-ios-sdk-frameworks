@@ -6,6 +6,6 @@ framework module FirebaseFirestoreSwift {
 }
 
 module FirebaseFirestoreSwift.Swift {
-    header "FirebaseFirestoreSwift-Swift.h"
-    requires objc
+  header "FirebaseFirestoreSwift-Swift.h"
+  requires objc
 }
