@@ -2,7 +2,9 @@ framework module FirebaseFirestore {
 umbrella header "FirebaseFirestore-umbrella.h"
 export *
 module * { export * }
-  link framework "AppKit"
+  link framework "BoringSSL-GRPC"
+  link framework "gRPC-Core"
+  link framework "gRPC-C++"  link framework "AppKit"
   link framework "Foundation"
   link framework "Security"
   link framework "SystemConfiguration"

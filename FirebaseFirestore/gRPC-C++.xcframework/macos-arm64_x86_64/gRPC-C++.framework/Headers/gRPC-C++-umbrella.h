@@ -24,8 +24,6 @@
 #import "grpcpp.h"
 #import "health_check_service_interface.h"
 #import "impl/call.h"
-#import "impl/call_hook.h"
-#import "impl/call_op_set_interface.h"
 #import "impl/channel_argument_option.h"
 #import "impl/client_unary_call.h"
 #import "impl/codegen/async_generic_service.h"
