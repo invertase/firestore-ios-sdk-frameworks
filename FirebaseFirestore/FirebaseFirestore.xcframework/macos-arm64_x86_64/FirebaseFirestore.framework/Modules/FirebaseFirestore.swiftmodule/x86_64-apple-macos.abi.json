@@ -8427,49 +8427,49 @@
   },
   "ConstValues": [
     {
-      "filePath": "\/var\/folders\/3s\/vfzpb5r51gs6y328rmlgzm7c0000gn\/T\/ZipRelease\/2023-10-25T14-24-30\/project-macos\/Pods\/FirebaseFirestore\/Firestore\/Swift\/Source\/Codable\/DocumentID.swift",
+      "filePath": "\/var\/folders\/3s\/vfzpb5r51gs6y328rmlgzm7c0000gn\/T\/ZipRelease\/2023-11-08T04-04-16\/project-macos\/Pods\/FirebaseFirestore\/Firestore\/Swift\/Source\/Codable\/DocumentID.swift",
       "kind": "StringLiteral",
       "offset": 918,
       "length": 24,
       "value": "\"DocumentRefUserInfoKey\""
     },
     {
-      "filePath": "\/var\/folders\/3s\/vfzpb5r51gs6y328rmlgzm7c0000gn\/T\/ZipRelease\/2023-10-25T14-24-30\/project-macos\/Pods\/FirebaseFirestore\/Firestore\/Swift\/Source\/Codable\/EncoderDecoder.swift",
+      "filePath": "\/var\/folders\/3s\/vfzpb5r51gs6y328rmlgzm7c0000gn\/T\/ZipRelease\/2023-11-08T04-04-16\/project-macos\/Pods\/FirebaseFirestore\/Firestore\/Swift\/Source\/Codable\/EncoderDecoder.swift",
       "kind": "Dictionary",
       "offset": 1677,
       "length": 3,
       "value": "[]"
     },
     {
-      "filePath": "\/var\/folders\/3s\/vfzpb5r51gs6y328rmlgzm7c0000gn\/T\/ZipRelease\/2023-10-25T14-24-30\/project-macos\/Pods\/FirebaseFirestore\/Firestore\/Swift\/Source\/Codable\/EncoderDecoder.swift",
+      "filePath": "\/var\/folders\/3s\/vfzpb5r51gs6y328rmlgzm7c0000gn\/T\/ZipRelease\/2023-11-08T04-04-16\/project-macos\/Pods\/FirebaseFirestore\/Firestore\/Swift\/Source\/Codable\/EncoderDecoder.swift",
       "kind": "Dictionary",
       "offset": 3447,
       "length": 3,
       "value": "[]"
     },
     {
-      "filePath": "\/var\/folders\/3s\/vfzpb5r51gs6y328rmlgzm7c0000gn\/T\/ZipRelease\/2023-10-25T14-24-30\/project-macos\/Pods\/FirebaseFirestore\/Firestore\/Swift\/Source\/PropertyWrapper\/FirestoreQuery.swift",
+      "filePath": "\/var\/folders\/3s\/vfzpb5r51gs6y328rmlgzm7c0000gn\/T\/ZipRelease\/2023-11-08T04-04-16\/project-macos\/Pods\/FirebaseFirestore\/Firestore\/Swift\/Source\/PropertyWrapper\/FirestoreQuery.swift",
       "kind": "Array",
       "offset": 6323,
       "length": 2,
       "value": "[]"
     },
     {
-      "filePath": "\/var\/folders\/3s\/vfzpb5r51gs6y328rmlgzm7c0000gn\/T\/ZipRelease\/2023-10-25T14-24-30\/project-macos\/Pods\/FirebaseFirestore\/Firestore\/Swift\/Source\/PropertyWrapper\/FirestoreQuery.swift",
+      "filePath": "\/var\/folders\/3s\/vfzpb5r51gs6y328rmlgzm7c0000gn\/T\/ZipRelease\/2023-11-08T04-04-16\/project-macos\/Pods\/FirebaseFirestore\/Firestore\/Swift\/Source\/PropertyWrapper\/FirestoreQuery.swift",
       "kind": "Array",
       "offset": 7406,
       "length": 2,
       "value": "[]"
     },
     {
-      "filePath": "\/var\/folders\/3s\/vfzpb5r51gs6y328rmlgzm7c0000gn\/T\/ZipRelease\/2023-10-25T14-24-30\/project-macos\/Pods\/FirebaseFirestore\/Firestore\/Swift\/Source\/PropertyWrapper\/FirestoreQueryObservable.swift",
+      "filePath": "\/var\/folders\/3s\/vfzpb5r51gs6y328rmlgzm7c0000gn\/T\/ZipRelease\/2023-11-08T04-04-16\/project-macos\/Pods\/FirebaseFirestore\/Firestore\/Swift\/Source\/PropertyWrapper\/FirestoreQueryObservable.swift",
       "kind": "BooleanLiteral",
       "offset": 1105,
       "length": 4,
       "value": "true"
     },
     {
-      "filePath": "\/var\/folders\/3s\/vfzpb5r51gs6y328rmlgzm7c0000gn\/T\/ZipRelease\/2023-10-25T14-24-30\/project-macos\/Pods\/FirebaseFirestore\/Firestore\/Swift\/Source\/PropertyWrapper\/QueryPredicate.swift",
+      "filePath": "\/var\/folders\/3s\/vfzpb5r51gs6y328rmlgzm7c0000gn\/T\/ZipRelease\/2023-11-08T04-04-16\/project-macos\/Pods\/FirebaseFirestore\/Firestore\/Swift\/Source\/PropertyWrapper\/QueryPredicate.swift",
       "kind": "BooleanLiteral",
       "offset": 3162,
       "length": 5,
