@@ -34,6 +34,7 @@ Pod::Spec.new do |s|
 
   hasCloudFirestore = current_definition_string.include?('cloud_firestore')
   hasFirebaseDatabase = current_definition_string.include?('firebase_database')
+  hasPerf = current_definition_string.include?('firebase_performance')
   hasRNFBFirestore = current_definition_string.include?('RNFBFirestore')
 
   # Base Pod gets everything except leveldb, which if included here may collide with inclusions elsewhere
@@ -48,6 +49,8 @@ Pod::Spec.new do |s|
       elsif ENV["SKIP_FIREBASE_FIRESTORE_SWIFT"] && name.include?('FirebaseFirestoreSwift')
         false
       elsif hasFirebaseDatabase && name.include?('FirebaseSharedSwift')
+        false
+      elsif hasPerf && name.include?('FirebaseSharedSwift')
         false
       else
         true
