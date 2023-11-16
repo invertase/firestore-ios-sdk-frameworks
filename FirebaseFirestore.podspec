@@ -32,6 +32,7 @@ Pod::Spec.new do |s|
   current_target_definition = Pod::Config.instance.podfile.send(:current_target_definition)
   current_definition_string = current_target_definition.to_hash.to_s
 
+  hasFirebaseDatabase = current_definition_string.include?('firebase_database')
   hasCloudFirestore = current_definition_string.include?('cloud_firestore')
   hasRNFBFirestore = current_definition_string.include?('RNFBFirestore')
 
@@ -46,6 +47,8 @@ Pod::Spec.new do |s|
         false
       elsif ENV["SKIP_FIREBASE_FIRESTORE_SWIFT"] && name.include?('FirebaseFirestoreSwift')
         false
+      elsif hasFirebaseDatabase && name.include?('FirebaseSharedSwift')
+        false  
       else
         true
       end
