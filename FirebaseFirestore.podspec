@@ -50,7 +50,7 @@ Pod::Spec.new do |s|
         false
       elsif hasFirebaseDatabase && name.include?('FirebaseSharedSwift')
         false
-      elsif hasPerf && (name.include?('FirebaseSharedSwift') || name.include?('abseil'))
+      elsif hasPerf && name.include?('FirebaseSharedSwift')
         false
       else
         true
