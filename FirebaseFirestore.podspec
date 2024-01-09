@@ -35,8 +35,10 @@ Pod::Spec.new do |s|
   hasCloudFirestore = current_definition_string.include?('cloud_firestore')
   hasRNFBFirestore = current_definition_string.include?('RNFBFirestore')
 
+
+
   s.subspec 'FirebaseFirestoreInternalWrapper' do |ffiw|
-    ffiw.dependency 'FirebaseFirestoreInternal'
+    ffiw.dependency 'FirebaseFirestore/FirebaseFirestoreInternal'
   end
 
   s.subspec 'FirebaseFirestoreInternal' do |ffi|
@@ -67,14 +69,13 @@ Pod::Spec.new do |s|
       end
     end
 
-    base.dependency 'FirebaseSharedSwift', '~> 10.19.0'
     # ffiw.dependency 'FirebaseCoreExtension', '~> 10.19.0'
-    # ffiw.dependency 'FirebaseAppCheckInterop', '~> 10.19.0'
-
+    # ffiw.dependency 'FirebaseAppCheckInterop', '~> 10.19.0'    
     base.vendored_frameworks  = frameworksBase
     base.preserve_paths       = frameworksBase
     base.resource             = 'FirebaseFirestore/Resources/*.bundle'
-    base.dependency 'FirebaseFirestoreInternalWrapper'
+    base.dependency 'FirebaseSharedSwift', '~> 10.19.0'
+    base.dependency 'FirebaseFirestore/FirebaseFirestoreInternalWrapper'
   end
 
 
