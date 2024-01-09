@@ -44,16 +44,27 @@ Pod::Spec.new do |s|
         false
       elsif hasRNFBFirestore && name.include?('FirebaseFirestoreSwift')
         false
+      elsif name.include?('FirebaseFirestoreInternal')
+        false
       elsif ENV["SKIP_FIREBASE_FIRESTORE_SWIFT"] && name.include?('FirebaseFirestoreSwift')
         false
       else
         true
       end
     end
-
+    
+    base.dependency 'FirebaseFirestore/FirebaseFirestoreInternalWrapper'
     base.vendored_frameworks  = frameworksBase
     base.preserve_paths       = frameworksBase
     base.resource             = 'FirebaseFirestore/Resources/*.bundle'
+  end
+
+  s.subspec 'FirebaseFirestoreInternalWrapper' do |ffiw|
+    ffiw.dependency 'FirebaseFirestore/FirebaseFirestoreInternal'
+  end
+
+  s.subspec 'FirebaseFirestoreInternal' do |ffi|
+    ffi.vendored_frameworks = 'FirebaseFirestore/FirebaseFirestoreInternal.xcframework'
   end
 
   # AutoLeveldb Pod attempts to determine if it should include leveldb automatically. Flaky in some instances.
