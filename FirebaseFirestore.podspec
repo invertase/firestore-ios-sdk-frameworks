@@ -35,6 +35,14 @@ Pod::Spec.new do |s|
   hasCloudFirestore = current_definition_string.include?('cloud_firestore')
   hasRNFBFirestore = current_definition_string.include?('RNFBFirestore')
 
+  s.subspec 'FirebaseFirestoreInternalWrapper' do |ffiw|
+    ffiw.dependency 'FirebaseFirestoreInternal'
+  end
+
+  s.subspec 'FirebaseFirestoreInternal' do |ffi|
+    ffi.vendored_frameworks = 'FirebaseFirestore/FirebaseFirestoreInternal.xcframework'
+  end
+
   # Base Pod gets everything except leveldb, which if included here may collide with inclusions elsewhere
   s.subspec 'Base' do |base|
     frameworksBase = Dir.glob("FirebaseFirestore/*.xcframework").select do |name|
@@ -69,13 +77,7 @@ Pod::Spec.new do |s|
     base.dependency 'FirebaseFirestoreInternalWrapper'
   end
 
-  s.subspec 'FirebaseFirestoreInternalWrapper' do |ffiw|
-    ffiw.dependency 'FirebaseFirestoreInternal'
-  end
 
-  s.subspec 'FirebaseFirestoreInternal' do |ffi|
-    ffi.vendored_frameworks = 'FirebaseFirestore/FirebaseFirestoreInternal.xcframework'
-  end
 
   # AutoLeveldb Pod attempts to determine if it should include leveldb automatically. Flaky in some instances.
   s.subspec 'AutodetectLeveldb' do |autodb|
