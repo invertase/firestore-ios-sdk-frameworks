@@ -63,7 +63,7 @@ Pod::Spec.new do |s|
       end
     end
 
-     ffiw.dependency 'FirebaseFirestore/FirebaseFirestoreInternal'
+    ffiw.dependency 'FirebaseFirestoreInternal'
     ffiw.dependency 'FirebaseSharedSwift', '~> 10.19.0'
     # ffiw.dependency 'FirebaseCoreExtension', '~> 10.19.0'
     # ffiw.dependency 'FirebaseAppCheckInterop', '~> 10.19.0'
