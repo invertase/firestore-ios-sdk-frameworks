@@ -37,6 +37,10 @@ Pod::Spec.new do |s|
 
   # Base Pod gets everything except leveldb, which if included here may collide with inclusions elsewhere
   s.subspec 'Base' do |base|
+    base.dependency 'FirebaseFirestore/FirebaseFirestoreInternalWrapper'
+  end
+
+  s.subspec 'FirebaseFirestoreInternalWrapper' do |ffiw|
     frameworksBase = Dir.glob("FirebaseFirestore/*.xcframework").select do |name|
       if name.include?('leveldb')
         false
@@ -46,6 +50,12 @@ Pod::Spec.new do |s|
         false
       elsif name.include?('FirebaseFirestoreInternal')
         false
+      elsif name.include?('FirebaseSharedSwift')
+        false
+      elsif name.include?('FirebaseCoreExtension')
+        false
+      elsif name.include?('FirebaseAppCheckInterop')
+        false
       elsif ENV["SKIP_FIREBASE_FIRESTORE_SWIFT"] && name.include?('FirebaseFirestoreSwift')
         false
       else
@@ -53,14 +63,14 @@ Pod::Spec.new do |s|
       end
     end
     
-    base.dependency 'FirebaseFirestore/FirebaseFirestoreInternalWrapper'
-    base.vendored_frameworks  = frameworksBase
-    base.preserve_paths       = frameworksBase
-    base.resource             = 'FirebaseFirestore/Resources/*.bundle'
-  end
-
-  s.subspec 'FirebaseFirestoreInternalWrapper' do |ffiw|
     ffiw.dependency 'FirebaseFirestore/FirebaseFirestoreInternal'
+    ffiw.dependency 'FirebaseSharedSwift', '~> 10.19.0'
+    ffiw.dependency 'FirebaseCoreExtension', '~> 10.19.0'
+    ffiw.dependency 'FirebaseAppCheckInterop', '~> 10.19.0'
+
+    ffiw.vendored_frameworks  = frameworksBase
+    ffiw.preserve_paths       = frameworksBase
+    ffiw.resource             = 'FirebaseFirestore/Resources/*.bundle'
   end
 
   s.subspec 'FirebaseFirestoreInternal' do |ffi|
