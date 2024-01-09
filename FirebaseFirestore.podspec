@@ -56,8 +56,8 @@ Pod::Spec.new do |s|
         false
       elsif name.include?('FirebaseFirestoreInternal')
         false
-      elsif name.include?('FirebaseSharedSwift')
-        false
+      # elsif name.include?('FirebaseSharedSwift')
+      #   false
       # elsif name.include?('FirebaseCoreExtension')
       #   false
       # elsif name.include?('FirebaseAppCheckInterop')
@@ -74,7 +74,7 @@ Pod::Spec.new do |s|
     base.vendored_frameworks  = frameworksBase
     base.preserve_paths       = frameworksBase
     base.resource             = 'FirebaseFirestore/Resources/*.bundle'
-    base.dependency 'FirebaseSharedSwift', '~> 10.19.0'
+    # base.dependency 'FirebaseSharedSwift', '~> 10.19.0'
     base.dependency 'FirebaseFirestore/FirebaseFirestoreInternalWrapper'
   end
 
