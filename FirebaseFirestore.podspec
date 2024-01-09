@@ -74,7 +74,8 @@ Pod::Spec.new do |s|
     base.vendored_frameworks  = frameworksBase
     base.preserve_paths       = frameworksBase
     base.resource             = 'FirebaseFirestore/Resources/*.bundle'
-    base.dependency 'FirebaseSharedSwift', '~> 10.19.0'
+    # try to rely on perf's FirebaseSharedSwift
+    # base.dependency 'FirebaseSharedSwift', '~> 10.19.0'
     base.dependency 'FirebaseFirestore/FirebaseFirestoreInternalWrapper'
   end
 
