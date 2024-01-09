@@ -50,23 +50,23 @@ Pod::Spec.new do |s|
         false
       elsif name.include?('FirebaseFirestoreInternal')
         false
-      elsif name.include?('FirebaseSharedSwift')
-        false
-      elsif name.include?('FirebaseCoreExtension')
-        false
-      elsif name.include?('FirebaseAppCheckInterop')
-        false
+      # elsif name.include?('FirebaseSharedSwift')
+      #   false
+      # elsif name.include?('FirebaseCoreExtension')
+      #   false
+      # elsif name.include?('FirebaseAppCheckInterop')
+      #   false
       elsif ENV["SKIP_FIREBASE_FIRESTORE_SWIFT"] && name.include?('FirebaseFirestoreSwift')
         false
       else
         true
       end
     end
-    
-    ffiw.dependency 'FirebaseFirestore/FirebaseFirestoreInternal'
-    ffiw.dependency 'FirebaseSharedSwift', '~> 10.19.0'
-    ffiw.dependency 'FirebaseCoreExtension', '~> 10.19.0'
-    ffiw.dependency 'FirebaseAppCheckInterop', '~> 10.19.0'
+
+     ffiw.dependency 'FirebaseFirestore/FirebaseFirestoreInternal'
+    # ffiw.dependency 'FirebaseSharedSwift', '~> 10.19.0'
+    # ffiw.dependency 'FirebaseCoreExtension', '~> 10.19.0'
+    # ffiw.dependency 'FirebaseAppCheckInterop', '~> 10.19.0'
 
     ffiw.vendored_frameworks  = frameworksBase
     ffiw.preserve_paths       = frameworksBase
