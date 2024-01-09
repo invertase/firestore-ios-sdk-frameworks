@@ -50,8 +50,8 @@ Pod::Spec.new do |s|
         false
       elsif name.include?('FirebaseFirestoreInternal')
         false
-      # elsif name.include?('FirebaseSharedSwift')
-      #   false
+      elsif name.include?('FirebaseSharedSwift')
+        false
       # elsif name.include?('FirebaseCoreExtension')
       #   false
       # elsif name.include?('FirebaseAppCheckInterop')
@@ -64,7 +64,7 @@ Pod::Spec.new do |s|
     end
 
      ffiw.dependency 'FirebaseFirestore/FirebaseFirestoreInternal'
-    # ffiw.dependency 'FirebaseSharedSwift', '~> 10.19.0'
+    ffiw.dependency 'FirebaseSharedSwift', '~> 10.19.0'
     # ffiw.dependency 'FirebaseCoreExtension', '~> 10.19.0'
     # ffiw.dependency 'FirebaseAppCheckInterop', '~> 10.19.0'
 
