@@ -32,8 +32,6 @@ Pod::Spec.new do |s|
   current_target_definition = Pod::Config.instance.podfile.send(:current_target_definition)
   current_definition_string = current_target_definition.to_hash.to_s
 
-  hasCloudFirestore = current_definition_string.include?('cloud_firestore')
-  hasRNFBFirestore = current_definition_string.include?('RNFBFirestore')
   hasPerf = current_definition_string.include?('firebase_performance')
 
 
@@ -50,33 +48,31 @@ Pod::Spec.new do |s|
     frameworksBase = Dir.glob("FirebaseFirestore/*.xcframework").select do |name|
       if name.include?('leveldb')
         false
-      elsif hasCloudFirestore && name.include?('FirebaseFirestoreSwift')
-        false
-      elsif hasRNFBFirestore && name.include?('FirebaseFirestoreSwift')
-        false
       elsif name.include?('FirebaseFirestoreInternal')
         false
       elsif name.include?('FirebaseSharedSwift')
         false
-      # elsif name.include?('FirebaseCoreExtension')
-      #   false
-      # elsif name.include?('FirebaseAppCheckInterop')
-      #   false
-      elsif ENV["SKIP_FIREBASE_FIRESTORE_SWIFT"] && name.include?('FirebaseFirestoreSwift')
+      elsif name.include?('FirebaseAppCheckInterop')
+        false
+      elsif name.include?('FirebaseCore')
+        false
+      elsif name.include?('FirebaseCoreExtension')
         false
       else
         true
       end
     end
 
-    # ffiw.dependency 'FirebaseCoreExtension', '~> 10.19.0'
-    # ffiw.dependency 'FirebaseAppCheckInterop', '~> 10.19.0'    
+    # Dependencies that are from source following SPM strategy: https://github.com/firebase/firebase-ios-sdk/blob/main/Package.swift#L1500C1-L1504C31
+    base.dependency 'FirebaseAppCheckInterop', '~> 10.19.0'    
+    base.dependency 'FirebaseCore', '~> 10.19.0'    
+    base.dependency 'FirebaseCoreExtension', '~> 10.19.0'    
+    base.dependency 'FirebaseSharedSwift', '~> 10.19.0'
+    # Wrap around FirebaseFirestoreInternal following SPM strategy: https://github.com/firebase/firebase-ios-sdk/blob/main/Package.swift#L1513-L1519
+    base.dependency 'FirebaseFirestore/FirebaseFirestoreInternalWrapper'
     base.vendored_frameworks  = frameworksBase
     base.preserve_paths       = frameworksBase
     base.resource             = 'FirebaseFirestore/Resources/*.bundle'
-    # try to rely on perf's FirebaseSharedSwift
-    # base.dependency 'FirebaseSharedSwift', '~> 10.19.0'
-    base.dependency 'FirebaseFirestore/FirebaseFirestoreInternalWrapper'
   end
 
 
