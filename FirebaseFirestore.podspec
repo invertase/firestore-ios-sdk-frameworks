@@ -50,8 +50,8 @@ Pod::Spec.new do |s|
         false
       elsif name.include?('FirebaseFirestoreInternal')
         false
-      elsif name.include?('FirebaseSharedSwift')
-        false
+      # elsif name.include?('FirebaseSharedSwift')
+      #   false
       elsif name.include?('FirebaseAppCheckInterop')
         false
       elsif name.include?('FirebaseCore')
@@ -67,7 +67,7 @@ Pod::Spec.new do |s|
     base.dependency 'FirebaseAppCheckInterop', '~> 10.19.0'    
     base.dependency 'FirebaseCore', '~> 10.19.0'    
     base.dependency 'FirebaseCoreExtension', '~> 10.19.0'    
-    base.dependency 'FirebaseSharedSwift', '~> 10.19.0'
+    # base.dependency 'FirebaseSharedSwift', '~> 10.19.0'
     # Wrap around FirebaseFirestoreInternal following SPM strategy: https://github.com/firebase/firebase-ios-sdk/blob/main/Package.swift#L1513-L1519
     base.dependency 'FirebaseFirestore/FirebaseFirestoreInternalWrapper'
     base.vendored_frameworks  = frameworksBase
