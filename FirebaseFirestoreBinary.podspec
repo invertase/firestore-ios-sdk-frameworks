@@ -58,7 +58,7 @@ Pod::Spec.new do |s|
 
   # AutoLeveldb Pod attempts to determine if it should include leveldb automatically. Flaky in some instances.
   s.subspec 'AutodetectLeveldb' do |autodb|
-    autodb.dependency 'FirebaseFirestore/Base'
+    autodb.dependency 'FirebaseFirestoreBinary/Base'
 
 
     skip_leveldb = false
@@ -89,18 +89,18 @@ Pod::Spec.new do |s|
 
     if !skip_leveldb
       Pod::UI.puts "#{autodb.name}: subspec would include leveldb if used directly or by default."
-      autodb.dependency 'FirebaseFirestore/WithLeveldb'
+      autodb.dependency 'FirebaseFirestoreBinary/WithLeveldb'
     end
   end
 
   # NoLeveldb Pod deterministically gets all of FirebaseFirestore *except* leveldb, to ensure no symbol collisions
   s.subspec 'WithoutLeveldb' do |nodb|
-    nodb.dependency 'FirebaseFirestore/Base'
+    nodb.dependency 'FirebaseFirestoreBinary/Base'
   end
 
   # WithLeveldb Pod deterministically gets all of FirebaseFirestore *and* leveldb
   s.subspec 'WithLeveldb' do |withdb|
-    withdb.dependency            'FirebaseFirestore/Base'
+    withdb.dependency            'FirebaseFirestoreBinary/Base'
     withdb.vendored_frameworks = "FirebaseFirestore/*leveldb*"
     withdb.preserve_paths      = "FirebaseFirestore/*leveldb*"
   end
