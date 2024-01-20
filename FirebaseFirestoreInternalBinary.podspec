@@ -1,4 +1,4 @@
-firebase_firestore_version = '10.20.0'
+firebase_firestore_version = '10.18.0'
 
 Pod::Spec.new do |s|
   s.name                   = 'FirebaseFirestoreInternalBinary'
@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
 
   # See https://github.com/firebase/firebase-ios-sdk/blob/main/Package.swift
   s.source           = {
-    :http => 'https://dl.google.com/firebase/ios/bin/firestore/10.20.0/FirebaseFirestoreInternal.zip'
+    :http => 'https://dl.google.com/firebase/ios/bin/firestore/10.18.0/FirebaseFirestoreInternal.zip'
   }
 
   s.cocoapods_version      = '>= 1.10.0'
@@ -38,7 +38,7 @@ Pod::Spec.new do |s|
   s.dependency 'FirebaseFirestoreGRPCCPPBinary', '~> 1.49.1'
   s.dependency 'FirebaseFirestoreAbseilBinary', '~> 1.2022062300.0'
 
-  s.dependency 'FirebaseCore', '~> 10.20'
+  s.dependency 'FirebaseCore', '~> 10.18'
   s.dependency 'leveldb-library', '~> 1.22'
   s.dependency 'nanopb', '>= 2.30908.0', '< 2.30910.0'
 end
