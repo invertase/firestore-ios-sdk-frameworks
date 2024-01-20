@@ -1,6 +1,0 @@
-framework module abseil {
-umbrella header "abseil-umbrella.h"
-export *
-module * { export * }
-  link "c++"
-}
