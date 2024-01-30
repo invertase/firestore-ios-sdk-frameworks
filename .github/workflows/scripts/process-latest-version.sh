@@ -50,9 +50,9 @@ echo "Updating pods..."
 pod repo list
 pod repo add cocoapods "https://github.com/CocoaPods/Specs.git"
 pod repo update
-pod spec which FirebaseFirestoreInternal --version="10.19.0"
+pod spec which FirebaseFirestoreInternal
 
-PODSPEC_FILE=$(pod spec which FirebaseFirestoreInternal --version="10.19.0")
+PODSPEC_FILE=$(pod spec which FirebaseFirestoreInternal)
 
 # Extract Firebase Firestore version
 firebase_firestore_version=$(python3 -c 'import json; data = json.load(open("'"$PODSPEC_FILE"'")); print(data["version"])')
@@ -139,7 +139,7 @@ else
     sed -i '' "s/^firebase_firestore_nanopb_version_min = .*/firebase_firestore_nanopb_version_min = '$firebase_firestore_nanopb_version_min'/" "$file"
     sed -i '' "s/^firebase_firestore_nanopb_version_max = .*/firebase_firestore_nanopb_version_max = '$firebase_firestore_nanopb_version_max'/" "$file"
   done
-  new_version_added_line="<!--NEW_VERSION_PLACEHOLDER-->¬ - [$firebase_firestore_version](https:\/\/github.com\/invertase\/firestore-ios-sdk-frameworks\/releases\/tag\/$LATEST_FIREBASE_VERSION)"
+  new_version_added_line="<!--NEW_VERSION_PLACEHOLDER-->¬ - [$firebase_firestore_version](https:\/\/github.com\/invertase\/firestore-ios-sdk-frameworks\/releases\/tag\/$firebase_firestore_version)"
   updated_readme_contents=$(sed -e "s/<!--NEW_VERSION_PLACEHOLDER-->.*/$new_version_added_line/" README.md | tr '¬' '\n')
   echo "$updated_readme_contents" >README.md
 

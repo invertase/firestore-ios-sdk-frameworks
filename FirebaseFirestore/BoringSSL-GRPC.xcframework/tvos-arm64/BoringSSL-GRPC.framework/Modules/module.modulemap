@@ -1,5 +1,0 @@
-framework module BoringSSL-GRPC {
-umbrella header "umbrella.h"
-export *
-module * { export * }
-}
