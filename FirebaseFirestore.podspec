@@ -22,5 +22,5 @@ Pod::Spec.new do |s|
   s.osx.deployment_target  = '10.13'
   s.tvos.deployment_target = '12.0'
 
-  s.dependency 'FirebaseFirestoreBinary', '9.20.0'
+  s.dependency 'FirebaseFirestoreBinary', '9.20.1'
 end
