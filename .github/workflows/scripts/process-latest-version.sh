@@ -100,7 +100,6 @@ echo "firebase_firestore_grpc_version = '$firebase_firestore_grpc_version'"
 echo "firebase_firestore_leveldb_version = '$firebase_firestore_leveldb_version'"
 echo "firebase_firestore_nanopb_version_min = '$firebase_firestore_nanopb_version_min'"
 echo "firebase_firestore_nanopb_version_max = '$firebase_firestore_nanopb_version_max'"
-echo "firebase_firestore_boringssl_version = '$firebase_firestore_boringssl_version'"
 echo "firebase_firestore_boringssl_version = '$firebase_firestore_grpc_boringssl_version'"
 
 if [ -z "$firebase_firestore_version" ]; then
