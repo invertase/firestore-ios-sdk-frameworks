@@ -198,7 +198,6 @@ else
   exit_code=$?
   if [ $exit_code -eq 1 ]; then
     pod trunk push FirebaseFirestoreBinary.podspec --allow-warnings --skip-tests --skip-import-validation --synchronous
-    pod repo update cocoapods
   else
     echo "FirebaseFirestoreBinary already exists"
   fi
