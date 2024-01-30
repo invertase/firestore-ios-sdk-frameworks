@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
 
   # See https://github.com/google/grpc-binary/blob/main/Package.swift
   s.source           = {
-    :http => 'https://dl.google.com/firebase/ios/bin/grpc/#{firebase_firestore_grpc_version}/gRPC-C++.zip'
+    :http => "https://dl.google.com/firebase/ios/bin/grpc/#{firebase_firestore_grpc_version}/gRPC-C++.zip"
   }
 
   s.cocoapods_version      = '>= 1.10.0'

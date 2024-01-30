@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
 
   # See https://github.com/google/abseil-cpp-binary/blob/main/Package.swift
   s.source           = {
-    :http => 'https://dl.google.com/firebase/ios/bin/abseil/#{firebase_firestore_abseil_version}/abseil.zip'
+    :http => "https://dl.google.com/firebase/ios/bin/abseil/#{firebase_firestore_abseil_version}/abseil.zip"
   }
 
   s.cocoapods_version      = '>= 1.10.0'

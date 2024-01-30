@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
 
   # See https://github.com/firebase/firebase-ios-sdk/blob/main/Package.swift
   s.source           = {
-    :http => 'https://dl.google.com/firebase/ios/bin/firestore/#{firebase_firestore_version}/FirebaseFirestoreInternal.zip'
+    :http => "https://dl.google.com/firebase/ios/bin/firestore/#{firebase_firestore_version}/FirebaseFirestoreInternal.zip"
   }
 
   s.cocoapods_version      = '>= 1.10.0'
