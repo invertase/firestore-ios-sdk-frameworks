@@ -57,8 +57,8 @@ PODSPEC_FILE=$(pod spec which FirebaseFirestoreInternal)
 # Extract Firebase Firestore version
 firebase_firestore_version=$(python3 -c 'import json; data = json.load(open("'"$PODSPEC_FILE"'")); print(data["version"])')
 
-# Extract Abseil version
-firebase_firestore_abseil_version=$(python3 -c 'import json; data = json.load(open("'"$PODSPEC_FILE"'")); print(data["dependencies"]["abseil/algorithm"][0].replace("~> ", ""))')
+# Extract the Firebase Firestore Abseil version and pad it with two extra zeros (for some reason)
+firebase_firestore_abseil_version=$(python3 -c 'import json; data = json.load(open("'"$PODSPEC_FILE"'")); version = data["dependencies"]["abseil/algorithm"][0].replace("~> ", ""); parts = version.split("."); print(parts[0] + "." + parts[1] + "00." + parts[2])')
 
 # Extract gRPC version
 firebase_firestore_grpc_version=$(python3 -c 'import json; data = json.load(open("'"$PODSPEC_FILE"'")); print(data["dependencies"]["gRPC-C++"][0].replace("~> ", ""))')
