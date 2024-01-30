@@ -48,7 +48,7 @@ create_github_release() {
 # Update pod repo to ensure we retrieve the latest version.
 echo "Updating pods..."
 pod repo list
-pod repo add-cdn trunk "https://cdn.cocoapods.org/"
+pod repo add cocoapods "https://github.com/CocoaPods/Specs.git"
 pod repo update
 pod spec which FirebaseFirestoreInternal
 
@@ -149,12 +149,59 @@ else
   git push origin main --follow-tags
   create_github_release "$firebase_firestore_version" "\"[View Firebase iOS SDK Release](https://github.com/firebase/firebase-ios-sdk/releases/tag/$firebase_firestore_version)\"" "$firebase_firestore_version"
 
-  for file in *.podspec; do
-    if [ "$file" != "FirebaseFirestore.podspec" ]; then
-      echo "Pushing $file to trunk..."
-      pod trunk push "$file" --synchronous --allow-warnings --skip-tests
-    fi
-  done
+  pod spec which FirebaseFirestoreGRPCBoringSSLBinary --version="$firebase_firestore_grpc_version"
+  exit_code=$?
+  if [ $exit_code -eq 1 ]; then
+    pod trunk push FirebaseFirestoreGRPCBoringSSLBinary.podspec --allow-warnings --skip-tests --skip-import-validation --synchronous
+    pod repo update cocoapods
+  else
+    echo "FirebaseFirestoreGRPCBoringSSLBinary already exists"
+  fi
+
+  pod spec which FirebaseFirestoreGRPCCoreBinary --version="$firebase_firestore_grpc_version"
+  exit_code=$?
+  if [ $exit_code -eq 1 ]; then
+    pod trunk push FirebaseFirestoreGRPCCoreBinary.podspec --allow-warnings --skip-tests --skip-import-validation --synchronous
+    pod repo update cocoapods
+  else
+    echo "FirebaseFirestoreGRPCCoreBinary already exists"
+  fi
+
+  pod spec which FirebaseFirestoreGRPCCPPBinary --version="$firebase_firestore_grpc_version"
+  exit_code=$?
+  if [ $exit_code -eq 1 ]; then
+    pod trunk push FirebaseFirestoreGRPCCPPBinary.podspec --allow-warnings --skip-tests --skip-import-validation --synchronous
+    pod repo update cocoapods
+  else
+    echo "FirebaseFirestoreGRPCCPPBinary already exists"
+  fi
+
+  pod spec which FirebaseFirestoreAbseilBinary --version="$firebase_firestore_abseil_version"
+  exit_code=$?
+  if [ $exit_code -eq 1 ]; then
+    pod trunk push FirebaseFirestoreAbseilBinary.podspec --allow-warnings --skip-tests --skip-import-validation --synchronous
+    pod repo update cocoapods
+  else
+    echo "FirebaseFirestoreAbseilBinary already exists"
+  fi
+
+  pod spec which FirebaseFirestoreInternalBinary --version="$firebase_firestore_version"
+  exit_code=$?
+  if [ $exit_code -eq 1 ]; then
+    pod trunk push FirebaseFirestoreInternalBinary.podspec --allow-warnings --skip-tests --skip-import-validation --synchronous
+    pod repo update cocoapods
+  else
+    echo "FirebaseFirestoreInternalBinary already exists"
+  fi
+
+  pod spec which FirebaseFirestoreBinary --version="$firebase_firestore_version"
+  exit_code=$?
+  if [ $exit_code -eq 1 ]; then
+    pod trunk push FirebaseFirestoreBinary.podspec --allow-warnings --skip-tests --skip-import-validation --synchronous
+    pod repo update cocoapods
+  else
+    echo "FirebaseFirestoreBinary already exists"
+  fi
 
   echo ""
   echo "Release $LATEST_FIREBASE_VERSION complete."
