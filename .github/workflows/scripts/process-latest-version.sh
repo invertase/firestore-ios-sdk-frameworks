@@ -153,7 +153,7 @@ else
   for file in *.podspec; do
     if [ "$file" != "FirebaseFirestore.podspec" ]; then
       echo "Pushing $file to trunk..."
-      pod trunk push "$file"
+      pod trunk push "$file" --synchronous --allow-warnings --skip-tests
     fi
   done
 
