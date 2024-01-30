@@ -50,9 +50,9 @@ echo "Updating pods..."
 pod repo list
 pod repo add cocoapods "https://github.com/CocoaPods/Specs.git"
 pod repo update
-pod spec which FirebaseFirestoreInternal
+pod spec which FirebaseFirestoreInternal --version="10.19.0"
 
-PODSPEC_FILE=$(pod spec which FirebaseFirestoreInternal)
+PODSPEC_FILE=$(pod spec which FirebaseFirestoreInternal --version="10.19.0")
 
 # Extract Firebase Firestore version
 firebase_firestore_version=$(python3 -c 'import json; data = json.load(open("'"$PODSPEC_FILE"'")); print(data["version"])')
