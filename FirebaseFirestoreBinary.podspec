@@ -1,6 +1,9 @@
-firebase_firestore_version = '10.18.0'
-firebase_firestore_abseil_version = '1.2022062300.0'
+firebase_firestore_version = '10.20.0'
+firebase_firestore_abseil_version = '1202206230'
 firebase_firestore_grpc_version = '1.49.1'
+firebase_firestore_leveldb_version = '~> 1.22'
+firebase_firestore_nanopb_version_min = '>= 2.30908.0'
+firebase_firestore_nanopb_version_max = '< 2.30910.0'
 
 Pod::Spec.new do |s|
   s.name             = 'FirebaseFirestoreBinary'
@@ -13,8 +16,8 @@ Google Cloud Firestore is a NoSQL document database built for automatic scaling,
   s.license          = { :type => 'Apache-2.0', :file => 'Firestore/LICENSE' }
   s.authors          = 'Google, Inc.'
   s.source           = {
-    :git => 'https://github.com/firebase/firebase-ios-sdk.git',
-    :tag => 'CocoaPods-' + s.version.to_s
+    :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git',
+    :tag => s.version.to_s
   }
 
   s.ios.deployment_target = '11.0'
