@@ -19,6 +19,7 @@ jobs:
           fetch-tags: true
       - name: GIT Setup
         run: |
+          git fetch --tags
           git config --global user.name '@Salakar'
           git config --global user.email 'Salakar@users.noreply.github.com'
           git remote set-url origin git@github.com:$GITHUB_REPOSITORY
