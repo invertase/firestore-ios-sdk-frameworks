@@ -2,8 +2,8 @@ name: Build
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 */6 * * *" # Every 6 hours
+#  schedule:
+#    - cron: "0 */6 * * *" # Every 6 hours
 
 jobs:
   latest_release:
