@@ -65,6 +65,7 @@ firebase_firestore_grpc_version=$(python3 -c 'import json; data = json.load(open
 # If the gRPC version is 1.62.0, set it to 1.62.1
 # Since the tag is missing for 1.62.0.
 if [ "$firebase_firestore_grpc_version" = "1.62.0" ]; then
+  echo "Overriding gRPC version to 1.62.1"
   firebase_firestore_grpc_version="1.62.1"
 fi
 
@@ -81,6 +82,7 @@ firebase_firestore_nanopb_version_max=$(python3 -c 'import json; data = json.loa
 boringssl_url="https://raw.githubusercontent.com/google/grpc-binary/$firebase_firestore_grpc_version/Package.swift"
 
 # Fetch the Package.swift file
+echo "Fetching Package.swift file from $boringssl_url"
 package_swift=$(curl -s $boringssl_url)
 
 # Check if the fetch was successful
