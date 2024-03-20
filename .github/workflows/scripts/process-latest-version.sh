@@ -62,6 +62,11 @@ firebase_firestore_abseil_version=$(python3 -c 'import json; data = json.load(op
 
 # Extract gRPC version
 firebase_firestore_grpc_version=$(python3 -c 'import json; data = json.load(open("'"$PODSPEC_FILE"'")); print(data["dependencies"]["gRPC-C++"][0].replace("~> ", ""))')
+# If the gRPC version is 1.62.0, set it to 1.62.1
+# Since the tag is missing for 1.62.0.
+if [ "$firebase_firestore_grpc_version" = "1.62.0" ]; then
+  firebase_firestore_grpc_version="1.62.1"
+fi
 
 # Extract leveldb version
 firebase_firestore_leveldb_version=$(python3 -c 'import json; data = json.load(open("'"$PODSPEC_FILE"'")); print(data["dependencies"]["leveldb-library"][0])')
