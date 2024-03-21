@@ -1,7 +1,7 @@
-firebase_firestore_version = '10.22.0'
-firebase_firestore_abseil_version = '1.2022062300.0'
-firebase_firestore_grpc_version = '1.49.1'
-firebase_firestore_grpc_boringssl_version = '1.44.0'
+firebase_firestore_version = '10.23.0'
+firebase_firestore_abseil_version = '1.20240116.1'
+firebase_firestore_grpc_version = '1.62.0'
+firebase_firestore_grpc_boringssl_version = '~>  1.62.1'
 firebase_firestore_leveldb_version = '~> 1.22'
 firebase_firestore_nanopb_version_min = '>= 2.30908.0'
 firebase_firestore_nanopb_version_max = '< 2.30911.0'
@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
 
   # See https://github.com/google/grpc-binary/blob/main/Package.swift
   s.source           = {
-    :http => "https://dl.google.com/firebase/ios/bin/grpc/#{firebase_firestore_grpc_boringssl_version}/BoringSSL-GRPC.zip"
+    :http => "https://dl.google.com/firebase/ios/bin/grpc/1.62.1/rc1/openssl_grpc.zip"
   }
 
   s.cocoapods_version      = '>= 1.10.0'
