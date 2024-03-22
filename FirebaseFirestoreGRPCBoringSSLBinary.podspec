@@ -1,5 +1,5 @@
 firebase_firestore_version = '10.23.0'
-firebase_firestore_abseil_version = '1.20240116.1'
+firebase_firestore_abseil_version = '1.2022062300.0'
 firebase_firestore_grpc_version = '1.62.0'
 firebase_firestore_grpc_boringssl_version = '1.62.1'
 firebase_firestore_leveldb_version = '~> 1.22'
@@ -34,6 +34,6 @@ Pod::Spec.new do |s|
   s.swift_version = '5.3'
 
   s.vendored_frameworks = [ 
-    "BoringSSL-GRPC.xcframework",
+    "openssl_grpc.xcframework",
   ]
 end
