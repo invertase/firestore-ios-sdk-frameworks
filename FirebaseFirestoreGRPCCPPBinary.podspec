@@ -39,8 +39,7 @@ Pod::Spec.new do |s|
   s.vendored_frameworks = [ 
     "grpcpp.xcframework",
   ]
-  #this one
+
   s.dependency 'FirebaseFirestoreGRPCCoreBinary', firebase_firestore_grpc_version
-  #this one
   s.dependency 'FirebaseFirestoreAbseilBinary', firebase_firestore_abseil_version
 end
