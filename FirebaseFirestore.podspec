@@ -1,5 +1,5 @@
 firebase_firestore_version = '10.23.0'
-firebase_firestore_abseil_version = '1.2022062300.0'
+firebase_firestore_abseil_version = '1.2024011601.0'
 firebase_firestore_grpc_version = '1.62.0'
 firebase_firestore_grpc_boringssl_version = '1.62.1'
 firebase_firestore_leveldb_version = '~> 1.22'
