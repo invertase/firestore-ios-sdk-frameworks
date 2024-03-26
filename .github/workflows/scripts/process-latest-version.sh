@@ -100,6 +100,12 @@ if [[ -z $firebase_firestore_grpc_boringssl_version ]]; then
   exit 1
 fi
 
+# Extract the URLs for grpc, grpcpp, and openssl_grpc
+firebase_firestore_grpc_version_url=$(echo "$package_swift" | grep -A1 "name: \"grpc\"" | grep "url" | sed -E 's/.*url: "(.*)",.*/\1/')
+firebase_firestore_grpc_ccp_version_url=$(echo "$package_swift" | grep -A1 "name: \"grpcpp\"" | grep "url" | sed -E 's/.*url: "(.*)",.*/\1/')
+firebase_firestore_grpc_boringssl_url=$(echo "$package_swift" | grep -A1 "name: \"openssl_grpc\"" | grep "url" | sed -E 's/.*url: "(.*)",.*/\1/')
+
+
 # Output the extracted values
 echo "firebase_firestore_version = '$firebase_firestore_version'"
 echo "firebase_firestore_abseil_version = '$firebase_firestore_abseil_version'"
@@ -108,6 +114,27 @@ echo "firebase_firestore_leveldb_version = '$firebase_firestore_leveldb_version'
 echo "firebase_firestore_nanopb_version_min = '$firebase_firestore_nanopb_version_min'"
 echo "firebase_firestore_nanopb_version_max = '$firebase_firestore_nanopb_version_max'"
 echo "firebase_firestore_boringssl_version = '$firebase_firestore_grpc_boringssl_version'"
+echo "firebase_firestore_grpc_version_url = '$firebase_firestore_grpc_version_url'"
+echo "firebase_firestore_grpc_ccp_version_url = '$firebase_firestore_grpc_ccp_version_url'"
+echo "firebase_firestore_grpc_boringssl_url = '$firebase_firestore_grpc_boringssl_url'"
+
+# Check if the grpc version URL was extracted
+if [[ -z $firebase_firestore_grpc_version_url ]]; then
+  echo "Failed to extract the gRPC version URL."
+  exit 1
+fi
+
+# Check if the grpcpp version URL was extracted
+if [[ -z $firebase_firestore_grpc_ccp_version_url ]]; then
+  echo "Failed to extract the gRPC CPP version URL."
+  exit 1
+fi
+
+# Check if the BoringSSL-GRPC URL was extracted
+if [[ -z $firebase_firestore_grpc_boringssl_url ]]; then
+  echo "Failed to extract the BoringSSL-GRPC URL."
+  exit 1
+fi
 
 if [ -z "$firebase_firestore_version" ]; then
   echo "Failed to extract Firebase Firestore version from podspec."
@@ -140,14 +167,18 @@ if [ $(git tag -l "$firebase_firestore_version") ]; then
 fi
 
 for file in *.podspec; do
-  sed -i '' "s/^firebase_firestore_version = .*/firebase_firestore_version = '$firebase_firestore_version'/" "$file"
-  sed -i '' "s/^firebase_firestore_abseil_version = .*/firebase_firestore_abseil_version = '$firebase_firestore_abseil_version'/" "$file"
-  sed -i '' "s/^firebase_firestore_grpc_version = .*/firebase_firestore_grpc_version = '$firebase_firestore_grpc_version'/" "$file"
-  sed -i '' "s/^firebase_firestore_grpc_boringssl_version = .*/firebase_firestore_grpc_boringssl_version = '$firebase_firestore_grpc_boringssl_version'/" "$file"
-  sed -i '' "s/^firebase_firestore_leveldb_version = .*/firebase_firestore_leveldb_version = '$firebase_firestore_leveldb_version'/" "$file"
-  sed -i '' "s/^firebase_firestore_nanopb_version_min = .*/firebase_firestore_nanopb_version_min = '$firebase_firestore_nanopb_version_min'/" "$file"
-  sed -i '' "s/^firebase_firestore_nanopb_version_max = .*/firebase_firestore_nanopb_version_max = '$firebase_firestore_nanopb_version_max'/" "$file"
+  sed -i '' "s|firebase_firestore_version[[:space:]]*=[[:space:]]*.*|firebase_firestore_version='$firebase_firestore_version'|" "$file"
+  sed -i '' "s|firebase_firestore_abseil_url[[:space:]]*=[[:space:]]*.*|firebase_firestore_abseil_url='$firebase_firestore_abseil_url'|" "$file"
+  sed -i '' "s|firebase_firestore_abseil_version[[:space:]]*=[[:space:]]*.*|firebase_firestore_abseil_version='$firebase_firestore_abseil_version'|" "$file"
+  sed -i '' "s|firebase_firestore_grpc_version[[:space:]]*=[[:space:]]*.*|firebase_firestore_grpc_version='$firebase_firestore_grpc_version'|" "$file"
+  sed -i '' "s|firebase_firestore_grpc_version_url[[:space:]]*=[[:space:]]*.*|firebase_firestore_grpc_version_url='$firebase_firestore_grpc_version_url'|" "$file"
+  sed -i '' "s|firebase_firestore_grpc_ccp_version_url[[:space:]]*=[[:space:]]*.*|firebase_firestore_grpc_ccp_version_url='$firebase_firestore_grpc_ccp_version_url'|" "$file"
+  sed -i '' "s|firebase_firestore_grpc_boringssl_url[[:space:]]*=[[:space:]]*.*|firebase_firestore_grpc_boringssl_url='$firebase_firestore_grpc_boringssl_url'|" "$file"
+  sed -i '' "s|firebase_firestore_leveldb_version[[:space:]]*=[[:space:]]*.*|firebase_firestore_leveldb_version='$firebase_firestore_leveldb_version'|" "$file"
+  sed -i '' "s|firebase_firestore_nanopb_version_min[[:space:]]*=[[:space:]]*.*|firebase_firestore_nanopb_version_min='$firebase_firestore_nanopb_version_min'|" "$file"
+  sed -i '' "s|firebase_firestore_nanopb_version_max[[:space:]]*=[[:space:]]*.*|firebase_firestore_nanopb_version_max='$firebase_firestore_nanopb_version_max'|" "$file"
 done
+
 new_version_added_line="<!--NEW_VERSION_PLACEHOLDER-->¬ - [$firebase_firestore_version](https:\/\/github.com\/invertase\/firestore-ios-sdk-frameworks\/releases\/tag\/$firebase_firestore_version)"
 updated_readme_contents=$(sed -e "s/<!--NEW_VERSION_PLACEHOLDER-->.*/$new_version_added_line/" README.md | tr '¬' '\n')
 echo "$updated_readme_contents" >README.md
