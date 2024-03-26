@@ -91,8 +91,8 @@ if [[ -z $package_swift ]]; then
   exit 1
 fi
 
-# Extract the BoringSSL-GRPC version
-firebase_firestore_grpc_boringssl_version=$(echo "$package_swift" | grep -A1 "name: \"BoringSSL-GRPC\"" | grep "url" | sed -E 's/.*grpc\/([0-9]+\.[0-9]+\.[0-9]+)\/BoringSSL-GRPC\.zip.*/\1/')
+# Extract the BoringSSL-GRPC version from the grpc binary target URL
+firebase_firestore_grpc_boringssl_version=$(echo "$package_swift" | grep -m1 "url: \"https://dl.google.com/firebase/ios/bin/grpc/" | sed -E 's|.*/grpc/([0-9]+\.[0-9]+\.[0-9]+)/.*|\1|')
 
 # Check if the version was extracted
 if [[ -z $firebase_firestore_grpc_boringssl_version ]]; then
