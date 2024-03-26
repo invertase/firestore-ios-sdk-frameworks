@@ -79,11 +79,11 @@ firebase_firestore_nanopb_version_min=$(python3 -c 'import json; data = json.loa
 firebase_firestore_nanopb_version_max=$(python3 -c 'import json; data = json.load(open("'"$PODSPEC_FILE"'")); print(data["dependencies"]["nanopb"][1])')
 
 # URL of the Package.swift file
-boringssl_url="https://raw.githubusercontent.com/google/grpc-binary/$firebase_firestore_grpc_version/Package.swift"
+openssl_url="https://raw.githubusercontent.com/google/grpc-binary/$firebase_firestore_grpc_version/Package.swift"
 
 # Fetch the Package.swift file
-echo "Fetching Package.swift file from $boringssl_url"
-package_swift=$(curl -s $boringssl_url)
+echo "Fetching Package.swift file from $openssl_url"
+package_swift=$(curl -s $openssl_url)
 
 # Check if the fetch was successful
 if [[ -z $package_swift ]]; then
@@ -91,12 +91,13 @@ if [[ -z $package_swift ]]; then
   exit 1
 fi
 
-# Extract the BoringSSL-GRPC version
-firebase_firestore_grpc_boringssl_version=$(echo "$package_swift" | grep -A1 "name: \"BoringSSL-GRPC\"" | grep "url" | sed -E 's/.*grpc\/([0-9]+\.[0-9]+\.[0-9]+)\/BoringSSL-GRPC\.zip.*/\1/')
+# Extract the OpenSSL-GRPC version
+# Example url currently: https://dl.google.com/firebase/ios/bin/grpc/1.62.1/rc1/openssl_grpc.zip (note the 'rc1' before zip now)
+firebase_firestore_grpc_openssl_version=$(echo "$package_swift" | grep -A1 "name: \"openssl_grpc\"" | grep "url" | sed -E 's/.*grpc\/([0-9]+\.[0-9]+\.[0-9]+)\/.*/openssl_grpc\.zip.*/\1/')
 
 # Check if the version was extracted
-if [[ -z $firebase_firestore_grpc_boringssl_version ]]; then
-  echo "Failed to extract BoringSSL-GRPC version."
+if [[ -z $firebase_firestore_grpc_openssl_version ]]; then
+  echo "Failed to extract OpenSSL-GRPC version."
   exit 1
 fi
 
@@ -107,7 +108,7 @@ echo "firebase_firestore_grpc_version = '$firebase_firestore_grpc_version'"
 echo "firebase_firestore_leveldb_version = '$firebase_firestore_leveldb_version'"
 echo "firebase_firestore_nanopb_version_min = '$firebase_firestore_nanopb_version_min'"
 echo "firebase_firestore_nanopb_version_max = '$firebase_firestore_nanopb_version_max'"
-echo "firebase_firestore_boringssl_version = '$firebase_firestore_grpc_boringssl_version'"
+echo "firebase_firestore_openssl_version = '$firebase_firestore_grpc_openssl_version'"
 
 if [ -z "$firebase_firestore_version" ]; then
   echo "Failed to extract Firebase Firestore version from podspec."
@@ -143,7 +144,7 @@ for file in *.podspec; do
   sed -i '' "s/^firebase_firestore_version = .*/firebase_firestore_version = '$firebase_firestore_version'/" "$file"
   sed -i '' "s/^firebase_firestore_abseil_version = .*/firebase_firestore_abseil_version = '$firebase_firestore_abseil_version'/" "$file"
   sed -i '' "s/^firebase_firestore_grpc_version = .*/firebase_firestore_grpc_version = '$firebase_firestore_grpc_version'/" "$file"
-  sed -i '' "s/^firebase_firestore_grpc_boringssl_version = .*/firebase_firestore_grpc_boringssl_version = '$firebase_firestore_grpc_boringssl_version'/" "$file"
+  sed -i '' "s/^firebase_firestore_grpc_openssl_version = .*/firebase_firestore_grpc_openssl_version = '$firebase_firestore_grpc_openssl_version'/" "$file"
   sed -i '' "s/^firebase_firestore_leveldb_version = .*/firebase_firestore_leveldb_version = '$firebase_firestore_leveldb_version'/" "$file"
   sed -i '' "s/^firebase_firestore_nanopb_version_min = .*/firebase_firestore_nanopb_version_min = '$firebase_firestore_nanopb_version_min'/" "$file"
   sed -i '' "s/^firebase_firestore_nanopb_version_max = .*/firebase_firestore_nanopb_version_max = '$firebase_firestore_nanopb_version_max'/" "$file"
