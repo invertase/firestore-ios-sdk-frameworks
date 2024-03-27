@@ -57,9 +57,6 @@ PODSPEC_FILE=$(pod spec which FirebaseFirestoreInternal)
 # Extract Firebase Firestore version
 firebase_firestore_version=$(python3 -c 'import json; data = json.load(open("'"$PODSPEC_FILE"'")); print(data["version"])')
 
-# Extract the Firebase Firestore Abseil version and pad it with two extra zeros (for some reason)
-firebase_firestore_abseil_version=$(python3 -c 'import json; data = json.load(open("'"$PODSPEC_FILE"'")); version = data["dependencies"]["abseil/algorithm"][0].replace("~> ", ""); parts = version.split("."); print(parts[0] + "." + parts[1] + "00." + parts[2])')
-
 # Extract gRPC version
 firebase_firestore_grpc_version=$(python3 -c 'import json; data = json.load(open("'"$PODSPEC_FILE"'")); print(data["dependencies"]["gRPC-C++"][0].replace("~> ", ""))')
 # If the gRPC version is 1.62.0, set it to 1.62.1
@@ -78,7 +75,7 @@ firebase_firestore_nanopb_version_min=$(python3 -c 'import json; data = json.loa
 # Extract nanopb maximum version
 firebase_firestore_nanopb_version_max=$(python3 -c 'import json; data = json.load(open("'"$PODSPEC_FILE"'")); print(data["dependencies"]["nanopb"][1])')
 
-# URL of the Package.swift file
+# URL of the grpc binary Package.swift file
 boringssl_url="https://raw.githubusercontent.com/google/grpc-binary/$firebase_firestore_grpc_version/Package.swift"
 
 # Fetch the Package.swift file
@@ -87,7 +84,58 @@ package_swift=$(curl -s $boringssl_url)
 
 # Check if the fetch was successful
 if [[ -z $package_swift ]]; then
-  echo "Failed to fetch the Package.swift file."
+  echo "Failed to fetch the Package.swift grpc binary file."
+  exit 1
+fi
+
+# Capture the line with the version range
+version_line=$(echo "$package_swift" | grep -o '".*\.\.<.*"')
+
+
+# Check if the version line was captured
+if [[ -z $version_line ]]; then
+  echo "Failed to capture the version line."
+  exit 1
+fi
+
+# Extract the first part of the version
+firebase_firestore_abseil_version=$(echo "$version_line" | awk -F\" '{print $2}' | head -1)
+
+
+# Check if the version was extracted
+if [[ -z $firebase_firestore_abseil_version ]]; then
+  echo "Failed to extract the Firebase Firestore Abseil version."
+  exit 1
+fi
+
+# Extract the BoringSSL-GRPC version from the grpc binary target URL
+firebase_firestore_grpc_boringssl_version=$(echo "$package_swift" | grep -m1 "url: \"https://dl.google.com/firebase/ios/bin/grpc/" | sed -E 's|.*/grpc/([0-9]+\.[0-9]+\.[0-9]+)/.*|\1|')
+
+# Check if the version was extracted
+if [[ -z $firebase_firestore_grpc_boringssl_version ]]; then
+  echo "Failed to extract BoringSSL-GRPC version."
+  exit 1
+fi
+
+# URL of the abseil cpp binary Package.swift file
+abseil_cpp_binary_url="https://raw.githubusercontent.com/google/abseil-cpp-binary/$firebase_firestore_abseil_version/Package.swift"
+
+# Fetch the Package.swift file
+echo "Fetching Package.swift file from $abseil_cpp_binary_url"
+abseil_cpp_binary_package_swift=$(curl -s $abseil_cpp_binary_url)
+
+# Check if the fetch was successful
+if [[ -z $abseil_cpp_binary_package_swift ]]; then
+  echo "Failed to fetch the Package.swift abseil cpp binary file."
+  exit 1
+fi
+
+# Extract the abseil URL
+firebase_firestore_abseil_url=$(echo "$abseil_cpp_binary_package_swift" | grep -m1 "url: \"" | sed -E 's|.*url: "([^"]+)".*|\1|')
+
+# Check if the URL was extracted
+if [[ -z $firebase_firestore_abseil_url ]]; then
+  echo "Failed to extract the Firebase Firestore Abseil URL."
   exit 1
 fi
 
@@ -108,6 +156,7 @@ firebase_firestore_grpc_boringssl_url=$(echo "$package_swift" | grep -A1 "name: 
 
 # Output the extracted values
 echo "firebase_firestore_version = '$firebase_firestore_version'"
+echo "firebase_firestore_abseil_url = '$firebase_firestore_abseil_url'"
 echo "firebase_firestore_abseil_version = '$firebase_firestore_abseil_version'"
 echo "firebase_firestore_grpc_version = '$firebase_firestore_grpc_version'"
 echo "firebase_firestore_leveldb_version = '$firebase_firestore_leveldb_version'"
@@ -117,6 +166,7 @@ echo "firebase_firestore_boringssl_version = '$firebase_firestore_grpc_boringssl
 echo "firebase_firestore_grpc_version_url = '$firebase_firestore_grpc_version_url'"
 echo "firebase_firestore_grpc_ccp_version_url = '$firebase_firestore_grpc_ccp_version_url'"
 echo "firebase_firestore_grpc_boringssl_url = '$firebase_firestore_grpc_boringssl_url'"
+
 
 # Check if the grpc version URL was extracted
 if [[ -z $firebase_firestore_grpc_version_url ]]; then
