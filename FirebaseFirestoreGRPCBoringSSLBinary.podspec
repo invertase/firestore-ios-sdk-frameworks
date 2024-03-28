@@ -9,9 +9,11 @@ firebase_firestore_nanopb_version_min='>= 2.30908.0'
 firebase_firestore_nanopb_version_max='< 2.30911.0'
 firebase_firestore_grpc_boringssl_url='https://dl.google.com/firebase/ios/bin/grpc/1.62.1/rc1/openssl_grpc.zip'
 
+trial_release="#{firebase_firestore_grpc_version}-rc1"
+
 Pod::Spec.new do |s|
   s.name                   = 'FirebaseFirestoreGRPCBoringSSLBinary'
-  s.version                = firebase_firestore_grpc_version
+  s.version                = trial_release
   s.summary                = 'A replica Firebase Firestore podspec.'
   s.description            = 'A replica Firebase Firestore podspec that provides pre-compiled binaries/frameworks instead'
   s.homepage               = 'https://invertase.io'

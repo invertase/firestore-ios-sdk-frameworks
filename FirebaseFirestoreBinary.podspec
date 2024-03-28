@@ -9,9 +9,11 @@ firebase_firestore_nanopb_version_min='>= 2.30908.0'
 firebase_firestore_nanopb_version_max='< 2.30911.0'
 firebase_firestore_grpc_boringssl_url='https://dl.google.com/firebase/ios/bin/grpc/1.62.1/rc1/openssl_grpc.zip'
 
+trial_release="#{firebase_firestore_version}-rc1"
+
 Pod::Spec.new do |s|
   s.name             = 'FirebaseFirestoreBinary'
-  s.version          = firebase_firestore_version
+  s.version          = trial_release
   s.summary          = 'Google Cloud Firestore'
   s.description      = <<-DESC
 Google Cloud Firestore is a NoSQL document database built for automatic scaling, high performance, and ease of application development.
@@ -47,7 +49,7 @@ Google Cloud Firestore is a NoSQL document database built for automatic scaling,
 
   s.dependency 'FirebaseCore', firebase_firestore_version
   s.dependency 'FirebaseCoreExtension', firebase_firestore_version
-  s.dependency 'FirebaseFirestoreInternalBinary', firebase_firestore_version
+  s.dependency 'FirebaseFirestoreInternalBinary', trial_release
   s.dependency 'FirebaseSharedSwift', firebase_firestore_version
 
 end

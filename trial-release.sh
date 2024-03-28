@@ -388,16 +388,21 @@ for file in *.podspec; do
   sed -i '' "s|firebase_firestore_nanopb_version_max[[:space:]]*=[[:space:]]*.*|firebase_firestore_nanopb_version_max='$firebase_firestore_nanopb_version_max'|" "$file"
 done
 
-new_version_added_line="<!--NEW_VERSION_PLACEHOLDER-->¬ - [$firebase_firestore_version](https:\/\/github.com\/invertase\/firestore-ios-sdk-frameworks\/releases\/tag\/$firebase_firestore_version)"
-updated_readme_contents=$(sed -e "s/<!--NEW_VERSION_PLACEHOLDER-->.*/$new_version_added_line/" README.md | tr '¬' '\n')
-echo "$updated_readme_contents" >README.md
+# # GIT COMMIT, PUSH & TAG
+# new_version_added_line="<!--NEW_VERSION_PLACEHOLDER-->¬ - [$firebase_firestore_version](https:\/\/github.com\/invertase\/firestore-ios-sdk-frameworks\/releases\/tag\/$firebase_firestore_version)"
+# updated_readme_contents=$(sed -e "s/<!--NEW_VERSION_PLACEHOLDER-->.*/$new_version_added_line/" README.md | tr '¬' '\n')
+# echo "$updated_readme_contents" >README.md
 
-# GIT COMMIT, PUSH & TAG
-git add .
-git commit -m "release: $firebase_firestore_version"
-git tag -a "$firebase_firestore_version" -m "$firebase_firestore_version"
-git push origin main --follow-tags
-create_github_release "$firebase_firestore_version" "\"[View Firebase iOS SDK Release](https://github.com/firebase/firebase-ios-sdk/releases/tag/$firebase_firestore_version)\"" "$firebase_firestore_version"
+# git add .
+# git commit -m "release: $firebase_firestore_version"
+# git tag -a "$firebase_firestore_version" -m "$firebase_firestore_version"
+# git push origin main --follow-tags
+# create_github_release "$firebase_firestore_version" "\"[View Firebase iOS SDK Release](https://github.com/firebase/firebase-ios-sdk/releases/tag/$firebase_firestore_version)\"" "$firebase_firestore_version"
+
+
+firebase_firestore_grpc_version+="-rc1"
+firebase_firestore_abseil_version+="-rc1"
+firebase_firestore_version+="-rc1"
 
 # PUSH THE PODSPECS TO COCOAPODS
 pod spec which FirebaseFirestoreGRPCBoringSSLBinary --version="$firebase_firestore_grpc_version"
