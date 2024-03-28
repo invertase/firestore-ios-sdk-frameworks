@@ -1,14 +1,18 @@
-firebase_firestore_version = '10.22.0'
-firebase_firestore_abseil_version = '1.2022062300.0'
-firebase_firestore_grpc_version = '1.49.1'
-firebase_firestore_grpc_boringssl_version = '1.44.0'
-firebase_firestore_leveldb_version = '~> 1.22'
-firebase_firestore_nanopb_version_min = '>= 2.30908.0'
-firebase_firestore_nanopb_version_max = '< 2.30911.0'
+firebase_firestore_version='10.23.0'
+firebase_firestore_abseil_url='https://dl.google.com/firebase/ios/bin/abseil/1.2024011601.0/rc1/absl.zip'
+firebase_firestore_abseil_version='1.2024011601.0'
+firebase_firestore_grpc_version='1.62.1'
+firebase_firestore_grpc_version_url='https://dl.google.com/firebase/ios/bin/grpc/1.62.1/rc1/grpc.zip'
+firebase_firestore_grpc_ccp_version_url='https://dl.google.com/firebase/ios/bin/grpc/1.62.1/rc1/grpcpp.zip'
+firebase_firestore_leveldb_version='~> 1.22'
+firebase_firestore_nanopb_version_min='>= 2.30908.0'
+firebase_firestore_nanopb_version_max='< 2.30911.0'
+firebase_firestore_grpc_boringssl_url='https://dl.google.com/firebase/ios/bin/grpc/1.62.1/rc1/openssl_grpc.zip'
+
 
 Pod::Spec.new do |s|
   s.name                   = 'FirebaseFirestoreGRPCCoreBinary'
-  s.version                = firebase_firestore_grpc_version
+  s.version                = "0.0.1-rc1"
   s.summary                = 'A replica Firebase Firestore podspec.'
   s.description            = 'A replica Firebase Firestore podspec that provides pre-compiled binaries/frameworks instead'
   s.homepage               = 'https://invertase.io'
@@ -16,7 +20,7 @@ Pod::Spec.new do |s|
 
   # See https://github.com/google/grpc-binary/blob/main/Package.swift
   s.source           = {
-    :http => "https://dl.google.com/firebase/ios/bin/grpc/#{firebase_firestore_grpc_version}/gRPC-Core.zip"
+    :http => firebase_firestore_grpc_version_url
   }
 
   s.cocoapods_version      = '>= 1.10.0'
@@ -34,9 +38,13 @@ Pod::Spec.new do |s|
   s.swift_version = '5.3'
 
   s.vendored_frameworks = [ 
-    "gRPC-Core.xcframework",
+    "grpc.xcframework",
   ]
 
-  s.dependency 'FirebaseFirestoreGRPCBoringSSLBinary', firebase_firestore_grpc_version
-  s.dependency 'FirebaseFirestoreAbseilBinary', firebase_firestore_abseil_version
+  s.resource_bundles = {
+    "#{s.module_name}_Privacy" => 'Resources/grpc/PrivacyInfo.xcprivacy'
+  }
+
+  s.dependency 'FirebaseFirestoreGRPCBoringSSLBinary', "0.0.1-rc1"
+  s.dependency 'FirebaseFirestoreAbseilBinary', "0.0.1-rc1"
 end
