@@ -40,6 +40,10 @@ Pod::Spec.new do |s|
     "grpc.xcframework",
   ]
 
+  s.resource_bundles = {
+    "#{s.module_name}_Privacy" => 'Resources/grpc/PrivacyInfo.xcprivacy'
+  }
+
   s.dependency 'FirebaseFirestoreGRPCBoringSSLBinary', firebase_firestore_grpc_version
   s.dependency 'FirebaseFirestoreAbseilBinary', firebase_firestore_abseil_version
 end

@@ -76,11 +76,11 @@ firebase_firestore_nanopb_version_min=$(python3 -c 'import json; data = json.loa
 firebase_firestore_nanopb_version_max=$(python3 -c 'import json; data = json.load(open("'"$PODSPEC_FILE"'")); print(data["dependencies"]["nanopb"][1])')
 
 # URL of the grpc binary Package.swift file
-boringssl_url="https://raw.githubusercontent.com/google/grpc-binary/$firebase_firestore_grpc_version/Package.swift"
+grpc_binary_swift_url="https://raw.githubusercontent.com/google/grpc-binary/$firebase_firestore_grpc_version/Package.swift"
 
 # Fetch the Package.swift file
-echo "Fetching Package.swift file from $boringssl_url"
-package_swift=$(curl -s $boringssl_url)
+echo "Fetching Package.swift file from $grpc_binary_swift_url"
+package_swift=$(curl -s $grpc_binary_swift_url)
 
 # Check if the fetch was successful
 if [[ -z $package_swift ]]; then
@@ -88,7 +88,41 @@ if [[ -z $package_swift ]]; then
   exit 1
 fi
 
+# GRPC CORE BINARY UPDATE
+: <<'END_COMMENT'
+- Captures the version from the grpc binary Package.swift file.
+- Extracts the URL of the Firebase Firestore GRPC core package from the grpc Package.swift file for source in FirebaseFirestoreGRPCCoreBinary.podspec
+- Extracts the path and resource process path of the PrivacyInfo.xcprivacy file from the grpc binary Package.swift file and writes the content to Resources/grpc/PrivacyInfo.xcprivacy.
+END_COMMENT
 
+firebase_firestore_grpc_version_url=$(echo "$package_swift" | grep -A1 "name: \"grpc\"" | grep "url" | sed -E 's/.*url: "(.*)",.*/\1/')
+
+# Extract the section for the grpcWrapper target
+grpc_wrapper_section=$(echo "$package_swift" | awk '/grpcWrapper/,/}/' | grep -v 'opensslWrapper\|grpcppWrapper')
+
+# Extract the path value for grpcWrapper
+grpc_wrapper_path=$(echo "$grpc_wrapper_section" | grep -m1 'path: ' | sed -E 's/.*path: "([^"]*)".*/\1/')
+
+# Extract the resource process path for grpcWrapper
+grpc_wrapper_resource_process_path=$(echo "$grpc_wrapper_section" | grep -m1 'process(' | sed -E 's/.*process\("([^"]*)"\).*/\1/')
+
+grpc_privacy_resource_url="https://raw.githubusercontent.com/google/grpc-binary/1.62.1/$grpc_wrapper_path/$grpc_wrapper_resource_process_path"
+
+# Ensure the directory "Resources/grpc" exists
+mkdir -p Resources/grpc
+
+# Fetch the content
+grpc_privacy_content=$(curl -s "$grpc_privacy_resource_url")
+
+# Check if the grpc_privacy_content is an XML file with <plist></plist>
+if [[ $grpc_privacy_content == *"?xml"* ]] && [[ $grpc_privacy_content == *"</plist>"* ]]; then
+    # Write the grpc_privacy_content into the file "Resources/grpc/PrivacyInfo.xcprivacy"
+    echo "$grpc_privacy_content" > "Resources/grpc/PrivacyInfo.xcprivacy"
+    echo "Privacy resource successfully written to Resources/grpc/PrivacyInfo.xcprivacy"
+else
+    echo "Failed to write the privacy resource for grpc: Content is not a valid XML plist file."
+    exit 1
+fi
 
 # ABSEIL BINARY UPDATE
 : <<'END_COMMENT'
@@ -218,7 +252,6 @@ fi
 
 
 ## TODO move these at some point to appropriate sections
-firebase_firestore_grpc_version_url=$(echo "$package_swift" | grep -A1 "name: \"grpc\"" | grep "url" | sed -E 's/.*url: "(.*)",.*/\1/')
 firebase_firestore_grpc_ccp_version_url=$(echo "$package_swift" | grep -A1 "name: \"grpcpp\"" | grep "url" | sed -E 's/.*url: "(.*)",.*/\1/')
 
 
