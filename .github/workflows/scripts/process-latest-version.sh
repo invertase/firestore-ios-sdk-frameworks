@@ -88,6 +88,23 @@ if [[ -z $package_swift ]]; then
   exit 1
 fi
 
+# Extract the BoringSSL-GRPC version from the grpc binary target URL
+firebase_firestore_grpc_boringssl_version=$(echo "$package_swift" | grep -m1 "url: \"https://dl.google.com/firebase/ios/bin/grpc/" | sed -E 's|.*/grpc/([0-9]+\.[0-9]+\.[0-9]+)/.*|\1|')
+
+# Check if the version was extracted
+if [[ -z $firebase_firestore_grpc_boringssl_version ]]; then
+  echo "Failed to extract BoringSSL-GRPC version."
+  exit 1
+fi
+
+# ABSEIL BINARY UPDATE
+: <<'END_COMMENT'
+- Captures the version range of the Firebase Firestore Abseil package from the grpc binary Package.swift file.
+- Takes the first part of the version range and uses it to fetch the Package.swift file of the abseil-cpp-binary repository.
+- Extracts the URL of the Firebase Firestore Abseil package from the abseil-cpp-binary Package.swift file.
+- Extracts the path and resource process path of the PrivacyInfo.xcprivacy file from the abseil-cpp-binary Package.swift file and writes the content to Resources/abseil/PrivacyInfo.xcprivacy.
+END_COMMENT
+
 # Capture the line with the version range
 version_line=$(echo "$package_swift" | grep -o '".*\.\.<.*"')
 
@@ -105,15 +122,6 @@ firebase_firestore_abseil_version=$(echo "$version_line" | awk -F\" '{print $2}'
 # Check if the version was extracted
 if [[ -z $firebase_firestore_abseil_version ]]; then
   echo "Failed to extract the Firebase Firestore Abseil version."
-  exit 1
-fi
-
-# Extract the BoringSSL-GRPC version from the grpc binary target URL
-firebase_firestore_grpc_boringssl_version=$(echo "$package_swift" | grep -m1 "url: \"https://dl.google.com/firebase/ios/bin/grpc/" | sed -E 's|.*/grpc/([0-9]+\.[0-9]+\.[0-9]+)/.*|\1|')
-
-# Check if the version was extracted
-if [[ -z $firebase_firestore_grpc_boringssl_version ]]; then
-  echo "Failed to extract BoringSSL-GRPC version."
   exit 1
 fi
 
@@ -138,6 +146,31 @@ if [[ -z $firebase_firestore_abseil_url ]]; then
   echo "Failed to extract the Firebase Firestore Abseil URL."
   exit 1
 fi
+
+# Extract the path ("absl-Wrapper")
+path=$(echo "$abseil_cpp_binary_package_swift" | grep -o 'path: "[^"]*"' | sed -E 's/path: "([^"]*)"/\1/' | head -1)
+
+# Extract the resource process path ("Resources/PrivacyInfo.xcprivacy")
+resource_process_path=$(echo "$abseil_cpp_binary_package_swift" | grep -o 'process("[^"]*")' | sed -E 's/process\("([^"]*)"\)/\1/' | head -1)
+
+abseil_privacy_resource_url="https://raw.githubusercontent.com/google/abseil-cpp-binary/$firebase_firestore_abseil_version/$path/$resource_process_path"
+
+# Ensure the directory "Resources/abseil" exists
+mkdir -p Resources/abseil
+
+# Fetch the content
+abseil_privacy_content=$(curl -s "$abseil_privacy_resource_url")
+
+# Check if the abseil_privacy_content is an XML file with <plist></plist>
+if [[ $abseil_privacy_content == *"?xml"* ]] && [[ $abseil_privacy_content == *"</plist>"* ]]; then
+    # Write the abseil_privacy_content into the file "Resources/abseil/PrivacyInfo.xcprivacy"
+    echo "$abseil_privacy_content" > "Resources/abseil/PrivacyInfo.xcprivacy"
+    echo "Privacy resource successfully written to Resources/abseil/PrivacyInfo.xcprivacy"
+else
+    echo "Failed to write the privacy resource: Content is not a valid XML plist file."
+    exit 1
+fi
+
 
 # Extract the BoringSSL-GRPC version from the grpc binary target URL
 firebase_firestore_grpc_boringssl_version=$(echo "$package_swift" | grep -m1 "url: \"https://dl.google.com/firebase/ios/bin/grpc/" | sed -E 's|.*/grpc/([0-9]+\.[0-9]+\.[0-9]+)/.*|\1|')
