@@ -400,9 +400,9 @@ done
 # create_github_release "$firebase_firestore_version" "\"[View Firebase iOS SDK Release](https://github.com/firebase/firebase-ios-sdk/releases/tag/$firebase_firestore_version)\"" "$firebase_firestore_version"
 
 
-firebase_firestore_grpc_version+="-rc1"
-firebase_firestore_abseil_version+="-rc1"
-firebase_firestore_version+="-rc1"
+firebase_firestore_grpc_version="0.0.1-rc1"
+firebase_firestore_abseil_version="0.0.1-rc1"
+firebase_firestore_version="0.0.1-rc1"
 
 # PUSH THE PODSPECS TO COCOAPODS
 pod spec which FirebaseFirestoreGRPCBoringSSLBinary --version="$firebase_firestore_grpc_version"

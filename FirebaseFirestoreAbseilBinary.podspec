@@ -9,11 +9,9 @@ firebase_firestore_nanopb_version_min='>= 2.30908.0'
 firebase_firestore_nanopb_version_max='< 2.30911.0'
 firebase_firestore_grpc_boringssl_url='https://dl.google.com/firebase/ios/bin/grpc/1.62.1/rc1/openssl_grpc.zip'
 
-trial_release="#{firebase_firestore_abseil_version}-rc1"
-
 Pod::Spec.new do |s|
   s.name                   = 'FirebaseFirestoreAbseilBinary'
-  s.version                = trial_release
+  s.version                = "0.0.1-rc1"
   s.summary                = 'Binary build of Firestore abseil dependency'
   s.description            = 'Not supported for usage outside of Firebase.'
   s.homepage               = 'https://invertase.io'

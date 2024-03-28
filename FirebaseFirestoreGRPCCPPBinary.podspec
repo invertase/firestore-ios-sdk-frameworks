@@ -9,12 +9,10 @@ firebase_firestore_nanopb_version_min='>= 2.30908.0'
 firebase_firestore_nanopb_version_max='< 2.30911.0'
 firebase_firestore_grpc_boringssl_url='https://dl.google.com/firebase/ios/bin/grpc/1.62.1/rc1/openssl_grpc.zip'
 
-trial_release="#{firebase_firestore_grpc_version}-rc1"
-abseil_trial_release="#{firebase_firestore_abseil_version}-rc1"
 
 Pod::Spec.new do |s|
   s.name                   = 'FirebaseFirestoreGRPCCPPBinary'
-  s.version                = trial_release
+  s.version                = "0.0.1-rc1"
   s.summary                = 'A replica Firebase Firestore podspec.'
   s.description            = 'A replica Firebase Firestore podspec that provides pre-compiled binaries/frameworks instead'
   s.homepage               = 'https://invertase.io'
@@ -47,6 +45,6 @@ Pod::Spec.new do |s|
     "#{s.module_name}_Privacy" => 'Resources/grpcpp/PrivacyInfo.xcprivacy'
   }
 
-  s.dependency 'FirebaseFirestoreGRPCCoreBinary', trial_release
-  s.dependency 'FirebaseFirestoreAbseilBinary', abseil_trial_release
+  s.dependency 'FirebaseFirestoreGRPCCoreBinary', "0.0.1-rc1"
+  s.dependency 'FirebaseFirestoreAbseilBinary', "0.0.1-rc1"
 end
