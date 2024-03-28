@@ -43,6 +43,11 @@ Pod::Spec.new do |s|
   s.vendored_frameworks = [ 
    "FirebaseFirestoreInternal.xcframework",
   ]
+
+  s.resource_bundles = {
+    "#{s.module_name}_Privacy" => 'Resources/firestore_internal/PrivacyInfo.xcprivacy'
+  }
+
   s.dependency 'FirebaseFirestoreGRPCCPPBinary', firebase_firestore_grpc_version
   s.dependency 'FirebaseFirestoreAbseilBinary', firebase_firestore_abseil_version
 

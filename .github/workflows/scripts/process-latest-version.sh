@@ -288,6 +288,29 @@ else
     exit 1
 fi
 
+# FIREBASE FIRESTORE INTERNAL BINARY UPDATE
+: <<'END_COMMENT'
+- Takes the Firebase Firestore version and uses it to fetch the Firebase Firestore Internal privacy manifest.
+END_COMMENT
+
+# URL of the Firebase Firestore Internal privacy manifest
+firestore_internal_privacy_content_url="https://raw.githubusercontent.com/firebase/firebase-ios-sdk/$firebase_firestore_version/Firestore/Source/Resources/PrivacyInfo.xcprivacy"
+
+# Ensure the directory "Resources/firestore_internal" exists
+mkdir -p Resources/firestore_internal
+
+# Fetch the content
+firestore_internal_privacy_content=$(curl -s "$firestore_internal_privacy_content_url")
+
+# Check if the firestore_internal_privacy_content is an XML file with <plist></plist>
+if [[ $firestore_internal_privacy_content == *"?xml"* ]] && [[ $firestore_internal_privacy_content == *"</plist>"* ]]; then
+    # Write the firestore_internal_privacy_content into the file "Resources/firestore_internal/PrivacyInfo.xcprivacy"
+    echo "$firestore_internal_privacy_content" > "Resources/firestore_internal/PrivacyInfo.xcprivacy"
+    echo "Privacy resource successfully written to Resources/firestore_internal/PrivacyInfo.xcprivacy"
+else
+    echo "Failed to write the privacy resource for Firebase Firestore Internal: Content is not a valid XML plist file."
+    exit 1
+fi
 
 # Output the extracted values
 echo "firebase_firestore_version = '$firebase_firestore_version'"
