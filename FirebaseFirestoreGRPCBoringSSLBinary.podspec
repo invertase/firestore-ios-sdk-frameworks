@@ -36,6 +36,10 @@ Pod::Spec.new do |s|
 
   s.swift_version = '5.3'
 
+  s.resource_bundles = {
+    "#{s.module_name}_Privacy" => 'Resources/open_ssl/PrivacyInfo.xcprivacy'
+  }
+
   s.vendored_frameworks = [ 
     "openssl_grpc.xcframework",
   ]

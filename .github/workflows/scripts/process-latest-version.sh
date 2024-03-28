@@ -88,14 +88,7 @@ if [[ -z $package_swift ]]; then
   exit 1
 fi
 
-# Extract the BoringSSL-GRPC version from the grpc binary target URL
-firebase_firestore_grpc_boringssl_version=$(echo "$package_swift" | grep -m1 "url: \"https://dl.google.com/firebase/ios/bin/grpc/" | sed -E 's|.*/grpc/([0-9]+\.[0-9]+\.[0-9]+)/.*|\1|')
 
-# Check if the version was extracted
-if [[ -z $firebase_firestore_grpc_boringssl_version ]]; then
-  echo "Failed to extract BoringSSL-GRPC version."
-  exit 1
-fi
 
 # ABSEIL BINARY UPDATE
 : <<'END_COMMENT'
@@ -171,6 +164,12 @@ else
     exit 1
 fi
 
+# OPENSSL BINARY UPDATE (Previously BoringSSL-GRPC)
+: <<'END_COMMENT'
+- Captures the version from the grpc binary Package.swift file.
+- Extracts the URL of the Firebase Firestore Open SSL package from the grpc Package.swift file for source in FirebaseFirestoreGRPCBoringSSLBinary.podspec
+- Extracts the path and resource process path of the PrivacyInfo.xcprivacy file from the grpc binary Package.swift file and writes the content to Resources/open_ssl/PrivacyInfo.xcprivacy.
+END_COMMENT
 
 # Extract the BoringSSL-GRPC version from the grpc binary target URL
 firebase_firestore_grpc_boringssl_version=$(echo "$package_swift" | grep -m1 "url: \"https://dl.google.com/firebase/ios/bin/grpc/" | sed -E 's|.*/grpc/([0-9]+\.[0-9]+\.[0-9]+)/.*|\1|')
@@ -181,10 +180,46 @@ if [[ -z $firebase_firestore_grpc_boringssl_version ]]; then
   exit 1
 fi
 
-# Extract the URLs for grpc, grpcpp, and openssl_grpc
+# Extract the URL for openssl_grpc
+firebase_firestore_grpc_boringssl_url=$(echo "$package_swift" | grep -A1 "name: \"openssl_grpc\"" | grep "url" | sed -E 's/.*url: "(.*)",.*/\1/')
+
+if [[ -z $firebase_firestore_grpc_boringssl_url ]]; then
+  echo "Failed to extract the BoringSSL-GRPC URL."
+  exit 1
+fi
+
+# Use URL of the gRPC binary Package.swift file to get the privacy resource for open_ssl
+# Extract the section for the opensslWrapper target
+openssl_wrapper_section=$(echo "$package_swift" | awk '/opensslWrapper/,/}/' | grep -v 'grpcWrapper\|grpcppWrapper')
+
+# Extract the path value for opensslWrapper
+openssl_wrapper_path=$(echo "$openssl_wrapper_section" | grep -m1 'path: ' | sed -E 's/.*path: "([^"]*)".*/\1/')
+
+# Extract the resource process path for opensslWrapper
+openssl_wrapper_resource_process_path=$(echo "$openssl_wrapper_section" | grep -m1 'process(' | sed -E 's/.*process\("([^"]*)"\).*/\1/')
+
+open_ssl_privacy_resource_url="https://raw.githubusercontent.com/google/grpc-binary/1.62.1/$openssl_wrapper_path/$openssl_wrapper_resource_process_path"
+
+# Ensure the directory "Resources/open_ssl" exists
+mkdir -p Resources/open_ssl
+
+# Fetch the content
+open_ssl_privacy_content=$(curl -s "$open_ssl_privacy_resource_url")
+
+# Check if the open_ssl_privacy_content is an XML file with <plist></plist>
+if [[ $open_ssl_privacy_content == *"?xml"* ]] && [[ $open_ssl_privacy_content == *"</plist>"* ]]; then
+    # Write the open_ssl_privacy_content into the file "Resources/open_ssl/PrivacyInfo.xcprivacy"
+    echo "$open_ssl_privacy_content" > "Resources/open_ssl/PrivacyInfo.xcprivacy"
+    echo "Privacy resource successfully written to Resources/open_ssl/PrivacyInfo.xcprivacy"
+else
+    echo "Failed to write the privacy resource open_ssl: Content is not a valid XML plist file."
+    exit 1
+fi
+
+
+## TODO move these at some point to appropriate sections
 firebase_firestore_grpc_version_url=$(echo "$package_swift" | grep -A1 "name: \"grpc\"" | grep "url" | sed -E 's/.*url: "(.*)",.*/\1/')
 firebase_firestore_grpc_ccp_version_url=$(echo "$package_swift" | grep -A1 "name: \"grpcpp\"" | grep "url" | sed -E 's/.*url: "(.*)",.*/\1/')
-firebase_firestore_grpc_boringssl_url=$(echo "$package_swift" | grep -A1 "name: \"openssl_grpc\"" | grep "url" | sed -E 's/.*url: "(.*)",.*/\1/')
 
 
 # Output the extracted values
