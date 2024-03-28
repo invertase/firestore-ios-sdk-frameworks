@@ -34,12 +34,12 @@ Pod::Spec.new do |s|
   s.osx.deployment_target  = '10.13'
   s.tvos.deployment_target = '12.0'
   
+  s.swift_version = '5.3'
+  
   s.resource_bundles = {
     "#{s.module_name}_Privacy" => 'Resources/abseil/PrivacyInfo.xcprivacy'
   }
-
-  s.swift_version = '5.3'
-
+  
   s.vendored_frameworks = [ 
     "absl.xcframework",
   ]
