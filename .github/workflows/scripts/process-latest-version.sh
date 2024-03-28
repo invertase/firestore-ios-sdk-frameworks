@@ -124,6 +124,44 @@ else
     exit 1
 fi
 
+# GRPCPP (GRPC CPP) BINARY UPDATE
+: <<'END_COMMENT'
+- Captures the version from the grpc binary Package.swift file.
+- Extracts the URL of the Firebase Firestore GRPC CPP package from the grpc Package.swift file for source in FirebaseFirestoreGRPCCPPBinary.podspec
+- Extracts the path and resource process path of the PrivacyInfo.xcprivacy file from the grpc binary Package.swift file and writes the content to Resources/grpcpp/PrivacyInfo.xcprivacy.
+END_COMMENT
+
+# Extract the URL of the grpcpp zip for the podspec
+firebase_firestore_grpc_ccp_version_url=$(echo "$package_swift" | grep -A1 "name: \"grpcpp\"" | grep "url" | sed -E 's/.*url: "(.*)",.*/\1/')
+
+# Extract the section for the grpcppWrapper target
+grpcpp_wrapper_section=$(echo "$package_swift" | sed -n '/name: "grpcppWrapper"/,/^ *},/p' | grep -v 'name: "grpcWrapper"\|name: "opensslWrapper"')
+
+# Extract the path value for grpcppWrapper
+grpcpp_wrapper_path=$(echo "$grpcpp_wrapper_section" | grep -m1 'path: ' | sed -E 's/.*path: "([^"]*)".*/\1/')
+
+# Extract the resource process path for grpcppWrapper
+grpcpp_wrapper_resource_process_path=$(echo "$grpcpp_wrapper_section" | grep -m1 'process(' | sed -E 's/.*process\("([^"]*)"\).*/\1/')
+
+
+grpcpp_privacy_resource_url="https://raw.githubusercontent.com/google/grpc-binary/1.62.1/$grpcpp_wrapper_path/$grpcpp_wrapper_resource_process_path"
+
+# Ensure the directory "Resources/grpcpp" exists
+mkdir -p Resources/grpcpp
+
+# Fetch the content
+grpcpp_privacy_content=$(curl -s "$grpcpp_privacy_resource_url")
+
+# Check if the grpcpp_privacy_content is an XML file with <plist></plist>
+if [[ $grpcpp_privacy_content == *"?xml"* ]] && [[ $grpcpp_privacy_content == *"</plist>"* ]]; then
+    # Write the grpcpp_privacy_content into the file "Resources/grpcpp/PrivacyInfo.xcprivacy"
+    echo "$grpcpp_privacy_content" > "Resources/grpcpp/PrivacyInfo.xcprivacy"
+    echo "Privacy resource successfully written to Resources/grpcpp/PrivacyInfo.xcprivacy"
+else
+    echo "Failed to write the privacy resource for grpcpp: Content is not a valid XML plist file."
+    exit 1
+fi
+
 # ABSEIL BINARY UPDATE
 : <<'END_COMMENT'
 - Captures the version range of the Firebase Firestore Abseil package from the grpc binary Package.swift file.
@@ -249,10 +287,6 @@ else
     echo "Failed to write the privacy resource open_ssl: Content is not a valid XML plist file."
     exit 1
 fi
-
-
-## TODO move these at some point to appropriate sections
-firebase_firestore_grpc_ccp_version_url=$(echo "$package_swift" | grep -A1 "name: \"grpcpp\"" | grep "url" | sed -E 's/.*url: "(.*)",.*/\1/')
 
 
 # Output the extracted values
