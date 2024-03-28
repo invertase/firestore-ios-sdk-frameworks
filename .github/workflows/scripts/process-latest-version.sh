@@ -374,6 +374,7 @@ if [ $(git tag -l "$firebase_firestore_version") ]; then
   exit 0
 fi
 
+# UPDATE THE VARIABLES IN EACH PODSPEC FILE
 for file in *.podspec; do
   sed -i '' "s|firebase_firestore_version[[:space:]]*=[[:space:]]*.*|firebase_firestore_version='$firebase_firestore_version'|" "$file"
   sed -i '' "s|firebase_firestore_abseil_url[[:space:]]*=[[:space:]]*.*|firebase_firestore_abseil_url='$firebase_firestore_abseil_url'|" "$file"
@@ -391,12 +392,14 @@ new_version_added_line="<!--NEW_VERSION_PLACEHOLDER-->¬ - [$firebase_firestore_
 updated_readme_contents=$(sed -e "s/<!--NEW_VERSION_PLACEHOLDER-->.*/$new_version_added_line/" README.md | tr '¬' '\n')
 echo "$updated_readme_contents" >README.md
 
+# GIT COMMIT, PUSH & TAG
 git add .
 git commit -m "release: $firebase_firestore_version"
 git tag -a "$firebase_firestore_version" -m "$firebase_firestore_version"
 git push origin main --follow-tags
 create_github_release "$firebase_firestore_version" "\"[View Firebase iOS SDK Release](https://github.com/firebase/firebase-ios-sdk/releases/tag/$firebase_firestore_version)\"" "$firebase_firestore_version"
 
+# PUSH THE PODSPECS TO COCOAPODS
 pod spec which FirebaseFirestoreGRPCBoringSSLBinary --version="$firebase_firestore_grpc_version"
 exit_code=$?
 if [ $exit_code -eq 1 ]; then
