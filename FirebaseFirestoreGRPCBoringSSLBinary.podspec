@@ -18,9 +18,10 @@ Pod::Spec.new do |s|
   s.license                = 'Apache-2.0'
 
   # See https://github.com/google/grpc-binary/blob/main/Package.swift
-  s.source           = {
-    :http => firebase_firestore_grpc_boringssl_url
+  s.source = {
+    :http => 'https://github.com/invertase/firestore-ios-sdk-frameworks/raw/23-fix-4/new_openssl_grpc.zip'
   }
+
 
   s.cocoapods_version      = '>= 1.10.0'
   s.authors                = 'Invertase Limited'
@@ -37,7 +38,7 @@ Pod::Spec.new do |s|
   s.swift_version = '5.3'
 
   s.resource_bundles = {
-    "#{s.module_name}_Privacy" => 'Resources/open_ssl/PrivacyInfo.xcprivacy'
+    "#{s.module_name}_Privacy" => 'PrivacyInfo.xcprivacy'
   }
 
   s.vendored_frameworks = [ 
