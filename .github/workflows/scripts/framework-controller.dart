@@ -3,7 +3,6 @@ import 'utils.dart';
 import 'constants.dart';
 
 Future<void> main() async {
-  // tODO wrap in try catch to do clean up. remmeber to clean up tmp/ directory
   // Step 1: Extract versions
   final versionResults = await Process.run(
     'bash',
@@ -100,22 +99,22 @@ Future<void> main() async {
   }
 
 // Step 6: Commit and publish to cocoapods
-  final commitAndPublishResults = await Process.run(
-    'bash',
-    [
-      commitAndPublishScript,
-      versions.firebase_firestore_version,
-      versions.firebase_firestore_grpc_version,
-      versions.firebase_firestore_abseil_version,
-    ],
-  );
+  // final commitAndPublishResults = await Process.run(
+  //   'bash',
+  //   [
+  //     commitAndPublishScript,
+  //     versions.firebase_firestore_version,
+  //     versions.firebase_firestore_grpc_version,
+  //     versions.firebase_firestore_abseil_version,
+  //   ],
+  // );
 
-  if (debugOutput) {
-    print(commitAndPublishResults.stdout);
-  }
+  // if (debugOutput) {
+  //   print(commitAndPublishResults.stdout);
+  // }
 
-  if (commitAndPublishResults.exitCode != 0) {
-    throw Exception(
-        'Committing and publishing failed: ${commitAndPublishResults.stderr}');
-  }
+  // if (commitAndPublishResults.exitCode != 0) {
+  //   throw Exception(
+  //       'Committing and publishing failed: ${commitAndPublishResults.stderr}');
+  // }
 }
