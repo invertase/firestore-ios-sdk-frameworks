@@ -8,7 +8,7 @@ firebase_firestore_leveldb_version='~> 1.22'
 firebase_firestore_nanopb_version_min='>= 2.30908.0'
 firebase_firestore_nanopb_version_max='< 2.30911.0'
 firebase_firestore_grpc_boringssl_url='https://dl.google.com/firebase/ios/bin/grpc/1.62.1/rc1/openssl_grpc.zip'
-firebase_firestore_internal_url=''
+firebase_firestore_internal_url='https://dl.google.com/firebase/ios/bin/firestore/10.23.0/FirebaseFirestoreInternal.zip'
 
 Pod::Spec.new do |s|
   s.name                   = 'FirebaseFirestoreGRPCBoringSSLBinary'
@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
 
   # See https://github.com/google/grpc-binary/blob/main/Package.swift
   s.source = {
-    :http => 'https://github.com/invertase/firestore-ios-sdk-frameworks/raw/23-fix-4/new_openssl_grpc.zip'
+    :http => firebase_firestore_grpc_boringssl_url
   }
 
 
