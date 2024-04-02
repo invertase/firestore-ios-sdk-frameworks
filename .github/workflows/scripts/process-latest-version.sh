@@ -45,85 +45,6 @@ create_github_release() {
   fi
 }
 
-# Update pod repo to ensure we retrieve the latest version.
-echo "Updating pods..."
-pod repo list
-pod repo add cocoapods "https://github.com/CocoaPods/Specs.git"
-pod repo update
-pod spec which FirebaseFirestoreInternal
-
-PODSPEC_FILE=$(pod spec which FirebaseFirestoreInternal)
-
-# Extract Firebase Firestore version
-firebase_firestore_version=$(python3 -c 'import json; data = json.load(open("'"$PODSPEC_FILE"'")); print(data["version"])')
-
-# Extract gRPC version
-firebase_firestore_grpc_version=$(python3 -c 'import json; data = json.load(open("'"$PODSPEC_FILE"'")); print(data["dependencies"]["gRPC-C++"][0].replace("~> ", ""))')
-# If the gRPC version is 1.62.0, set it to 1.62.1
-# Since the tag is missing for 1.62.0.
-if [ "$firebase_firestore_grpc_version" = "1.62.0" ]; then
-  echo "Overriding gRPC version to 1.62.1"
-  firebase_firestore_grpc_version="1.62.1"
-fi
-
-# Extract leveldb version
-firebase_firestore_leveldb_version=$(python3 -c 'import json; data = json.load(open("'"$PODSPEC_FILE"'")); print(data["dependencies"]["leveldb-library"][0])')
-
-# Extract nanopb minimum version
-firebase_firestore_nanopb_version_min=$(python3 -c 'import json; data = json.load(open("'"$PODSPEC_FILE"'")); print(data["dependencies"]["nanopb"][0])')
-
-# Extract nanopb maximum version
-firebase_firestore_nanopb_version_max=$(python3 -c 'import json; data = json.load(open("'"$PODSPEC_FILE"'")); print(data["dependencies"]["nanopb"][1])')
-
-# URL of the grpc binary Package.swift file
-grpc_binary_swift_url="https://raw.githubusercontent.com/google/grpc-binary/$firebase_firestore_grpc_version/Package.swift"
-
-# Fetch the Package.swift file
-echo "Fetching Package.swift file from $grpc_binary_swift_url"
-package_swift=$(curl -s $grpc_binary_swift_url)
-
-# Check if the fetch was successful
-if [[ -z $package_swift ]]; then
-  echo "Failed to fetch the Package.swift grpc binary file."
-  exit 1
-fi
-
-# GRPC CORE BINARY UPDATE
-: <<'END_COMMENT'
-- Captures the version from the grpc binary Package.swift file.
-- Extracts the URL of the Firebase Firestore GRPC core package from the grpc Package.swift file for source in FirebaseFirestoreGRPCCoreBinary.podspec
-- Extracts the path and resource process path of the PrivacyInfo.xcprivacy file from the grpc binary Package.swift file and writes the content to Resources/grpc/PrivacyInfo.xcprivacy.
-END_COMMENT
-
-firebase_firestore_grpc_version_url=$(echo "$package_swift" | grep -A1 "name: \"grpc\"" | grep "url" | sed -E 's/.*url: "(.*)",.*/\1/')
-
-# Extract the section for the grpcWrapper target
-grpc_wrapper_section=$(echo "$package_swift" | awk '/grpcWrapper/,/}/' | grep -v 'opensslWrapper\|grpcppWrapper')
-
-# Extract the path value for grpcWrapper
-grpc_wrapper_path=$(echo "$grpc_wrapper_section" | grep -m1 'path: ' | sed -E 's/.*path: "([^"]*)".*/\1/')
-
-# Extract the resource process path for grpcWrapper
-grpc_wrapper_resource_process_path=$(echo "$grpc_wrapper_section" | grep -m1 'process(' | sed -E 's/.*process\("([^"]*)"\).*/\1/')
-
-grpc_privacy_resource_url="https://raw.githubusercontent.com/google/grpc-binary/1.62.1/$grpc_wrapper_path/$grpc_wrapper_resource_process_path"
-
-# Ensure the directory "Resources/grpc" exists
-mkdir -p Resources/grpc
-
-# Fetch the content
-grpc_privacy_content=$(curl -s "$grpc_privacy_resource_url")
-
-# Check if the grpc_privacy_content is an XML file with <plist></plist>
-if [[ $grpc_privacy_content == *"?xml"* ]] && [[ $grpc_privacy_content == *"</plist>"* ]]; then
-    # Write the grpc_privacy_content into the file "Resources/grpc/PrivacyInfo.xcprivacy"
-    echo "$grpc_privacy_content" > "Resources/grpc/PrivacyInfo.xcprivacy"
-    echo "Privacy resource successfully written to Resources/grpc/PrivacyInfo.xcprivacy"
-else
-    echo "Failed to write the privacy resource for grpc: Content is not a valid XML plist file."
-    exit 1
-fi
-
 # GRPCPP (GRPC CPP) BINARY UPDATE
 : <<'END_COMMENT'
 - Captures the version from the grpc binary Package.swift file.
@@ -170,47 +91,9 @@ fi
 - Extracts the path and resource process path of the PrivacyInfo.xcprivacy file from the abseil-cpp-binary Package.swift file and writes the content to Resources/abseil/PrivacyInfo.xcprivacy.
 END_COMMENT
 
-# Capture the line with the version range
-version_line=$(echo "$package_swift" | grep -o '".*\.\.<.*"')
 
 
-# Check if the version line was captured
-if [[ -z $version_line ]]; then
-  echo "Failed to capture the version line."
-  exit 1
-fi
 
-# Extract the first part of the version
-firebase_firestore_abseil_version=$(echo "$version_line" | awk -F\" '{print $2}' | head -1)
-
-
-# Check if the version was extracted
-if [[ -z $firebase_firestore_abseil_version ]]; then
-  echo "Failed to extract the Firebase Firestore Abseil version."
-  exit 1
-fi
-
-# URL of the abseil cpp binary Package.swift file
-abseil_cpp_binary_url="https://raw.githubusercontent.com/google/abseil-cpp-binary/$firebase_firestore_abseil_version/Package.swift"
-
-# Fetch the Package.swift file
-echo "Fetching Package.swift file from $abseil_cpp_binary_url"
-abseil_cpp_binary_package_swift=$(curl -s $abseil_cpp_binary_url)
-
-# Check if the fetch was successful
-if [[ -z $abseil_cpp_binary_package_swift ]]; then
-  echo "Failed to fetch the Package.swift abseil cpp binary file."
-  exit 1
-fi
-
-# Extract the abseil URL
-firebase_firestore_abseil_url=$(echo "$abseil_cpp_binary_package_swift" | grep -m1 "url: \"" | sed -E 's|.*url: "([^"]+)".*|\1|')
-
-# Check if the URL was extracted
-if [[ -z $firebase_firestore_abseil_url ]]; then
-  echo "Failed to extract the Firebase Firestore Abseil URL."
-  exit 1
-fi
 
 # Extract the path ("absl-Wrapper")
 path=$(echo "$abseil_cpp_binary_package_swift" | grep -o 'path: "[^"]*"' | sed -E 's/path: "([^"]*)"/\1/' | head -1)
@@ -252,13 +135,7 @@ if [[ -z $firebase_firestore_grpc_boringssl_version ]]; then
   exit 1
 fi
 
-# Extract the URL for openssl_grpc
-firebase_firestore_grpc_boringssl_url=$(echo "$package_swift" | grep -A1 "name: \"openssl_grpc\"" | grep "url" | sed -E 's/.*url: "(.*)",.*/\1/')
 
-if [[ -z $firebase_firestore_grpc_boringssl_url ]]; then
-  echo "Failed to extract the BoringSSL-GRPC URL."
-  exit 1
-fi
 
 # Use URL of the gRPC binary Package.swift file to get the privacy resource for open_ssl
 # Extract the section for the opensslWrapper target
@@ -333,10 +210,7 @@ if [[ -z $firebase_firestore_grpc_version_url ]]; then
 fi
 
 # Check if the grpcpp version URL was extracted
-if [[ -z $firebase_firestore_grpc_ccp_version_url ]]; then
-  echo "Failed to extract the gRPC CPP version URL."
-  exit 1
-fi
+
 
 # Check if the BoringSSL-GRPC URL was extracted
 if [[ -z $firebase_firestore_grpc_boringssl_url ]]; then
@@ -344,30 +218,11 @@ if [[ -z $firebase_firestore_grpc_boringssl_url ]]; then
   exit 1
 fi
 
-if [ -z "$firebase_firestore_version" ]; then
-  echo "Failed to extract Firebase Firestore version from podspec."
-  exit 1
-fi
 if [ -z "$firebase_firestore_abseil_version" ]; then
   echo "Failed to extract Firebase Firestore Abseil version from podspec."
   exit 1
 fi
-if [ -z "$firebase_firestore_grpc_version" ]; then
-  echo "Failed to extract Firebase Firestore gRPC version from podspec."
-  exit 1
-fi
-if [ -z "$firebase_firestore_leveldb_version" ]; then
-  echo "Failed to extract Firebase Firestore leveldb version from podspec."
-  exit 1
-fi
-if [ -z "$firebase_firestore_nanopb_version_min" ]; then
-  echo "Failed to extract Firebase Firestore nanopb minimum version from podspec."
-  exit 1
-fi
-if [ -z "$firebase_firestore_nanopb_version_max" ]; then
-  echo "Failed to extract Firebase Firestore nanopb maximum version from podspec."
-  exit 1
-fi
+
 
 if [ $(git tag -l "$firebase_firestore_version") ]; then
   echo "Tag $firebase_firestore_version already exists, skipping release."
