@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'constants.dart';
+import 'package:path/path.dart' as p;
 
 class FirestoreVersions {
   FirestoreVersions({
@@ -171,26 +172,6 @@ Future<void> createZips(
       );
     }
   }
-
-  if (!isCI) {
-    const destinationPath = '../../../Archives';
-
-    // Delete the existing destination directory if it exists
-    var deleteResult = await Process.run('rm', ['-rf', destinationPath]);
-    if (deleteResult.exitCode != 0) {
-      throw Exception(
-          'Error deleting existing directory: ${deleteResult.stderr}');
-    }
-
-    // Move the Archives directory
-    final moveResult =
-        await Process.run('mv', ['-f', 'Archives', destinationPath]);
-    if (moveResult.exitCode != 0) {
-      print('Error moving directory: ${moveResult.stderr}');
-    } else {
-      print('Directory moved successfully.');
-    }
-  }
 }
 
 Future<void> createZip(
@@ -201,7 +182,10 @@ Future<void> createZip(
   final result = await Process.run(
     'bash',
     [
-      writeNewZipScript,
+      p.join(
+        pathToScripts,
+        writeNewZipScript,
+      ),
       zipUrl,
       privacy_manifest_url,
       zipPath,

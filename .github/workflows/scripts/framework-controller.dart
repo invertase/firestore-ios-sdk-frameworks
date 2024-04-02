@@ -1,12 +1,19 @@
 import 'dart:io';
 import 'utils.dart';
 import 'constants.dart';
+import 'package:path/path.dart' as p;
 
 Future<void> main() async {
   // Step 1: Extract versions
   final versionResults = await Process.run(
     'bash',
-    [extractVersionsScript, firestoreVersionJSONPath],
+    [
+      p.join(
+        pathToScripts,
+        extractVersionsScript,
+      ),
+      firestoreVersionJSONPath
+    ],
   );
 
   if (debugOutput) {
@@ -23,7 +30,10 @@ Future<void> main() async {
   final rawUrlResults = await Process.run(
     'bash',
     [
-      extractRawZipUrlsScript,
+      p.join(
+        pathToScripts,
+        extractRawZipUrlsScript,
+      ),
       firestoreRawZipUrlsJSONPath,
       versions.firebase_firestore_grpc_version,
       versions.firebase_firestore_abseil_version,
@@ -47,7 +57,10 @@ Future<void> main() async {
   final privacyManifestUrlsResults = await Process.run(
     'bash',
     [
-      extractPrivacyManifestURLSScript,
+      p.join(
+        pathToScripts,
+        extractPrivacyManifestURLSScript,
+      ),
       privacyManifestUrlsJSONPath,
       versions.firebase_firestore_abseil_version,
       versions.firebase_firestore_grpc_version,
@@ -74,7 +87,10 @@ Future<void> main() async {
   final updateFileVariableValuesResults = await Process.run(
     'bash',
     [
-      updateFileVariableValues,
+      p.join(
+        pathToScripts,
+        updateFileVariableValues,
+      ),
       versions.firebase_firestore_version,
       versions.firebase_firestore_abseil_version,
       versions.firebase_firestore_grpc_version,
@@ -99,22 +115,22 @@ Future<void> main() async {
   }
 
 // Step 6: Commit and publish to cocoapods
-  final commitAndPublishResults = await Process.run(
-    'bash',
-    [
-      commitAndPublishScript,
-      versions.firebase_firestore_version,
-      versions.firebase_firestore_grpc_version,
-      versions.firebase_firestore_abseil_version,
-    ],
-  );
+  // final commitAndPublishResults = await Process.run(
+  //   'bash',
+  //   [
+      // p.join(pathToScripts, commitAndPublishScript,),
+  //     versions.firebase_firestore_version,
+  //     versions.firebase_firestore_grpc_version,
+  //     versions.firebase_firestore_abseil_version,
+  //   ],
+  // );
 
-  if (debugOutput) {
-    print(commitAndPublishResults.stdout);
-  }
+  // if (debugOutput) {
+  //   print(commitAndPublishResults.stdout);
+  // }
 
-  if (commitAndPublishResults.exitCode != 0) {
-    throw Exception(
-        'Committing and publishing failed: ${commitAndPublishResults.stderr}');
-  }
+  // if (commitAndPublishResults.exitCode != 0) {
+  //   throw Exception(
+  //       'Committing and publishing failed: ${commitAndPublishResults.stderr}');
+  // }
 }
