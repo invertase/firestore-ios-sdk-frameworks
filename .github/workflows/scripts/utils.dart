@@ -173,14 +173,20 @@ Future<void> createZips(
   }
 
   if (!isCI) {
-    // Move the Archives directory to the root of the project
-    final result = await Process.run('mv', [
-      '-f',
-      'Archives',
-      '../../../',
-    ]);
-    if (result.exitCode != 0) {
-      print('Error: ${result.stderr}');
+    const destinationPath = '../../../Archives';
+
+    // Delete the existing destination directory if it exists
+    var deleteResult = await Process.run('rm', ['-rf', destinationPath]);
+    if (deleteResult.exitCode != 0) {
+      throw Exception(
+          'Error deleting existing directory: ${deleteResult.stderr}');
+    }
+
+    // Move the Archives directory
+    final moveResult =
+        await Process.run('mv', ['-f', 'Archives', destinationPath]);
+    if (moveResult.exitCode != 0) {
+      print('Error moving directory: ${moveResult.stderr}');
     } else {
       print('Directory moved successfully.');
     }
@@ -211,7 +217,6 @@ Future<void> createZip(
     throw Exception('Creating zip failed: ${result.stderr}');
   }
 }
-
 
 String createURLToZip(String zipName) {
   // Update this to main branch when finished
