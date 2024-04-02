@@ -1,6 +1,5 @@
 import 'dart:io';
 const bool debugOutput = false;
-final bool isCI = Platform.environment['CI'] == 'true';
 
 const pathToScripts = '.github/workflows/scripts/';
 
