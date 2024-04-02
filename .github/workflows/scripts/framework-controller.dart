@@ -115,22 +115,22 @@ Future<void> main() async {
   }
 
 // Step 6: Commit and publish to cocoapods
-  // final commitAndPublishResults = await Process.run(
-  //   'bash',
-  //   [
-      // p.join(pathToScripts, commitAndPublishScript,),
-  //     versions.firebase_firestore_version,
-  //     versions.firebase_firestore_grpc_version,
-  //     versions.firebase_firestore_abseil_version,
-  //   ],
-  // );
+  final commitAndPublishResults = await Process.run(
+    'bash',
+    [
+      p.join(pathToScripts, commitAndPublishScript,),
+      versions.firebase_firestore_version,
+      versions.firebase_firestore_grpc_version,
+      versions.firebase_firestore_abseil_version,
+    ],
+  );
 
-  // if (debugOutput) {
-  //   print(commitAndPublishResults.stdout);
-  // }
+  if (debugOutput) {
+    print(commitAndPublishResults.stdout);
+  }
 
-  // if (commitAndPublishResults.exitCode != 0) {
-  //   throw Exception(
-  //       'Committing and publishing failed: ${commitAndPublishResults.stderr}');
-  // }
+  if (commitAndPublishResults.exitCode != 0) {
+    throw Exception(
+        'Committing and publishing failed: ${commitAndPublishResults.stderr}');
+  }
 }
