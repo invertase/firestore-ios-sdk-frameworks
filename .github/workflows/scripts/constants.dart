@@ -1,5 +1,3 @@
-import 'dart:io';
-
 const bool debugOutput = true;
 
 const pathToScripts = '.github/workflows/scripts/';
