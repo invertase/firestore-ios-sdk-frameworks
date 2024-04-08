@@ -51,7 +51,7 @@ Google Cloud Firestore is a NoSQL document database built for automatic scaling,
   ]
 
   s.resource_bundles = {
-    "#{s.module_name}_Privacy" => 'Firestore/Source/Resources/PrivacyInfo.xcprivacy'
+    "#{s.module_name}_Privacy" => 'Firestore/Swift/Source/Resources/PrivacyInfo.xcprivacy'
   }
 
   s.dependency 'FirebaseCore', firebase_firestore_version
