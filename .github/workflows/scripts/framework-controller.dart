@@ -83,7 +83,28 @@ Future<void> main() async {
   // Step 4: Create custom zips
   await createZips(rawUrls, privacyManifestUrls);
 
-// Step 5: Update the variables at the top of each podspec file
+  // Step 5: Write local privacy manifest for FirebaseFirestore.podspec
+  final writeFirestorePrivacyManifestResult = await Process.run(
+    'bash',
+    [
+      p.join(
+        pathToScripts,
+        writeFirestorePrivacyManifestScript,
+      ),
+      versions.firebase_firestore_version,
+    ],
+  );
+
+  if (debugOutput) {
+    print(writeFirestorePrivacyManifestResult.stdout);
+  }
+
+  if (writeFirestorePrivacyManifestResult.exitCode != 0) {
+    throw Exception(
+        'Writing firestore privacy manifest failed: ${writeFirestorePrivacyManifestResult.stderr}');
+  }
+
+  // Step 6: Update the variables at the top of each podspec file
   final updateFileVariableValuesResults = await Process.run(
     'bash',
     [
@@ -129,7 +150,7 @@ Future<void> main() async {
         'Updating file variable values failed: ${updateFileVariableValuesResults.stderr}');
   }
 
-// Step 6: Commit and publish to cocoapods
+// Step 7: Commit and publish to cocoapods
   final commitAndPublishResults = await Process.run(
     'bash',
     [

@@ -14,6 +14,9 @@ const String privacyManifestUrlsJSONPath = './tmp/privacy_manifest_urls.json';
 
 const String writeNewZipScript = 'create-zips.sh';
 
+const String writeFirestorePrivacyManifestScript =
+    'write-firestore-privacy-manifest.sh';
+
 const String updateFileVariableValues = 'update-file-variables.sh';
 
 const String commitAndPublishScript = 'commit-and-publish.sh';
