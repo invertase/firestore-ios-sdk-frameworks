@@ -2,7 +2,6 @@ const bool debugOutput = true;
 
 const pathToScripts = '.github/workflows/scripts/';
 
-//Scripts to be executed in order
 const String extractVersionsScript = 'extract-versions.sh';
 const String firestoreVersionJSONPath = './tmp/firestore_versions.json';
 
