@@ -31,7 +31,7 @@ jobs:
         if: ${{ github.repository == 'invertase/firestore-ios-sdk-frameworks' }}
         run: echo "GITHUB_TOKEN=${{ secrets.GH_TOKEN }}" >> $GITHUB_ENV
       - uses: dart-lang/setup-dart@v1
-      - run: dart pub get
+      - run: cd ./.github/workflows/scripts && dart pub get
       - name: Process Latest Version
         env:
           COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
