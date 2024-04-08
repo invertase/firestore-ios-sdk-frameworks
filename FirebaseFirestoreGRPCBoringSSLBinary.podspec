@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
   }
 
 
-  s.cocoapods_version      = '>= 1.10.0'
+  s.cocoapods_version      = '>= 1.12.0'
   s.authors                = 'Invertase Limited'
   s.pod_target_xcconfig    = { 'OTHER_LDFLAGS' => '-lObjC' }
 
