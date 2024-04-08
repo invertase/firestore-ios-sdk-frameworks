@@ -202,7 +202,6 @@ Future<void> createZip(
   }
 }
 
-String createURLToZip(String zipName) {
-  // Update this to main branch when finished
-  return 'https://github.com/invertase/firestore-ios-sdk-frameworks/raw/23-fix-4/Archives/$zipName.zip';
+String createURLToZip(String zipName, String firebaseSdkVersion) {
+  return 'https://github.com/invertase/firestore-ios-sdk-frameworks/raw/$firebaseSdkVersion/Archives/$zipName.zip';
 }

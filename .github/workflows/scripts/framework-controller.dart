@@ -97,11 +97,26 @@ Future<void> main() async {
       versions.firebase_firestore_leveldb_version,
       versions.firebase_firestore_nanopb_version_min,
       versions.firebase_firestore_nanopb_version_max,
-      createURLToZip('grpc'),
-      createURLToZip('abseil'),
-      createURLToZip('firestore_internal'),
-      createURLToZip('openssl'),
-      createURLToZip('grpcpp'),
+      createURLToZip(
+        'grpc',
+        versions.firebase_firestore_version,
+      ),
+      createURLToZip(
+        'abseil',
+        versions.firebase_firestore_version,
+      ),
+      createURLToZip(
+        'firestore_internal',
+        versions.firebase_firestore_version,
+      ),
+      createURLToZip(
+        'openssl',
+        versions.firebase_firestore_version,
+      ),
+      createURLToZip(
+        'grpcpp',
+        versions.firebase_firestore_version,
+      ),
     ],
   );
 
@@ -118,7 +133,10 @@ Future<void> main() async {
   final commitAndPublishResults = await Process.run(
     'bash',
     [
-      p.join(pathToScripts, commitAndPublishScript,),
+      p.join(
+        pathToScripts,
+        commitAndPublishScript,
+      ),
       versions.firebase_firestore_version,
       versions.firebase_firestore_grpc_version,
       versions.firebase_firestore_abseil_version,
