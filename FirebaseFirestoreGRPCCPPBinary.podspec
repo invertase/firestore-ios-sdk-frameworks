@@ -1,18 +1,18 @@
 firebase_firestore_version='10.23.0'
-firebase_firestore_abseil_url='https://dl.google.com/firebase/ios/bin/abseil/1.2024011601.0/rc1/absl.zip'
+firebase_firestore_abseil_url='https://github.com/invertase/firestore-ios-sdk-frameworks/raw/23-fix-4/Archives/abseil.zip'
 firebase_firestore_abseil_version='1.2024011601.0'
 firebase_firestore_grpc_version='1.62.1'
-firebase_firestore_grpc_version_url='https://dl.google.com/firebase/ios/bin/grpc/1.62.1/rc1/grpc.zip'
-firebase_firestore_grpc_ccp_version_url='https://dl.google.com/firebase/ios/bin/grpc/1.62.1/rc1/grpcpp.zip'
+firebase_firestore_grpc_version_url='https://github.com/invertase/firestore-ios-sdk-frameworks/raw/23-fix-4/Archives/grpc.zip'
+firebase_firestore_grpc_ccp_version_url='https://github.com/invertase/firestore-ios-sdk-frameworks/raw/23-fix-4/Archives/grpcpp.zip'
 firebase_firestore_leveldb_version='~> 1.22'
 firebase_firestore_nanopb_version_min='>= 2.30908.0'
 firebase_firestore_nanopb_version_max='< 2.30911.0'
-firebase_firestore_grpc_boringssl_url='https://dl.google.com/firebase/ios/bin/grpc/1.62.1/rc1/openssl_grpc.zip'
-firebase_firestore_internal_url='https://dl.google.com/firebase/ios/bin/firestore/10.23.0/FirebaseFirestoreInternal.zip'
+firebase_firestore_grpc_boringssl_url='https://github.com/invertase/firestore-ios-sdk-frameworks/raw/23-fix-4/Archives/openssl.zip'
+firebase_firestore_internal_url='https://github.com/invertase/firestore-ios-sdk-frameworks/raw/23-fix-4/Archives/firestore_internal.zip'
 
 Pod::Spec.new do |s|
   s.name                   = 'FirebaseFirestoreGRPCCPPBinary'
-  s.version                = "0.0.1-rc1"
+  s.version                = firebase_firestore_grpc_version
   s.summary                = 'A replica Firebase Firestore podspec.'
   s.description            = 'A replica Firebase Firestore podspec that provides pre-compiled binaries/frameworks instead'
   s.homepage               = 'https://invertase.io'
@@ -45,6 +45,6 @@ Pod::Spec.new do |s|
     "#{s.module_name}_Privacy" => 'PrivacyInfo.xcprivacy'
   }
 
-  s.dependency 'FirebaseFirestoreGRPCCoreBinary', "0.0.1-rc1"
-  s.dependency 'FirebaseFirestoreAbseilBinary', "0.0.1-rc1"
+  s.dependency 'FirebaseFirestoreGRPCCoreBinary', firebase_firestore_grpc_version
+  s.dependency 'FirebaseFirestoreAbseilBinary', firebase_firestore_abseil_version
 end
