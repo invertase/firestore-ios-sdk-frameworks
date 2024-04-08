@@ -12,7 +12,7 @@ firebase_firestore_internal_url='https://dl.google.com/firebase/ios/bin/firestor
 
 Pod::Spec.new do |s|
   s.name                   = 'FirebaseFirestore'
-  s.version                = "0.0.1-rc1"
+  s.version                = "10.23.0"
   s.summary                = 'A replica Firebase Firestore podspec.'
   s.description            = 'A replica Firebase Firestore podspec that provides pre-compiled binaries/frameworks instead'
   s.homepage               = 'https://invertase.io'
