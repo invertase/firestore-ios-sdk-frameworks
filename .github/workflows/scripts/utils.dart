@@ -192,10 +192,9 @@ Future<void> createZip(
     ],
   );
 
-  // if (debugOutput) {
-  //   print(result.stdout);
-  // }
-  print(result.stdout);
+  if (debugOutput) {
+    print(result.stdout);
+  }
 
   if (result.exitCode != 0) {
     throw Exception('Creating zip failed: ${result.stderr}');
