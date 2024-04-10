@@ -79,6 +79,20 @@ if [ $exit_code -ne 0 ]; then
   exit 1
 fi
 
+pod spec which FirebaseFirestoreAbseilBinary --version="$firebase_firestore_abseil_version"
+exit_code=$?
+if [ $exit_code -eq 1 ]; then
+  pod trunk push FirebaseFirestoreAbseilBinary.podspec --allow-warnings --skip-tests --skip-import-validation --synchronous
+  exit_code=$?
+  pod repo update cocoapods
+else
+  echo "FirebaseFirestoreAbseilBinary already exists"
+fi
+if [ $exit_code -ne 0 ]; then
+  echo "Failed to push FirebaseFirestoreAbseilBinary"
+  exit 1
+fi
+
 pod spec which FirebaseFirestoreGRPCCoreBinary --version="$firebase_firestore_grpc_version"
 exit_code=$?
 if [ $exit_code -eq 1 ]; then
@@ -104,20 +118,6 @@ else
 fi
 if [ $exit_code -ne 0 ]; then
   echo "Failed to push FirebaseFirestoreGRPCCPPBinary"
-  exit 1
-fi
-
-pod spec which FirebaseFirestoreAbseilBinary --version="$firebase_firestore_abseil_version"
-exit_code=$?
-if [ $exit_code -eq 1 ]; then
-  pod trunk push FirebaseFirestoreAbseilBinary.podspec --allow-warnings --skip-tests --skip-import-validation --synchronous
-  exit_code=$?
-  pod repo update cocoapods
-else
-  echo "FirebaseFirestoreAbseilBinary already exists"
-fi
-if [ $exit_code -ne 0 ]; then
-  echo "Failed to push FirebaseFirestoreAbseilBinary"
   exit 1
 fi
 
