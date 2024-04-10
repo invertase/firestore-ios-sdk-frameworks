@@ -65,6 +65,10 @@ fi
 
 
 # PUSH THE PODSPECS TO COCOAPODS
+
+pod repo add cocoapods "https://github.com/CocoaPods/Specs.git"
+
+pod repo update
 pod spec which FirebaseFirestoreGRPCBoringSSLBinary --version="$firebase_firestore_grpc_version"
 exit_code=$?
 if [ $exit_code -eq 1 ]; then
@@ -80,6 +84,7 @@ if [ $exit_code -ne 0 ]; then
   exit 1
 fi
 
+pod repo update
 pod spec which FirebaseFirestoreAbseilBinary --version="$firebase_firestore_abseil_version"
 exit_code=$?
 if [ $exit_code -eq 1 ]; then
@@ -95,6 +100,7 @@ if [ $exit_code -ne 0 ]; then
   exit 1
 fi
 
+pod repo update
 pod spec which FirebaseFirestoreGRPCCoreBinary --version="$firebase_firestore_grpc_version"
 exit_code=$?
 if [ $exit_code -eq 1 ]; then
@@ -110,6 +116,7 @@ if [ $exit_code -ne 0 ]; then
   exit 1
 fi
 
+pod repo update
 pod spec which FirebaseFirestoreGRPCCPPBinary --version="$firebase_firestore_grpc_version"
 exit_code=$?
 if [ $exit_code -eq 1 ]; then
@@ -125,6 +132,7 @@ if [ $exit_code -ne 0 ]; then
   exit 1
 fi
 
+pod repo update
 pod spec which FirebaseFirestoreInternalBinary --version="$firebase_firestore_version"
 exit_code=$?
 if [ $exit_code -eq 1 ]; then
@@ -140,6 +148,7 @@ if [ $exit_code -ne 0 ]; then
   exit 1
 fi
 
+pod repo update
 pod spec which FirebaseFirestoreBinary --version="$firebase_firestore_version"
 exit_code=$?
 if [ $exit_code -eq 1 ]; then
