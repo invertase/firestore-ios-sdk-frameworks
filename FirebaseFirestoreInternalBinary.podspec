@@ -1,10 +1,14 @@
-firebase_firestore_version = '10.22.0'
-firebase_firestore_abseil_version = '1.2022062300.0'
-firebase_firestore_grpc_version = '1.49.1'
-firebase_firestore_grpc_boringssl_version = '1.44.0'
-firebase_firestore_leveldb_version = '~> 1.22'
-firebase_firestore_nanopb_version_min = '>= 2.30908.0'
-firebase_firestore_nanopb_version_max = '< 2.30911.0'
+firebase_firestore_version='10.23.0'
+firebase_firestore_abseil_url='https://github.com/invertase/firestore-ios-sdk-frameworks/raw/10.23.0/Archives/abseil.zip'
+firebase_firestore_abseil_version='1.2024011601.0'
+firebase_firestore_grpc_version='1.62.1'
+firebase_firestore_grpc_version_url='https://github.com/invertase/firestore-ios-sdk-frameworks/raw/10.23.0/Archives/grpc.zip'
+firebase_firestore_grpc_ccp_version_url='https://github.com/invertase/firestore-ios-sdk-frameworks/raw/10.23.0/Archives/grpcpp.zip'
+firebase_firestore_leveldb_version='~> 1.22'
+firebase_firestore_nanopb_version_min='>= 2.30908.0'
+firebase_firestore_nanopb_version_max='< 2.30911.0'
+firebase_firestore_grpc_boringssl_url='https://github.com/invertase/firestore-ios-sdk-frameworks/raw/10.23.0/Archives/openssl.zip'
+firebase_firestore_internal_url='https://github.com/invertase/firestore-ios-sdk-frameworks/raw/10.23.0/Archives/firestore_internal.zip'
 
 Pod::Spec.new do |s|
   s.name                   = 'FirebaseFirestoreInternalBinary'
@@ -16,10 +20,10 @@ Pod::Spec.new do |s|
 
   # See https://github.com/firebase/firebase-ios-sdk/blob/main/Package.swift
   s.source           = {
-    :http => "https://dl.google.com/firebase/ios/bin/firestore/#{firebase_firestore_version}/FirebaseFirestoreInternal.zip"
+    :http => firebase_firestore_internal_url
   }
 
-  s.cocoapods_version      = '>= 1.10.0'
+  s.cocoapods_version      = '>= 1.12.0'
   s.authors                = 'Invertase Limited'
   s.pod_target_xcconfig    = { 'OTHER_LDFLAGS' => '-lObjC' }
   s.static_framework       = true
@@ -40,6 +44,10 @@ Pod::Spec.new do |s|
   s.vendored_frameworks = [ 
    "FirebaseFirestoreInternal.xcframework",
   ]
+
+  s.resource_bundles = {
+    "#{s.module_name}_Privacy" => 'PrivacyInfo.xcprivacy'
+  }
 
   s.dependency 'FirebaseFirestoreGRPCCPPBinary', firebase_firestore_grpc_version
   s.dependency 'FirebaseFirestoreAbseilBinary', firebase_firestore_abseil_version

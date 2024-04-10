@@ -1,0 +1,10 @@
+name: firestore_ios_sdk_frameworks
+description: Script for managing Firestore iOS SDK frameworks.
+version: 1.0.0
+
+environment:
+  sdk: '>=2.18.0 <4.0.0'
+dependencies:
+  path: ^1.9.0
+
+  

@@ -2,8 +2,9 @@ name: Build
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 */6 * * *" # Every 6 hours
+  # Temporarily disabled until working as intended
+  # schedule:
+  #   - cron: "0 */6 * * *" # Every 6 hours
 
 jobs:
   latest_release:
@@ -30,11 +31,13 @@ jobs:
       - name: Set Github Token Securely
         if: ${{ github.repository == 'invertase/firestore-ios-sdk-frameworks' }}
         run: echo "GITHUB_TOKEN=${{ secrets.GH_TOKEN }}" >> $GITHUB_ENV
+      - uses: dart-lang/setup-dart@v1
+      - run: cd ./.github/workflows/scripts && dart pub get
       - name: Process Latest Version
         env:
           COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
         run: |
-          ./.github/workflows/scripts/process-latest-version.sh
+          dart ./.github/workflows/scripts/framework-controller.dart
       - name: Report Failure Status
         uses: 8398a7/action-slack@v3
         with:
