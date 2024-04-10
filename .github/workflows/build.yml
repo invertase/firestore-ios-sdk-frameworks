@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   # Temporarily disabled until working as intended
   # schedule:
-  #   - cron: "0 * * * *" # Every 1 hour
+  #   - cron: "0 */3 * * *" # Every 3 hours
 
 jobs:
   latest_release:
@@ -12,7 +12,7 @@ jobs:
     if: (github.repository == 'invertase/firestore-ios-sdk-frameworks' && github.event_name == 'schedule') || github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request'
 
     name: "Latest Release"
-    timeout-minutes: 60
+    timeout-minutes: 120
     runs-on: macos-12
     steps:
       - uses: actions/checkout@v2
