@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   # Temporarily disabled until working as intended
   # schedule:
-  #   - cron: "0 */6 * * *" # Every 6 hours
+  #   - cron: "0 * * * *" # Every 1 hour
 
 jobs:
   latest_release:

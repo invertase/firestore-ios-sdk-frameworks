@@ -48,6 +48,22 @@ create_github_release() {
   fi
 }
 
+if [ $(git tag -l "$firebase_firestore_version") ]; then
+  echo "Tag $firebase_firestore_version already exists, skipping tagging."
+else
+  # GIT COMMIT, PUSH & TAG
+  new_version_added_line="<!--NEW_VERSION_PLACEHOLDER-->¬ - [$firebase_firestore_version](https:\/\/github.com\/invertase\/firestore-ios-sdk-frameworks\/releases\/tag\/$firebase_firestore_version)"
+  updated_readme_contents=$(sed -e "s/<!--NEW_VERSION_PLACEHOLDER-->.*/$new_version_added_line/" README.md | tr '¬' '\n')
+  echo "$updated_readme_contents" >README.md
+  
+  git add .
+  git commit -m "release: $firebase_firestore_version"
+  git tag -a "$firebase_firestore_version" -m "$firebase_firestore_version"
+  git push origin main --follow-tags
+  create_github_release "$firebase_firestore_version" "\"[View Firebase iOS SDK Release](https://github.com/firebase/firebase-ios-sdk/releases/tag/$firebase_firestore_version)\"" "$firebase_firestore_version"
+fi
+
+
 # PUSH THE PODSPECS TO COCOAPODS
 pod spec which FirebaseFirestoreGRPCBoringSSLBinary --version="$firebase_firestore_grpc_version"
 exit_code=$?
@@ -132,16 +148,7 @@ if [ $exit_code -ne 0 ]; then
   exit 1
 fi
 
-new_version_added_line="<!--NEW_VERSION_PLACEHOLDER-->¬ - [$firebase_firestore_version](https:\/\/github.com\/invertase\/firestore-ios-sdk-frameworks\/releases\/tag\/$firebase_firestore_version)"
-updated_readme_contents=$(sed -e "s/<!--NEW_VERSION_PLACEHOLDER-->.*/$new_version_added_line/" README.md | tr '¬' '\n')
-echo "$updated_readme_contents" >README.md
 
-# GIT COMMIT, PUSH & TAG
-git add .
-git commit -m "release: $firebase_firestore_version"
-git tag -a "$firebase_firestore_version" -m "$firebase_firestore_version"
-git push origin main --follow-tags
-create_github_release "$firebase_firestore_version" "\"[View Firebase iOS SDK Release](https://github.com/firebase/firebase-ios-sdk/releases/tag/$firebase_firestore_version)\"" "$firebase_firestore_version"
 
 echo ""
 echo "Release $LATEST_FIREBASE_VERSION complete."
