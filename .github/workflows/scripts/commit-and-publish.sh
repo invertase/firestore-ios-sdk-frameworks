@@ -70,6 +70,7 @@ exit_code=$?
 if [ $exit_code -eq 1 ]; then
   pod trunk push FirebaseFirestoreGRPCBoringSSLBinary.podspec --allow-warnings --skip-tests --skip-import-validation --synchronous
   exit_code=$?
+  sleep 5m
   pod repo update cocoapods
 else
   echo "FirebaseFirestoreGRPCBoringSSLBinary already exists"
@@ -84,6 +85,7 @@ exit_code=$?
 if [ $exit_code -eq 1 ]; then
   pod trunk push FirebaseFirestoreAbseilBinary.podspec --allow-warnings --skip-tests --skip-import-validation --synchronous
   exit_code=$?
+  sleep 5m
   pod repo update cocoapods
 else
   echo "FirebaseFirestoreAbseilBinary already exists"
@@ -98,6 +100,7 @@ exit_code=$?
 if [ $exit_code -eq 1 ]; then
   pod trunk push FirebaseFirestoreGRPCCoreBinary.podspec --allow-warnings --skip-tests --skip-import-validation --synchronous
   exit_code=$?
+  sleep 5m
   pod repo update cocoapods
 else
   echo "FirebaseFirestoreGRPCCoreBinary already exists"
@@ -112,6 +115,7 @@ exit_code=$?
 if [ $exit_code -eq 1 ]; then
   pod trunk push FirebaseFirestoreGRPCCPPBinary.podspec --allow-warnings --skip-tests --skip-import-validation --synchronous
   exit_code=$?
+  sleep 5m
   pod repo update cocoapods
 else
   echo "FirebaseFirestoreGRPCCPPBinary already exists"
@@ -126,6 +130,7 @@ exit_code=$?
 if [ $exit_code -eq 1 ]; then
   pod trunk push FirebaseFirestoreInternalBinary.podspec --allow-warnings --skip-tests --skip-import-validation --synchronous
   exit_code=$?
+  sleep 5m
   pod repo update cocoapods
 else
   echo "FirebaseFirestoreInternalBinary already exists"
