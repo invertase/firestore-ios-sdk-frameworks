@@ -99,7 +99,7 @@ Future<RawZipUrls> getRawUrls(String filePath, String firestoreVersion) async {
     firebase_firestore_grpc_ccp_version_url:
         jsonData['firebase_firestore_grpc_ccp_version_url'],
     firebase_firestore_internal_url:
-        'https://dl.google.com/firebase/ios/bin/firestore/$firestoreVersion/FirebaseFirestoreInternal.zip',
+        jsonData['firebase_firestore_internal_url'],
   );
 }
 
