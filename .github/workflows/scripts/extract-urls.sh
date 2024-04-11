@@ -5,9 +5,27 @@ json_file_write_path=$1
 
 firebase_firestore_grpc_version=$2
 firebase_firestore_abseil_version=$3
+firebase_firestore_version=$4
 
 # URL of the grpc binary Package.swift file
 grpc_binary_swift_url="https://raw.githubusercontent.com/google/grpc-binary/$firebase_firestore_grpc_version/Package.swift"
+
+# URL of the Firebase Package.swift file
+firebase_package_swift_url="https://raw.githubusercontent.com/firebase/firebase-ios-sdk/$firebase_firestore_version/Package.swift"
+
+
+
+# Fetch the Package.swift file
+firestore_package_swift=$(curl -s "$firebase_package_swift_url")
+
+# Check if the fetch was successful
+if [[ -z $firestore_package_swift ]]; then
+  echo "Failed to fetch the Package.swift file for firebase firestore."
+  exit 1
+fi
+
+# Extract the URL for FirebaseFirestoreInternal
+firebase_firestore_internal_url=$(echo "$firestore_package_swift" | grep -Eo 'url: "https://dl.google.com/firebase/ios/bin/firestore/[0-9.]+/rc[0-9]+/FirebaseFirestoreInternal.zip"' | grep -Eo 'https://[^"]+')
 
 
 # Fetch the Package.swift file
@@ -61,12 +79,25 @@ if [[ -z $firebase_firestore_grpc_ccp_version_url ]]; then
   exit 1
 fi
 
+# Check if the URL was extracted
+if [[ -z $firebase_firestore_internal_url ]]; then
+  echo "Failed to extract the URL for FirebaseFirestoreInternal."
+  exit 1
+fi
+
+echo "firebase_firestore_abseil_url: $firebase_firestore_abseil_url"
+echo "firebase_firestore_grpc_version_url: $firebase_firestore_grpc_version_url"
+echo "firebase_firestore_grpc_boringssl_url: $firebase_firestore_grpc_boringssl_url"
+echo "firebase_firestore_grpc_ccp_version_url: $firebase_firestore_grpc_ccp_version_url"
+echo "firebase_firestore_internal_url: $firebase_firestore_internal_url"
+
 # Output the variables in JSON format to a local temporary file. filename is passed as first argument.
 cat <<EOF > $json_file_write_path
 {
   "firebase_firestore_abseil_url": "$firebase_firestore_abseil_url",
   "firebase_firestore_grpc_version_url": "$firebase_firestore_grpc_version_url",
   "firebase_firestore_grpc_boringssl_url": "$firebase_firestore_grpc_boringssl_url",
-  "firebase_firestore_grpc_ccp_version_url": "$firebase_firestore_grpc_ccp_version_url"
+  "firebase_firestore_grpc_ccp_version_url": "$firebase_firestore_grpc_ccp_version_url",
+  "firebase_firestore_internal_url": "$firebase_firestore_internal_url"
 }
 EOF

@@ -37,6 +37,7 @@ Future<void> main() async {
       firestoreRawZipUrlsJSONPath,
       versions.firebase_firestore_grpc_version,
       versions.firebase_firestore_abseil_version,
+      versions.firebase_firestore_version,
     ],
   );
 
