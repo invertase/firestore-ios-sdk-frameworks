@@ -5,13 +5,13 @@ set -o pipefail
 json_file_write_path=$1
 
 # Update pod repo to ensure we retrieve the latest version.
-# echo "Updating pods..."
-# pod repo list
-# pod repo add cocoapods "https://github.com/CocoaPods/Specs.git"
-# pod repo update
-# pod spec which FirebaseFirestoreInternal
+echo "Updating pods..."
+pod repo list
+pod repo add cocoapods "https://github.com/CocoaPods/Specs.git"
+pod repo update
+pod spec which FirebaseFirestoreInternal
 
-PODSPEC_FILE='./FirebaseFirestoreInternal.json'
+PODSPEC_FILE=$(pod spec which FirebaseFirestoreInternal)
 
 # Extract Firebase Firestore version
 firebase_firestore_version=$(python3 -c 'import json; data = json.load(open("'"$PODSPEC_FILE"'")); print(data["version"])')
