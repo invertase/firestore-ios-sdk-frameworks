@@ -25,7 +25,7 @@ if [[ -z $firestore_package_swift ]]; then
 fi
 
 # Extract the URL for FirebaseFirestoreInternal
-firebase_firestore_internal_url=$(echo "$firestore_package_swift" | grep -o 'url: "https://dl.google.com/firebase/ios/bin/firestore/[0-9]+\.[0-9]+\.[0-9]+/rc[0-9]*/FirebaseFirestoreInternal.zip"' | sed -E 's|url: "(.*)",|\1|')
+firebase_firestore_internal_url=$(echo "$firestore_package_swift" | grep -Eo 'url: "https://dl.google.com/firebase/ios/bin/firestore/[0-9.]+/rc[0-9]+/FirebaseFirestoreInternal.zip"' | grep -Eo 'https://[^"]+')
 
 
 # Fetch the Package.swift file
@@ -84,6 +84,12 @@ if [[ -z $firebase_firestore_internal_url ]]; then
   echo "Failed to extract the URL for FirebaseFirestoreInternal."
   exit 1
 fi
+
+echo "firebase_firestore_abseil_url: $firebase_firestore_abseil_url"
+echo "firebase_firestore_grpc_version_url: $firebase_firestore_grpc_version_url"
+echo "firebase_firestore_grpc_boringssl_url: $firebase_firestore_grpc_boringssl_url"
+echo "firebase_firestore_grpc_ccp_version_url: $firebase_firestore_grpc_ccp_version_url"
+echo "firebase_firestore_internal_url: $firebase_firestore_internal_url"
 
 # Output the variables in JSON format to a local temporary file. filename is passed as first argument.
 cat <<EOF > $json_file_write_path
