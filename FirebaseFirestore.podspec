@@ -32,9 +32,6 @@ Pod::Spec.new do |s|
   s.osx.frameworks = 'SystemConfiguration'
   s.tvos.frameworks = 'SystemConfiguration', 'UIKit'
 
-  s.resource_bundles = {
-    "#{s.module_name}_Privacy" => 'Resources/FirebaseFirestore.xcprivacy'
-  }
 
   s.dependency 'FirebaseFirestoreBinary', firebase_firestore_version
 end
