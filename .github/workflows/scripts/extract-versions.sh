@@ -20,9 +20,9 @@ firebase_firestore_version=$(python3 -c 'import json; data = json.load(open("'"$
 firebase_firestore_grpc_version=$(python3 -c 'import json; data = json.load(open("'"$PODSPEC_FILE"'")); print(data["dependencies"]["gRPC-C++"][0].replace("~> ", ""))')
 # If the gRPC version is 1.62.0, set it to 1.62.1
 # Since the tag is missing for 1.62.0.
-if [ "$firebase_firestore_grpc_version" = "1.62.0" ]; then
-  echo "Overriding gRPC version to 1.62.1"
-  firebase_firestore_grpc_version="1.62.1"
+if [ "$firebase_firestore_grpc_version" = "1.65.0" ]; then
+  echo "Overriding gRPC version to 1.65.1"
+  firebase_firestore_grpc_version="1.65.1"
 fi
 
 # Extract leveldb version
