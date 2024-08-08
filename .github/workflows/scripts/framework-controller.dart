@@ -117,8 +117,7 @@ Future<void> main() async {
       versions.firebase_firestore_abseil_version,
       versions.firebase_firestore_grpc_version,
       versions.firebase_firestore_leveldb_version,
-      versions.firebase_firestore_nanopb_version_min,
-      versions.firebase_firestore_nanopb_version_max,
+      versions.firebase_firestore_nanopb_version,
       createURLToZip(
         'grpc',
         versions.firebase_firestore_version,
