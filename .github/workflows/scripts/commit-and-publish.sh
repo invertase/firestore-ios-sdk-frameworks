@@ -70,6 +70,7 @@ pod repo add cocoapods "https://github.com/CocoaPods/Specs.git"
 
 pod repo update
 pod spec which FirebaseFirestoreGRPCBoringSSLBinary --version="$firebase_firestore_grpc_version"
+echo "Running 'pod spec which FirebaseFirestoreGRPCBoringSSLBinary --version=$firebase_firestore_grpc_version'"
 exit_code=$?
 if [ $exit_code -eq 1 ]; then
   pod trunk push FirebaseFirestoreGRPCBoringSSLBinary.podspec --allow-warnings --skip-tests --skip-import-validation --synchronous
@@ -86,6 +87,7 @@ fi
 
 pod repo update
 pod spec which FirebaseFirestoreAbseilBinary --version="$firebase_firestore_abseil_version"
+echo "Running 'pod spec which FirebaseFirestoreAbseilBinary --version=$firebase_firestore_abseil_version'"
 exit_code=$?
 if [ $exit_code -eq 1 ]; then
   pod trunk push FirebaseFirestoreAbseilBinary.podspec --allow-warnings --skip-tests --skip-import-validation --synchronous
@@ -102,6 +104,7 @@ fi
 
 pod repo update
 pod spec which FirebaseFirestoreGRPCCoreBinary --version="$firebase_firestore_grpc_version"
+echo "Running 'pod spec which FirebaseFirestoreGRPCCoreBinary --version=$firebase_firestore_grpc_version'"
 exit_code=$?
 if [ $exit_code -eq 1 ]; then
   pod trunk push FirebaseFirestoreGRPCCoreBinary.podspec --allow-warnings --skip-tests --skip-import-validation --synchronous
@@ -118,6 +121,7 @@ fi
 
 pod repo update
 pod spec which FirebaseFirestoreGRPCCPPBinary --version="$firebase_firestore_grpc_version"
+echo "Running 'pod spec which FirebaseFirestoreGRPCCPPBinary --version=$firebase_firestore_grpc_version'"
 exit_code=$?
 if [ $exit_code -eq 1 ]; then
   pod trunk push FirebaseFirestoreGRPCCPPBinary.podspec --allow-warnings --skip-tests --skip-import-validation --synchronous
@@ -134,6 +138,7 @@ fi
 
 pod repo update
 pod spec which FirebaseFirestoreInternalBinary --version="$firebase_firestore_version"
+echo "Running 'pod spec which FirebaseFirestoreInternalBinary --version=$firebase_firestore_version'"
 exit_code=$?
 if [ $exit_code -eq 1 ]; then
   pod trunk push FirebaseFirestoreInternalBinary.podspec --allow-warnings --skip-tests --skip-import-validation --synchronous
@@ -150,6 +155,7 @@ fi
 
 pod repo update
 pod spec which FirebaseFirestoreBinary --version="$firebase_firestore_version"
+echo "Running 'pod spec which FirebaseFirestoreBinary --version=$firebase_firestore_version'"
 exit_code=$?
 if [ $exit_code -eq 1 ]; then
   pod trunk push FirebaseFirestoreBinary.podspec --allow-warnings --skip-tests --skip-import-validation --synchronous
