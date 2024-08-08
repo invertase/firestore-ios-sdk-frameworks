@@ -8,16 +8,14 @@ class FirestoreVersions {
     required this.firebase_firestore_version,
     required this.firebase_firestore_grpc_version,
     required this.firebase_firestore_leveldb_version,
-    required this.firebase_firestore_nanopb_version_min,
-    required this.firebase_firestore_nanopb_version_max,
+    required this.firebase_firestore_nanopb_version,
     required this.firebase_firestore_abseil_version,
   });
 
   final String firebase_firestore_version;
   final String firebase_firestore_grpc_version;
   final String firebase_firestore_leveldb_version;
-  final String firebase_firestore_nanopb_version_min;
-  final String firebase_firestore_nanopb_version_max;
+  final String firebase_firestore_nanopb_version;
   final String firebase_firestore_abseil_version;
 }
 
@@ -70,10 +68,8 @@ Future<FirestoreVersions> getVersions(String filePath) async {
         jsonData['firebase_firestore_grpc_version'],
     firebase_firestore_leveldb_version:
         jsonData['firebase_firestore_leveldb_version'],
-    firebase_firestore_nanopb_version_min:
-        jsonData['firebase_firestore_nanopb_version_min'],
-    firebase_firestore_nanopb_version_max:
-        jsonData['firebase_firestore_nanopb_version_max'],
+    firebase_firestore_nanopb_version:
+        jsonData['firebase_firestore_nanopb_version'],
     firebase_firestore_abseil_version:
         jsonData['firebase_firestore_abseil_version'],
   );

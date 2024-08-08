@@ -18,8 +18,8 @@ firebase_firestore_version=$(python3 -c 'import json; data = json.load(open("'"$
 
 # Extract gRPC version
 firebase_firestore_grpc_version=$(python3 -c 'import json; data = json.load(open("'"$PODSPEC_FILE"'")); print(data["dependencies"]["gRPC-C++"][0].replace("~> ", ""))')
-# If the gRPC version is 1.62.0, set it to 1.62.1
-# Since the tag is missing for 1.62.0.
+# If the gRPC version is 1.65.0, set it to 1.65.1
+# Since the tag is missing for 1.65.0.
 if [ "$firebase_firestore_grpc_version" = "1.65.0" ]; then
   echo "Overriding gRPC version to 1.65.1"
   firebase_firestore_grpc_version="1.65.1"
@@ -29,10 +29,7 @@ fi
 firebase_firestore_leveldb_version=$(python3 -c 'import json; data = json.load(open("'"$PODSPEC_FILE"'")); print(data["dependencies"]["leveldb-library"][0])')
 
 # Extract nanopb minimum version
-firebase_firestore_nanopb_version_min=$(python3 -c 'import json; data = json.load(open("'"$PODSPEC_FILE"'")); print(data["dependencies"]["nanopb"][0])')
-
-# Extract nanopb maximum version
-firebase_firestore_nanopb_version_max=$(python3 -c 'import json; data = json.load(open("'"$PODSPEC_FILE"'")); print(data["dependencies"]["nanopb"][1])')
+firebase_firestore_nanopb_version=$(python3 -c 'import json; data = json.load(open("'"$PODSPEC_FILE"'")); print(data["dependencies"]["nanopb"][0])')
 
 # URL of the grpc binary Package.swift file
 grpc_binary_swift_url="https://raw.githubusercontent.com/google/grpc-binary/$firebase_firestore_grpc_version/Package.swift"
@@ -83,13 +80,8 @@ if [ -z "$firebase_firestore_leveldb_version" ]; then
   exit 1
 fi
 
-if [ -z "$firebase_firestore_nanopb_version_min" ]; then
-  echo "Failed to extract Firebase Firestore nanopb minimum version from podspec."
-  exit 1
-fi
-
-if [ -z "$firebase_firestore_nanopb_version_max" ]; then
-  echo "Failed to extract Firebase Firestore nanopb maximum version from podspec."
+if [ -z "$firebase_firestore_nanopb_version" ]; then
+  echo "Failed to extract Firebase Firestore nanopb version from podspec."
   exit 1
 fi
 
@@ -104,8 +96,7 @@ cat <<EOF > $json_file_write_path
   "firebase_firestore_version": "$firebase_firestore_version",
   "firebase_firestore_grpc_version": "$firebase_firestore_grpc_version",
   "firebase_firestore_leveldb_version": "$firebase_firestore_leveldb_version",
-  "firebase_firestore_nanopb_version_min": "$firebase_firestore_nanopb_version_min",
-  "firebase_firestore_nanopb_version_max": "$firebase_firestore_nanopb_version_max",
+  "firebase_firestore_nanopb_version": "$firebase_firestore_nanopb_version",
   "firebase_firestore_abseil_version": "$firebase_firestore_abseil_version"
 }
 EOF
