@@ -5,8 +5,7 @@ firebase_firestore_grpc_version='1.65.1'
 firebase_firestore_grpc_version_url='https://github.com/invertase/firestore-ios-sdk-frameworks/raw/11.0.0/Archives/grpc.zip'
 firebase_firestore_grpc_ccp_version_url='https://github.com/invertase/firestore-ios-sdk-frameworks/raw/11.0.0/Archives/grpcpp.zip'
 firebase_firestore_leveldb_version='~> 1.22'
-firebase_firestore_nanopb_version_min='>= 2.30908.0'
-firebase_firestore_nanopb_version_max='< 2.30911.0'
+firebase_firestore_nanopb_version_min='~> 3.30910.0'
 firebase_firestore_grpc_boringssl_url='https://github.com/invertase/firestore-ios-sdk-frameworks/raw/11.0.0/Archives/openssl.zip'
 firebase_firestore_internal_url='https://github.com/invertase/firestore-ios-sdk-frameworks/raw/11.0.0/Archives/firestore_internal.zip'
 
@@ -54,5 +53,5 @@ Pod::Spec.new do |s|
 
   s.dependency 'FirebaseCore', firebase_firestore_version
   s.dependency 'leveldb-library', firebase_firestore_leveldb_version
-  s.dependency 'nanopb', firebase_firestore_nanopb_version_min, firebase_firestore_nanopb_version_max
+  s.dependency 'nanopb', firebase_firestore_nanopb_version_min
 end
