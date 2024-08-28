@@ -147,7 +147,7 @@ if [ $exit_code -eq 1 ]; then
   pod repo update cocoapods
 else
   echo "Force delete then re-push FirebaseFirestoreInternalBinary"
-  pod trunk delete FirebaseFirestoreInternalBinary "$firebase_firestore_version"
+  echo y | pod trunk delete FirebaseFirestoreInternalBinary "$firebase_firestore_version"
   pod trunk push FirebaseFirestoreInternalBinary.podspec --allow-warnings --skip-tests --skip-import-validation --synchronous
   exit_code=$?
   sleep 5m
