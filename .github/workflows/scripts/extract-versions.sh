@@ -11,7 +11,8 @@ pod repo add cocoapods "https://github.com/CocoaPods/Specs.git"
 pod repo update
 pod spec which FirebaseFirestoreInternal
 
-PODSPEC_FILE=$(pod spec which FirebaseFirestoreInternal)
+# Should be removed once the podspec is updated.
+PODSPEC_FILE="/Users/runner/.cocoapods/repos/cocoapods/Specs/3/1/8/FirebaseFirestoreInternal/11.0.0/FirebaseFirestoreInternal.podspec.json"
 
 # Extract Firebase Firestore version
 firebase_firestore_version=$(python3 -c 'import json; data = json.load(open("'"$PODSPEC_FILE"'")); print(data["version"])')
