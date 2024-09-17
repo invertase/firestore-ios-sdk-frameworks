@@ -58,7 +58,7 @@ else
   
   git add .
   git commit -m "release: $firebase_firestore_version"
-  git tag -a "0.0.1" -m "0.0.1"
+  git tag -a "$firebase_firestore_version" -m "$firebase_firestore_version"
   git push origin main --follow-tags
   create_github_release "$firebase_firestore_version" "\"[View Firebase iOS SDK Release](https://github.com/firebase/firebase-ios-sdk/releases/tag/$firebase_firestore_version)\"" "$firebase_firestore_version"
 fi
