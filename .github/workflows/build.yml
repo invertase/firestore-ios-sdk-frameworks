@@ -16,8 +16,6 @@ jobs:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-tags: true
       - name: GIT Setup
         run: |
           git fetch --tags
