@@ -56,6 +56,7 @@ The below are the currently supported Firebase iOS SDK versions of this reposito
 > **⚠️ Note:** if you are looking for a new version that is not listed in the supported versions list, examine the upstream release notes for firebase-ios-sdk carefully. This can happen if the firebase-ios-sdk team issues an interim release to solve some urgent problem, but do not run their full release process. If that happens, don't worry - just wait for the next supported version before moving forward, or temporarily de-integrate this pre-compiled framework if you must use the interim version. 6.31.1 is an example of this, with more details [here](https://github.com/firebase/firebase-ios-sdk/pull/6368#issuecomment-685030446) for why it might happen.
 
 <!--NEW_VERSION_PLACEHOLDER-->
+ - [11.6.0](https://github.com/invertase/firestore-ios-sdk-frameworks/releases/tag/11.6.0)
  - [11.5.0](https://github.com/invertase/firestore-ios-sdk-frameworks/releases/tag/11.5.0)
  - [11.4.0](https://github.com/invertase/firestore-ios-sdk-frameworks/releases/tag/11.4.0)
  - [11.3.0](https://github.com/invertase/firestore-ios-sdk-frameworks/releases/tag/11.3.0)
