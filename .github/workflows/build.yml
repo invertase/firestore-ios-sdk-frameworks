@@ -2,9 +2,8 @@ name: Build
 
 on:
   workflow_dispatch:
-  # Temporary stop until fixed
-  # schedule:
-  #   - cron: "0 */3 * * *" # Every 3 hours
+  schedule:
+    - cron: "0 */3 * * *" # Every 3 hours
 
 jobs:
   latest_release:
