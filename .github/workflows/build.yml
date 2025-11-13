@@ -36,17 +36,10 @@ jobs:
         run: |
           dart ./.github/workflows/scripts/framework-controller.dart
       - name: Report Failure Status
-        uses: 8398a7/action-slack@v3
-        with:
-          status: custom
-          fields: all
-          custom_payload: |
-            {
-              attachments: [{
-                color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
-                text: `firebase-ios-sdk pre-compile of ${process.env.LATEST_FIREBASE_VERSION} ${{ job.status }}`,
-              }]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.INVERTASEBOT_SLACK_GITHUB_CHANNEL_WEBHOOK_URL }}
+        uses: slackapi/slack-github-action@v2
         if: failure()
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            text: "*[firebase-ios-sdk-frameworks](https://github.com/invertase/firestore-ios-sdk-frameworks/actions) build failure:* ${process.env.LATEST_FIREBASE_VERSION} ${{ job.status }}"
