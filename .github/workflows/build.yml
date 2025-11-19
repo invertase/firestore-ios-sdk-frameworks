@@ -42,4 +42,4 @@ jobs:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: "https://github.com/invertase/firestore-ios-sdk-frameworks build failure: ${{ process.env.LATEST_FIREBASE_VERSION }} {{ job.status }}"
+            text: "https://github.com/invertase/firestore-ios-sdk-frameworks build failure: ${{ env.LATEST_FIREBASE_VERSION }} {{ job.status }}"
