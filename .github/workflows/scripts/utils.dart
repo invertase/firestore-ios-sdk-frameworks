@@ -200,3 +200,15 @@ Future<void> createZip(
 String createURLToZip(String zipName, String firebaseSdkVersion) {
   return 'https://github.com/invertase/firestore-ios-sdk-frameworks/raw/$firebaseSdkVersion/Archives/$zipName.zip';
 }
+
+Future<void> exportLatestFirebaseVersion(String version) async {
+  final githubEnv = Platform.environment['GITHUB_ENV'];
+  if (githubEnv == null) {
+    return;
+  }
+
+  await File(githubEnv).writeAsString(
+    'LATEST_FIREBASE_VERSION=$version\n',
+    mode: FileMode.append,
+  );
+}

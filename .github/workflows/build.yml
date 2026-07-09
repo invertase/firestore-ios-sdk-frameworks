@@ -33,8 +33,7 @@ jobs:
       - name: Process Latest Version
         env:
           COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
-        run: |
-          dart ./.github/workflows/scripts/framework-controller.dart
+        run: dart ./.github/workflows/scripts/framework-controller.dart
       - name: Report Failure Status
         uses: slackapi/slack-github-action@v2
         if: failure()
@@ -42,4 +41,4 @@ jobs:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: "https://github.com/invertase/firestore-ios-sdk-frameworks build failure: ${{ env.LATEST_FIREBASE_VERSION }} {{ job.status }}"
+            text: "https://github.com/invertase/firestore-ios-sdk-frameworks build failure for Firebase ${{ env.LATEST_FIREBASE_VERSION }} (job status: {{ job.status }})"

@@ -2,5 +2,6 @@
 .idea
 .vscode
 .tmp
+tmp/
 pubspec.lock
 package_config.json

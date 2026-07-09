@@ -13,15 +13,18 @@ temp_privacy_manifest_path="./tmp/PrivacyInfo.xcprivacy"
 # Create the directory for the new ZIP file if it doesn't exist
 new_zip_dir=$(dirname "$path_to_new_zip")
 mkdir -p "$new_zip_dir"
+mkdir -p "./tmp"
+
+curl_retry_flags=(--retry 5 --retry-delay 10 --retry-all-errors)
 
 # Fetch the original ZIP file, fail if HTTP request fails (e.g., with a 404)
-if ! curl -sf "$raw_zip_url" -o "$temp_zip_path"; then
+if ! curl -sf "${curl_retry_flags[@]}" "$raw_zip_url" -o "$temp_zip_path"; then
   echo "Failed to download ZIP file (URL might be invalid or file not found)."
   exit 1
 fi
 
 # Fetch the PrivacyInfo.xcprivacy file, fail if HTTP request fails
-if ! curl -sf "$privacy_manifest_url" -o "$temp_privacy_manifest_path"; then
+if ! curl -sf "${curl_retry_flags[@]}" "$privacy_manifest_url" -o "$temp_privacy_manifest_path"; then
   echo "Failed to download PrivacyInfo.xcprivacy file (URL might be invalid or file not found)."
   exit 1
 fi
