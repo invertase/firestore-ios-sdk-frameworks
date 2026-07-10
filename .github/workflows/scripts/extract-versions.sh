@@ -7,8 +7,10 @@ json_file_write_path=$1
 # Update pod repo to ensure we retrieve the latest version.
 echo "Updating pods..."
 pod repo list
-pod repo add cocoapods "https://github.com/CocoaPods/Specs.git"
-pod repo update
+if ! pod repo list 2>/dev/null | grep -qE '^cocoapods$'; then
+  pod repo add cocoapods "https://github.com/CocoaPods/Specs.git"
+fi
+pod repo update cocoapods
 pod spec which FirebaseFirestoreInternal
 
 # Should be removed once the podspec is updated.
@@ -38,7 +40,7 @@ grpc_binary_swift_url="https://raw.githubusercontent.com/google/grpc-binary/$fir
 
 # Fetch the Package.swift file
 echo "Fetching Package.swift file from $grpc_binary_swift_url"
-package_swift=$(curl -s $grpc_binary_swift_url)
+package_swift=$(curl -sf --retry 5 --retry-delay 5 --retry-all-errors "$grpc_binary_swift_url")
 
 # Check if the fetch was successful
 if [[ -z $package_swift ]]; then
@@ -101,4 +103,10 @@ cat <<EOF > $json_file_write_path
   "firebase_firestore_abseil_version": "$firebase_firestore_abseil_version"
 }
 EOF
+
+if [ -n "$GITHUB_ENV" ]; then
+  echo "LATEST_FIREBASE_VERSION=$firebase_firestore_version" >> "$GITHUB_ENV"
+fi
+
+echo "Latest Firebase Firestore version: $firebase_firestore_version"
 

@@ -1,4 +1,5 @@
 #!/bin/bash
+set -o pipefail
 
 firebase_firestore_version=$1
 
@@ -12,21 +13,18 @@ local_file_path="$local_dir/FirebaseFirestore.xcprivacy"
 # Create the local directory if it doesn't exist
 mkdir -p "$local_dir"
 
-# Download the file and write to the local directory
-curl -L -v "$url" -o "$local_file_path"
-
-# Check if the file was created successfully
-if [[ -f "$local_file_path" ]]; then
-    echo "File downloaded successfully and written to $local_file_path"
-else
-    echo "Failed to download the file."
-    exit 1
+# Download the file and fail on HTTP errors (e.g. 504 HTML responses).
+if ! curl -sfL --retry 5 --retry-delay 10 --retry-all-errors "$url" -o "$local_file_path"; then
+  echo "Failed to download the file from $url"
+  exit 1
 fi
+
+echo "File downloaded successfully and written to $local_file_path"
 
 # Check if the file is a plist/XML file
 if grep -q "<?xml version=\"1.0\"" "$local_file_path" && grep -q "<plist" "$local_file_path"; then
-    echo "FirebaseFirestore privacy manifest downloaded successfully and is a valid plist/XML file."
+  echo "FirebaseFirestore privacy manifest downloaded successfully and is a valid plist/XML file."
 else
-    echo "The downloaded file is not a valid plist/XML file."
-    exit 1
+  echo "The downloaded file is not a valid plist/XML file."
+  exit 1
 fi

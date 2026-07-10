@@ -3,6 +3,7 @@ const bool debugOutput = true;
 const pathToScripts = '.github/workflows/scripts/';
 
 const String extractVersionsScript = 'extract-versions.sh';
+const String checkReleaseCompleteScript = 'check-release-complete.sh';
 const String firestoreVersionJSONPath = './tmp/firestore_versions.json';
 
 const String extractRawZipUrlsScript = 'extract-urls.sh';

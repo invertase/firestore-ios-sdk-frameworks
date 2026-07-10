@@ -25,6 +25,37 @@ Future<void> main() async {
   }
 
   final versions = await getVersions(firestoreVersionJSONPath);
+  await exportLatestFirebaseVersion(versions.firebase_firestore_version);
+
+  final releaseCompleteResults = await Process.run(
+    'bash',
+    [
+      p.join(
+        pathToScripts,
+        checkReleaseCompleteScript,
+      ),
+      versions.firebase_firestore_version,
+      versions.firebase_firestore_grpc_version,
+      versions.firebase_firestore_abseil_version,
+    ],
+  );
+
+  if (debugOutput) {
+    print(releaseCompleteResults.stdout);
+  }
+
+  if (releaseCompleteResults.exitCode == 0) {
+    print(
+      'Release ${versions.firebase_firestore_version} already complete; skipping build.',
+    );
+    return;
+  }
+
+  if (releaseCompleteResults.exitCode == 2) {
+    throw Exception(
+      'Checking release status failed: ${releaseCompleteResults.stderr}',
+    );
+  }
 
   // Step 2: Extract raw zip urls for creating our own with privacy manifests
   final rawUrlResults = await Process.run(
