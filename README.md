@@ -1,3 +1,16 @@
+# 🚨🚨🚨 DEPRECATION NOTICE 🚨🚨🚨
+
+## ⚠️ This repository will become obsolete in October 2026
+
+**Firebase is ending CocoaPods distribution in October 2026.** This repo exists only to ship precompiled Firestore binaries for CocoaPods consumers. Once CocoaPods is no longer a supported distribution channel, this repository will no longer be relevant and will not receive further updates.
+
+### What you should do
+
+- **If you use Swift Package Manager:** You do not need this repo. Firestore via SPM already ships as a precompiled binary.
+- **If you still use CocoaPods:** Plan to migrate to SPM (or another supported distribution method) before October 2026.
+
+---
+
 # Firestore iOS SDK Binary Distribution
 
 Precompiled Firestore iOS SDK `xcframework` files extracted from the Firebase iOS SDK repository release downloads, tagged by Firebase iOS SDK version and presented as a consumable `podspec`.
