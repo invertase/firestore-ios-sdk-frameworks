@@ -1,13 +1,13 @@
 # 🚨🚨🚨 DEPRECATION NOTICE 🚨🚨🚨
 
-## ⚠️ This repository will become obsolete in October 2026
+## ⚠️ This repository is obsolete and no longer maintained as of October 2026
 
-**Firebase is ending CocoaPods distribution in October 2026.** This repo exists only to ship precompiled Firestore binaries for CocoaPods consumers. Once CocoaPods is no longer a supported distribution channel, this repository will no longer be relevant and will not receive further updates.
+**Firebase ended CocoaPods distribution in October 2026.** This repo existed only to ship precompiled Firestore binaries for CocoaPods consumers. Now that CocoaPods is no longer a supported distribution channel, this repository is no longer be relevant and will not receive further updates.
 
 ### What you should do
 
 - **If you use Swift Package Manager:** You do not need this repo. Firestore via SPM already ships as a precompiled binary.
-- **If you still use CocoaPods:** Plan to migrate to SPM (or another supported distribution method) before October 2026.
+- **If you still use CocoaPods:** Migrate to SPM (or another supported distribution method).
 
 ---
 
