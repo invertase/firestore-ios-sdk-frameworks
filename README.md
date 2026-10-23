@@ -2,7 +2,7 @@
 
 ## ⚠️ This repository is obsolete and no longer maintained as of October 2026
 
-**Firebase ended CocoaPods distribution in October 2026.** This repo existed only to ship precompiled Firestore binaries for CocoaPods consumers. Now that CocoaPods is no longer a supported distribution channel, this repository is no longer be relevant and will not receive further updates.
+**Firebase ended CocoaPods distribution in October 2026.** This repo existed only to ship precompiled Firestore binaries for CocoaPods consumers. Now that CocoaPods is no longer a supported distribution channel, this repository is no longer relevant and will not receive further updates.
 
 ### What you should do
 
